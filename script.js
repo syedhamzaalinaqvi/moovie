@@ -14,12 +14,7 @@ const videoData = [
         tmdbId: 575265,
         type: "movie",
         thumbnail: "https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg",
-        embedCode: `<iframe
-    src="https://net50.cc/hls/81328881.m3u8?in=6dd5e98e8707a4ed979c3eb3aaff7f9d::c74d68900c0c207a86fe453ec83bed37::1755862831::kp"
-    allowfullscreen
-    allowtransparency
-    allow="autoplay"
-  ></iframe>`,
+        embedCode: `<div id="IndStreamPlayer" style="display: flex; max-width:85%;"><iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>`,
         description:
             "The direct sequel to Avengers: Infinity War, the surviving members of the Avengers and their allies work to reverse the damage caused by Thanos.",
     },
