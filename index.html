@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-TV - Premium Video Streaming</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1 class="logo">H-TV</h1>
+            </div>
+            
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link" data-section="categories">Categories</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link" data-section="popular">Popular</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link" data-section="search">Search</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search videos...">
+                    <button class="search-btn" id="searchBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+                <button class="login-btn" id="loginBtn">Login</button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Featured Section -->
+        <section class="featured-section">
+            <div class="container">
+                <div class="featured-video">
+                    <div class="video-player">
+                        <iframe 
+                            id="featuredPlayer"
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                            frameborder="0" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="featured-info">
+                        <h2 class="featured-title">Featured: Never Gonna Give You Up</h2>
+                        <p class="featured-description">Rick Astley's official music video for "Never Gonna Give You Up"</p>
+                        <div class="featured-meta">
+                            <span class="duration">3:33</span>
+                            <span class="views">1.3B views</span>
+                            <span class="category">Music</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live TV Section -->
+        <section class="live-tv-section">
+            <div class="container">
+                <h2 class="section-title">Live TV Channels</h2>
+                <div class="live-tv-slider">
+                    <button class="slider-btn prev-btn" id="liveTvPrev">‹</button>
+                    <div class="live-tv-grid" id="liveTvGrid">
+                        <!-- Live TV channels will be loaded here -->
+                    </div>
+                    <button class="slider-btn next-btn" id="liveTvNext">›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="trending-section">
+            <div class="container">
+                <h2 class="section-title">Trending This Week</h2>
+                <div class="trending-slider">
+                    <button class="slider-btn prev-btn" id="trendingPrev">‹</button>
+                    <div class="trending-grid" id="trendingGrid">
+                        <!-- Trending content will be loaded here -->
+                    </div>
+                    <button class="slider-btn next-btn" id="trendingNext">›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Filters -->
+        <section class="filters-section">
+            <div class="container">
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="action">Action</button>
+                    <button class="filter-btn" data-category="comedy">Comedy</button>
+                    <button class="filter-btn" data-category="drama">Drama</button>
+                    <button class="filter-btn" data-category="horror">Horror</button>
+                    <button class="filter-btn" data-category="thriller">Thriller</button>
+                    <button class="filter-btn" data-category="romance">Romance</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Grid -->
+        <section class="videos-section">
+            <div class="container">
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="grid" id="gridViewBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Grid
+                    </button>
+                    <button class="view-btn" data-view="list" id="listViewBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        List
+                    </button>
+                </div>
+                <div class="videos-grid" id="videosGrid">
+                    <!-- Videos will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-video">
+                <iframe id="modalPlayer" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="modal-info">
+                <h3 id="modalTitle"></h3>
+                <div class="modal-meta">
+                    <span id="modalDuration"></span>
+                    <span id="modalViews"></span>
+                    <span id="modalCategory"></span>
+                    <span id="modalYear"></span>
+                    <span id="modalStatus"></span>
+                    <span id="modalRating"></span>
+                </div>
+                <p id="modalDescription"></p>
+                
+                <!-- TMDB Movie Details -->
+                <div class="tmdb-details" id="tmdbDetails" style="display: none;">
+                    <div class="movie-stats">
+                        <div class="stat-item">
+                            <label>Budget:</label>
+                            <span id="movieBudget">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Revenue:</label>
+                            <span id="movieRevenue">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Director:</label>
+                            <span id="movieDirector">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Genres:</label>
+                            <span id="movieGenres">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trailer-section" id="trailerSection" style="display: none;">
+                        <h4>Official Trailer</h4>
+                        <div class="trailer-player" id="trailerPlayer"></div>
+                    </div>
+                    
+                    <div class="cast-section">
+                        <h4>Cast</h4>
+                        <div class="cast-grid" id="castGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-overlay" id="loginOverlay"></div>
+        <div class="modal-content login-modal-content">
+            <button class="modal-close" id="loginModalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="login-form">
+                <h2>Login to H-TV</h2>
+                <form>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="login-submit-btn">Sign In</button>
+                </form>
+                <p class="login-footer">Don't have an account? <a href="#">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                © 2025 All rights reserved. Made by <a href="/" class="footer-link">H-TV</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
