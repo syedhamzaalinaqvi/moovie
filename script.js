@@ -46,28 +46,47 @@ const videoData = [
     },
     {
         id: 7,
-        tmdbId: 155, // The Dark Knight
+        tmdbId: 1254624, // Night Always Comes
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31567422" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 8,
-        tmdbId: 680, // Pulp Fiction
-        type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/Ks-_Mh1QhMc" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        tmdbId: 227114, // Butterfly
+        type: "tv",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26672404" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 9,
-        tmdbId: 238, // The Godfather
+        tmdbId: 1071585, // Megan 2.0
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/jgpJVI3tDbY" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26342662" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 10,
-        tmdbId: 1061474,
+        tmdbId: 1234821, //Jurassic world rebirth
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31036941" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
+    {
+        id: 11,
+        tmdbId: 119051, //Wednesday
+        type: "tv",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 12,
+        tmdbId: 1148817, //Vena: Before 7 Days
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt28857853" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 12,
+        tmdbId: 1106289, //Pickup 2025
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    
 ];
 
 // Cache for movie data to avoid repeated API calls
