@@ -1,6 +1,5 @@
-// TMDB API Configuration - API key moved to environment variables for security
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+// Local API Configuration - secure backend handles TMDB requests
+const API_BASE_URL = window.location.origin + '/api';
 
 // Video Data - Now supporting Movies/Series with TMDB integration
 const videoData = [
@@ -144,27 +143,48 @@ const videoData = [
 
 // TMDB API Functions
 async function fetchTMDBData(tmdbId, type) {
-    // TMDB API functionality disabled for security - API key should be handled server-side
-    console.log("TMDB API calls disabled - implement server-side API for production");
-    return null;
+    try {
+        const endpoint = type === "movie" ? "movie" : "tv";
+        const response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching movie data:", error);
+        return null;
+    }
 }
 
 async function fetchTrendingContent() {
-    // TMDB API functionality disabled for security - API key should be handled server-side
-    console.log("TMDB API calls disabled - implement server-side API for production");
-    return [];
+    try {
+        const response = await fetch(`${API_BASE_URL}/trending`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching trending data:", error);
+        return [];
+    }
 }
 
+// Credits are now included in the main fetchTMDBData response
 async function fetchTMDBCredits(tmdbId, type) {
-    // TMDB API functionality disabled for security - API key should be handled server-side
-    console.log("TMDB API calls disabled - implement server-side API for production");
-    return null;
+    const data = await fetchTMDBData(tmdbId, type);
+    return data ? { cast: data.cast, crew: [] } : null;
 }
 
+// Videos/trailers are now included in the main fetchTMDBData response
 async function fetchTMDBVideos(tmdbId, type) {
-    // TMDB API functionality disabled for security - API key should be handled server-side
-    console.log("TMDB API calls disabled - implement server-side API for production");
-    return null;
+    const data = await fetchTMDBData(tmdbId, type);
+    return data && data.trailer ? { results: [{ key: data.trailer.split('/').pop(), site: 'YouTube', type: 'Trailer' }] } : { results: [] };
 }
 
 function formatBudget(amount) {
@@ -891,3 +911,54 @@ async function openTrendingModal(tmdbId, mediaType) {
 }
 
 console.log("H-TV Video Streaming Platform initialized successfully!");
+
+// Download functionality
+function downloadMovie(title, year, id) {
+    const downloadInfo = `
+🎬 Movie: ${title}
+📅 Year: ${year}
+⭐ Quality: HD Available
+🆔 ID: ${id}
+
+This download feature connects to your streaming service.
+Click OK to proceed with download.`;
+    
+    if (confirm(`Download "${title}"?\n\n${downloadInfo}`)) {
+        // Create download notification
+        showDownloadNotification(title);
+        
+        // You can customize this to integrate with your actual download service
+        console.log("🎬 Initiating download for:", title);
+        
+        // Example: Open in new tab (replace with your download logic)
+        // window.open(`/download/${id}`, "_blank");
+    }
+}
+
+// Download notification
+function showDownloadNotification(title) {
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = "download-notification";
+    notification.innerHTML = `
+        <div class="notification-content">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+            </svg>
+            <span>Download started: ${title}</span>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Show animation
+    setTimeout(() => notification.classList.add("show"), 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove("show");
+        setTimeout(() => document.body.removeChild(notification), 300);
+    }, 3000);
+}
