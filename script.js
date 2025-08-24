@@ -16,15 +16,15 @@ const videoData = [
     },
     {
         id: 2,
-        tmdbId: 119051, // Wednesday
-        type: "tv",
-        embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        tmdbId: 1510251, //Murderbaad
+        type: "movie",
+        embedCode: `<iframe id="pjsfrrsplayer-f03a7b29827a4bef70f99554177387fb" scrolling="no" title="pjsfrrsplayer-f03a7b29827a4bef70f99554177387fb" allowfullscreen="true" allowtransparency="true" allow-scripts="true" style="position: absolute; width: 100%; height: 100%; border: 0px; pointer-events: none;"></iframe>`,
     },
     {
         id: 3,
         tmdbId: 575265, // mission imposible 2025
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 4,
