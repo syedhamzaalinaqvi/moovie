@@ -41,7 +41,7 @@ const videoData = [
     {
         id: 6,
         tmdbId: 110492, // Peacemaker
-        type: "movie",
+        type: "tv",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
