@@ -154,6 +154,11 @@ async function fetchTMDBData(tmdbId, type) {
         }
 
         const data = await response.json();
+        
+        // Debug: log the raw TMDB response to see what we're getting
+        console.log('🔍 Raw TMDB API response:', data);
+        console.log('🔍 Credits data:', data.credits);
+        console.log('🔍 Videos data:', data.videos);
 
         // Format the data to match our expected structure
         const formattedData = {
@@ -202,10 +207,10 @@ async function fetchTMDBData(tmdbId, type) {
                 .map((p) => p.name);
         }
 
-        // Extract cast information (top 10)
+        // Extract cast information (top 12 for better display)
         if (data.credits?.cast) {
             formattedData.cast = data.credits.cast
-                .slice(0, 10)
+                .slice(0, 12)
                 .map((actor) => ({
                     name: actor.name,
                     character: actor.character,
@@ -215,13 +220,12 @@ async function fetchTMDBData(tmdbId, type) {
                 }));
         }
 
-        // Find trailer
+        // Find trailer (prioritize official trailers)
         if (data.videos?.results) {
-            const trailer = data.videos.results.find(
-                (v) => v.type === "Trailer" && v.site === "YouTube",
-            );
-            if (trailer) {
-                formattedData.trailer = `https://www.youtube.com/embed/${trailer.key}`;
+            const trailers = data.videos.results.filter(v => v.type === 'Trailer' && v.site === 'YouTube');
+            const officialTrailer = trailers.find(v => v.name.toLowerCase().includes('official')) || trailers[0];
+            if (officialTrailer) {
+                formattedData.trailer = `https://www.youtube.com/embed/${officialTrailer.key}`;
             }
         }
 
