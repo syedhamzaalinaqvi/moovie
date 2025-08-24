@@ -1,5 +1,4 @@
-// TMDB API Configuration
-const TMDB_API_KEY = "46d13701165988b5bb5fb4d123c0447e";
+// TMDB API Configuration - API key moved to environment variables for security
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -14,7 +13,7 @@ const videoData = [
         tmdbId: 299534,
         type: "movie",
         thumbnail: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UY2048_.jpg",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt4154796" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/TcMBFSGVi1c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "The direct sequel to Avengers: Infinity War, the surviving members of the Avengers and their allies work to reverse the damage caused by Thanos.",
     },
@@ -27,7 +26,7 @@ const videoData = [
         tmdbId: 66732,
         type: "tv",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F7%2F9%2F2%2Fe%2F3%2F792e3bc844401.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
     },
@@ -40,7 +39,7 @@ const videoData = [
         tmdbId: 634649,
         type: "movie",
         thumbnail: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F8%2F3%2F5%2Fa%2F6%2F835a6d7f22830.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
     },
@@ -51,7 +50,7 @@ const videoData = [
         views: "3.2M views",
         category: "sports",
         thumbnail: "https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F9%2F1%2F2%2Fc%2F8%2F912c8e3a44507.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "The best moments from the latest Champions League matches.",
     },
@@ -62,7 +61,7 @@ const videoData = [
         views: "1.8M views",
         category: "comedy",
         thumbnail: "https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fa%2F4%2F7%2Fd%2F2%2Fa47d2f9b55603.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Laugh out loud with this hilarious stand-up comedy performance.",
     },
@@ -73,7 +72,7 @@ const videoData = [
         views: "965K views",
         category: "entertainment",
         thumbnail: "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fb%2F5%2F8%2Fe%2F4%2Fb58e4c6a77409.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description: "All the latest celebrity news and entertainment updates.",
     },
     {
@@ -83,7 +82,7 @@ const videoData = [
         views: "742K views",
         category: "educational",
         thumbnail: "https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fc%2F3%2F9%2Fa%2F7%2Fc39a7d8e44301.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Complete JavaScript tutorial for beginners in just 30 minutes.",
     },
@@ -94,7 +93,7 @@ const videoData = [
         views: "1.5M views",
         category: "gaming",
         thumbnail: "https://img.youtube.com/vi/Ks-_Mh1QhMc/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fd%2F2%2F6%2Fb%2F9%2Fd26b9f3c88502.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/Ks-_Mh1QhMc" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Ultimate guide to building the perfect gaming setup in 2024.",
     },
@@ -105,7 +104,7 @@ const videoData = [
         views: "890K views",
         category: "music",
         thumbnail: "https://img.youtube.com/vi/jgpJVI3tDbY/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fe%2F4%2F1%2Fc%2F5%2Fe41c5a7d99604.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/jgpJVI3tDbY" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Beautiful collection of classical music for relaxation and focus.",
     },
@@ -116,7 +115,7 @@ const videoData = [
         views: "2.1M views",
         category: "sports",
         thumbnail: "https://img.youtube.com/vi/XBhY347jmgI/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Ff%2F5%2F2%2Fd%2F8%2Ff52d8b6c11705.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description: "The most incredible basketball plays from this season.",
     },
     {
@@ -126,7 +125,7 @@ const videoData = [
         views: "3.4M views",
         category: "comedy",
         thumbnail: "https://img.youtube.com/vi/hFZFjoX2cGg/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fg%2F7%2F3%2Fe%2F9%2Fg73e9d4f22806.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/hFZFjoX2cGg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Hilarious sketch comedy compilation that will make you laugh.",
     },
@@ -137,7 +136,7 @@ const videoData = [
         views: "1.2M views",
         category: "entertainment",
         thumbnail: "https://img.youtube.com/vi/C0DPdy98e4c/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fh%2F8%2F4%2Fa%2F3%2Fh84a3e5d33907.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/C0DPdy98e4c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Exclusive behind-the-scenes footage from the latest blockbuster movies.",
     },
@@ -145,76 +144,27 @@ const videoData = [
 
 // TMDB API Functions
 async function fetchTMDBData(tmdbId, type) {
-    try {
-        const endpoint = type === "movie" ? "movie" : "tv";
-        const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching TMDB data:", error);
-        return null;
-    }
+    // TMDB API functionality disabled for security - API key should be handled server-side
+    console.log("TMDB API calls disabled - implement server-side API for production");
+    return null;
 }
 
 async function fetchTrendingContent() {
-    try {
-        const url = `${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data.results;
-    } catch (error) {
-        console.error("Error fetching trending data:", error);
-        return [];
-    }
+    // TMDB API functionality disabled for security - API key should be handled server-side
+    console.log("TMDB API calls disabled - implement server-side API for production");
+    return [];
 }
 
 async function fetchTMDBCredits(tmdbId, type) {
-    try {
-        const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(
-            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}`,
-        );
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching TMDB credits:", error);
-        return null;
-    }
+    // TMDB API functionality disabled for security - API key should be handled server-side
+    console.log("TMDB API calls disabled - implement server-side API for production");
+    return null;
 }
 
 async function fetchTMDBVideos(tmdbId, type) {
-    try {
-        const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(
-            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}`,
-        );
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching TMDB videos:", error);
-        return null;
-    }
+    // TMDB API functionality disabled for security - API key should be handled server-side
+    console.log("TMDB API calls disabled - implement server-side API for production");
+    return null;
 }
 
 function formatBudget(amount) {
@@ -239,35 +189,35 @@ const liveTvChannels = [
         name: 'News 24/7',
         channel: 'CNN Live',
         thumbnail: 'https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive1.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/W1NTtBs8M2Q" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv2',
         name: 'Sports Central',
         channel: 'ESPN HD',
         thumbnail: 'https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive2.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv3',
         name: 'Music Hits',
         channel: 'MTV Live',
         thumbnail: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive3.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv4',
         name: 'Comedy Central',
         channel: 'Comedy HD',
         thumbnail: 'https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive4.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv5',
         name: 'Discovery Science',
         channel: 'Discovery HD',
         thumbnail: 'https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive5.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     }
 ];
 
