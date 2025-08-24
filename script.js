@@ -4,9 +4,9 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 // Auto-detect if backend is available, fallback to CORS proxy
-const API_BASE_URL = window.location.origin.includes('replit') ? 
-    window.location.origin + "/api/tmdb" : 
-    "https://cors-anywhere.herokuapp.com/https://api.themoviedb.org/3";
+const API_BASE_URL = window.location.origin.includes("replit")
+    ? window.location.origin + "/api/tmdb"
+    : "https://cors-anywhere.herokuapp.com/https://api.themoviedb.org/3";
 
 // Simplified Video Data - Only tmdbId and embedCode needed
 const videoData = [
@@ -24,7 +24,7 @@ const videoData = [
     },
     {
         id: 3,
-        tmdbId: 634649, // Spider-Man: No Way Home
+        tmdbId: 1061474, // Spider-Man: No Way Home
         type: "movie",
         embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
@@ -66,7 +66,7 @@ const videoData = [
     },
     {
         id: 10,
-        tmdbId: 424, // Schindler's List
+        tmdbId: 1061474,
         type: "movie",
         embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
@@ -81,76 +81,105 @@ async function fetchTMDBData(tmdbId, type) {
     if (movieCache.has(cacheKey)) {
         return movieCache.get(cacheKey);
     }
-    
+
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        
+
         // Try backend first, fallback to direct API with CORS proxy
         let response;
-        if (API_BASE_URL.includes('replit')) {
+        if (API_BASE_URL.includes("replit")) {
             // Use existing backend
-            response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`);
+            response = await fetch(
+                `${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`,
+            );
         } else {
             // Use CORS proxy for static hosting
             const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
-            response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`);
+            response = await fetch(
+                `${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`,
+            );
         }
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
+
         // Format the data to match our expected structure
         const formattedData = {
             id: data.id,
             title: data.title || data.name,
             description: data.overview,
             release_date: data.release_date || data.first_air_date,
-            release_year: (data.release_date || data.first_air_date)?.substring(0, 4) || 'Unknown',
+            release_year:
+                (data.release_date || data.first_air_date)?.substring(0, 4) ||
+                "Unknown",
             rating: data.vote_average ? data.vote_average.toFixed(1) : null,
-            runtime: data.runtime ? `${data.runtime} minutes` : (data.number_of_seasons ? `${data.number_of_seasons} seasons` : 'Unknown'),
-            genres: data.genres?.map(g => g.name) || [],
-            poster_path: data.poster_path ? `${TMDB_IMAGE_BASE_URL}${data.poster_path}` : null,
-            backdrop_path: data.backdrop_path ? `https://image.tmdb.org/t/p/w1280${data.backdrop_path}` : null,
-            status: data.status || 'Unknown',
-            tagline: data.tagline || '',
-            homepage: data.homepage || '',
-            budget: data.budget ? formatMoney(data.budget) : 'Not disclosed',
-            revenue: data.revenue ? formatMoney(data.revenue) : 'Not disclosed',
-            countries: data.production_countries?.map(c => c.name) || [],
+            runtime: data.runtime
+                ? `${data.runtime} minutes`
+                : data.number_of_seasons
+                  ? `${data.number_of_seasons} seasons`
+                  : "Unknown",
+            genres: data.genres?.map((g) => g.name) || [],
+            poster_path: data.poster_path
+                ? `${TMDB_IMAGE_BASE_URL}${data.poster_path}`
+                : null,
+            backdrop_path: data.backdrop_path
+                ? `https://image.tmdb.org/t/p/w1280${data.backdrop_path}`
+                : null,
+            status: data.status || "Unknown",
+            tagline: data.tagline || "",
+            homepage: data.homepage || "",
+            budget: data.budget ? formatMoney(data.budget) : "Not disclosed",
+            revenue: data.revenue ? formatMoney(data.revenue) : "Not disclosed",
+            countries: data.production_countries?.map((c) => c.name) || [],
             directors: [],
             writers: [],
-            creators: data.created_by?.map(c => c.name) || [],
+            creators: data.created_by?.map((c) => c.name) || [],
             cast: [],
-            trailer: null
+            trailer: null,
         };
-        
+
         // Extract crew information
         if (data.credits?.crew) {
-            formattedData.directors = data.credits.crew.filter(p => p.job === 'Director').map(p => p.name);
-            formattedData.writers = data.credits.crew.filter(p => ['Writer', 'Screenplay', 'Story'].includes(p.job)).map(p => p.name);
+            formattedData.directors = data.credits.crew
+                .filter((p) => p.job === "Director")
+                .map((p) => p.name);
+            formattedData.writers = data.credits.crew
+                .filter((p) =>
+                    ["Writer", "Screenplay", "Story"].includes(p.job),
+                )
+                .map((p) => p.name);
         }
-        
+
         // Extract cast information (top 12 for better display)
         if (data.credits?.cast) {
-            formattedData.cast = data.credits.cast.slice(0, 12).map(actor => ({
-                name: actor.name,
-                character: actor.character,
-                profile_path: actor.profile_path ? `${TMDB_IMAGE_BASE_URL}${actor.profile_path}` : null
-            }));
+            formattedData.cast = data.credits.cast
+                .slice(0, 12)
+                .map((actor) => ({
+                    name: actor.name,
+                    character: actor.character,
+                    profile_path: actor.profile_path
+                        ? `${TMDB_IMAGE_BASE_URL}${actor.profile_path}`
+                        : null,
+                }));
         }
-        
+
         // Find trailer (prioritize official trailers)
         if (data.videos?.results) {
-            const trailers = data.videos.results.filter(v => v.type === 'Trailer' && v.site === 'YouTube');
-            const officialTrailer = trailers.find(v => v.name.toLowerCase().includes('official')) || trailers[0];
+            const trailers = data.videos.results.filter(
+                (v) => v.type === "Trailer" && v.site === "YouTube",
+            );
+            const officialTrailer =
+                trailers.find((v) =>
+                    v.name.toLowerCase().includes("official"),
+                ) || trailers[0];
             if (officialTrailer) {
                 formattedData.trailer = `https://www.youtube.com/embed/${officialTrailer.key}`;
             }
         }
-        
+
         // Cache the result
         movieCache.set(cacheKey, formattedData);
         return formattedData;
@@ -163,18 +192,20 @@ async function fetchTMDBData(tmdbId, type) {
 async function fetchTrendingContent() {
     try {
         let response;
-        if (API_BASE_URL.includes('replit')) {
+        if (API_BASE_URL.includes("replit")) {
             // Use existing backend
             response = await fetch(`${API_BASE_URL}/trending/all/week`);
         } else {
             // Use CORS proxy for static hosting
-            response = await fetch(`${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`);
+            response = await fetch(
+                `${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`,
+            );
         }
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         return data.results?.slice(0, 20) || [];
     } catch (error) {
@@ -185,11 +216,11 @@ async function fetchTrendingContent() {
 
 function formatMoney(amount) {
     if (amount >= 1000000000) {
-        return `$${(amount/1000000000).toFixed(1)}B`;
+        return `$${(amount / 1000000000).toFixed(1)}B`;
     } else if (amount >= 1000000) {
-        return `$${(amount/1000000).toFixed(1)}M`;
+        return `$${(amount / 1000000).toFixed(1)}M`;
     } else if (amount >= 1000) {
-        return `$${(amount/1000).toFixed(1)}K`;
+        return `$${(amount / 1000).toFixed(1)}K`;
     } else {
         return amount > 0 ? `$${amount}` : "Not disclosed";
     }
@@ -204,40 +235,40 @@ function formatRuntime(minutes) {
 // Live TV Data
 const liveTvChannels = [
     {
-        id: 'tv1',
-        name: 'News 24/7',
-        channel: 'CNN Live',
-        thumbnail: 'https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg',
-        embedCode: `<iframe src="https://www.youtube.com/embed/W1NTtBs8M2Q" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+        id: "tv1",
+        name: "News 24/7",
+        channel: "CNN Live",
+        thumbnail: "https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg",
+        embedCode: `<iframe src="https://www.youtube.com/embed/W1NTtBs8M2Q" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
     {
-        id: 'tv2',
-        name: 'Sports Central',
-        channel: 'ESPN HD',
-        thumbnail: 'https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg',
-        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+        id: "tv2",
+        name: "Sports Central",
+        channel: "ESPN HD",
+        thumbnail: "https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg",
+        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
     {
-        id: 'tv3',
-        name: 'Music Hits',
-        channel: 'MTV Live',
-        thumbnail: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+        id: "tv3",
+        name: "Music Hits",
+        channel: "MTV Live",
+        thumbnail: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg",
+        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
     {
-        id: 'tv4',
-        name: 'Comedy Central',
-        channel: 'Comedy HD',
-        thumbnail: 'https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg',
-        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+        id: "tv4",
+        name: "Comedy Central",
+        channel: "Comedy HD",
+        thumbnail: "https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg",
+        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
     {
-        id: 'tv5',
-        name: 'Discovery Science',
-        channel: 'Discovery HD',
-        thumbnail: 'https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg',
-        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
-    }
+        id: "tv5",
+        name: "Discovery Science",
+        channel: "Discovery HD",
+        thumbnail: "https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg",
+        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+    },
 ];
 
 // Global variables for loaded movies
@@ -283,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Load movies with TMDB data
 async function loadMoviesWithTMDBData() {
     loadedMovies = [];
-    
+
     for (const video of videoData) {
         try {
             const tmdbData = await fetchTMDBData(video.tmdbId, video.type);
@@ -293,10 +324,10 @@ async function loadMoviesWithTMDBData() {
                     title: tmdbData.title,
                     duration: tmdbData.runtime,
                     views: `${tmdbData.rating}★ TMDB`,
-                    category: tmdbData.genres[0]?.toLowerCase() || 'drama',
+                    category: tmdbData.genres[0]?.toLowerCase() || "drama",
                     thumbnail: tmdbData.poster_path,
                     description: tmdbData.description,
-                    tmdbData: tmdbData
+                    tmdbData: tmdbData,
                 };
                 loadedMovies.push(movieWithData);
             } else {
@@ -304,18 +335,19 @@ async function loadMoviesWithTMDBData() {
                 loadedMovies.push({
                     ...video,
                     title: `Movie ${video.id}`,
-                    duration: 'Unknown',
-                    views: 'Loading...',
-                    category: 'unknown',
-                    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==',
-                    description: 'Failed to load movie details'
+                    duration: "Unknown",
+                    views: "Loading...",
+                    category: "unknown",
+                    thumbnail:
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                    description: "Failed to load movie details",
                 });
             }
         } catch (error) {
             console.error(`Error loading movie ${video.id}:`, error);
         }
     }
-    
+
     filteredVideos = [...loadedMovies];
     renderVideos();
 }
@@ -463,7 +495,7 @@ async function openVideoModal(video) {
         modalViews.textContent = `⭐ ${movieData.rating}`;
         modalCategory.textContent = movieData.genres.join(", ");
         modalDescription.textContent = movieData.description;
-        
+
         // Update basic meta info
         const modalYear = document.getElementById("modalYear");
         const modalStatus = document.getElementById("modalStatus");
@@ -471,7 +503,9 @@ async function openVideoModal(video) {
 
         modalYear.textContent = movieData.release_year || "Unknown";
         modalStatus.textContent = movieData.status || "";
-        modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
+        modalRating.textContent = movieData.rating
+            ? `⭐ ${movieData.rating}`
+            : "";
 
         displayTMDBDetails(movieData, video.type);
     } else {
@@ -538,27 +572,37 @@ function displayTMDBDetails(movieData, type) {
             </div>
         </div>
         
-        ${movieData.cast && movieData.cast.length > 0 ? `
+        ${
+            movieData.cast && movieData.cast.length > 0
+                ? `
         <div class="cast-section">
             <h4>🎭 Cast & Characters</h4>
             <div class="cast-grid">
-                ${movieData.cast.map(actor => `
+                ${movieData.cast
+                    .map(
+                        (actor) => `
                     <div class="cast-member">
                         <img 
                             class="cast-photo" 
-                            src="${actor.profile_path || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='}" 
+                            src="${actor.profile_path || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
                             alt="${actor.name}"
                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
                         >
                         <div class="cast-name">${actor.name}</div>
                         <div class="cast-character">${actor.character}</div>
                     </div>
-                `).join("")}
+                `,
+                    )
+                    .join("")}
             </div>
         </div>
-        ` : ""}
+        `
+                : ""
+        }
         
-        ${movieData.trailer ? `
+        ${
+            movieData.trailer
+                ? `
         <div class="trailer-section">
             <h4>🎬 Official Trailer</h4>
             <div class="trailer-player">
@@ -572,13 +616,19 @@ function displayTMDBDetails(movieData, type) {
                 </iframe>
             </div>
         </div>
-        ` : ""}
+        `
+                : ""
+        }
         
-        ${movieData.tagline ? `
+        ${
+            movieData.tagline
+                ? `
         <div class="movie-tagline">
             <em>"${movieData.tagline}"</em>
         </div>
-        ` : ""}
+        `
+                : ""
+        }
     `;
 }
 
@@ -619,8 +669,8 @@ function handleLogin(e) {
         submitBtn.textContent = originalText;
 
         // Show success message
-        const notification = document.createElement('div');
-        notification.className = 'download-notification show';
+        const notification = document.createElement("div");
+        notification.className = "download-notification show";
         notification.innerHTML = `
             <div class="notification-content">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -687,8 +737,8 @@ function handleViewToggle(e) {
 // Download Movie Function
 function downloadMovie(title, year, movieId) {
     // Show download notification
-    const notification = document.createElement('div');
-    notification.className = 'download-notification show';
+    const notification = document.createElement("div");
+    notification.className = "download-notification show";
     notification.innerHTML = `
         <div class="notification-content">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -703,21 +753,21 @@ function downloadMovie(title, year, movieId) {
 
     // Remove notification after 3 seconds
     setTimeout(() => {
-        notification.classList.remove('show');
+        notification.classList.remove("show");
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
 // Load Live TV Slider
 async function loadLiveTvSlider() {
-    const liveTvGrid = document.querySelector('.live-tv-grid');
+    const liveTvGrid = document.querySelector(".live-tv-grid");
     if (!liveTvGrid) return;
 
-    liveTvGrid.innerHTML = '';
-    
-    liveTvChannels.forEach(channel => {
-        const channelCard = document.createElement('div');
-        channelCard.className = 'live-tv-card';
+    liveTvGrid.innerHTML = "";
+
+    liveTvChannels.forEach((channel) => {
+        const channelCard = document.createElement("div");
+        channelCard.className = "live-tv-card";
         channelCard.innerHTML = `
             <div class="live-tv-thumbnail">
                 <img src="${channel.thumbnail}" alt="${channel.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxpdmUgVFY8L3RleHQ+PC9zdmc+'">
@@ -731,29 +781,30 @@ async function loadLiveTvSlider() {
                 <p>${channel.channel}</p>
             </div>
         `;
-        
-        channelCard.addEventListener('click', () => openLiveTvModal(channel));
+
+        channelCard.addEventListener("click", () => openLiveTvModal(channel));
         liveTvGrid.appendChild(channelCard);
     });
 }
 
 // Load Trending Slider
 async function loadTrendingSlider() {
-    const trendingGrid = document.querySelector('.trending-grid');
+    const trendingGrid = document.querySelector(".trending-grid");
     if (!trendingGrid) return;
 
-    trendingGrid.innerHTML = '<div style="text-align: center; color: var(--text-secondary);">Loading trending content...</div>';
-    
+    trendingGrid.innerHTML =
+        '<div style="text-align: center; color: var(--text-secondary);">Loading trending content...</div>';
+
     try {
         const trendingContent = await fetchTrendingContent();
-        trendingGrid.innerHTML = '';
-        
-        trendingContent.slice(0, 10).forEach(item => {
-            const trendingCard = document.createElement('div');
-            trendingCard.className = 'trending-card';
+        trendingGrid.innerHTML = "";
+
+        trendingContent.slice(0, 10).forEach((item) => {
+            const trendingCard = document.createElement("div");
+            trendingCard.className = "trending-card";
             trendingCard.innerHTML = `
                 <div class="trending-thumbnail">
-                    <img src="${item.poster_path ? TMDB_IMAGE_BASE_URL + item.poster_path : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='}" alt="${item.title || item.name}">
+                    <img src="${item.poster_path ? TMDB_IMAGE_BASE_URL + item.poster_path : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=="}" alt="${item.title || item.name}">
                     <div class="trending-rank">#${trendingContent.indexOf(item) + 1}</div>
                 </div>
                 <div class="trending-info">
@@ -761,43 +812,45 @@ async function loadTrendingSlider() {
                     <p>⭐ ${item.vote_average.toFixed(1)}</p>
                 </div>
             `;
-            
-            trendingCard.addEventListener('click', () => {
+
+            trendingCard.addEventListener("click", () => {
                 // Create a temporary video object for trending content
                 const trendingVideo = {
                     id: `trending_${item.id}`,
                     tmdbId: item.id,
                     type: item.media_type,
-                    embedCode: '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Trailer not available for trending content</div>'
+                    embedCode:
+                        '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Trailer not available for trending content</div>',
                 };
                 openVideoModal(trendingVideo);
             });
-            
+
             trendingGrid.appendChild(trendingCard);
         });
     } catch (error) {
-        console.error('Error loading trending content:', error);
-        trendingGrid.innerHTML = '<div style="text-align: center; color: var(--text-secondary);">Failed to load trending content</div>';
+        console.error("Error loading trending content:", error);
+        trendingGrid.innerHTML =
+            '<div style="text-align: center; color: var(--text-secondary);">Failed to load trending content</div>';
     }
 }
 
 // Open Live TV Modal
 function openLiveTvModal(channel) {
-    const modalVideo = document.querySelector('.modal-video');
+    const modalVideo = document.querySelector(".modal-video");
     modalVideo.innerHTML = channel.embedCode;
 
     modalTitle.textContent = channel.name;
-    modalDuration.textContent = 'LIVE';
-    modalViews.textContent = 'Live TV';
+    modalDuration.textContent = "LIVE";
+    modalViews.textContent = "Live TV";
     modalCategory.textContent = channel.channel;
     modalDescription.textContent = `Watch ${channel.name} live streaming 24/7.`;
 
     // Hide TMDB details for live TV
-    const tmdbDetails = document.getElementById('tmdbDetails');
-    tmdbDetails.style.display = 'none';
+    const tmdbDetails = document.getElementById("tmdbDetails");
+    tmdbDetails.style.display = "none";
 
-    videoModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    videoModal.classList.add("active");
+    document.body.style.overflow = "hidden";
 }
 
-console.log('H-TV Video Streaming Platform initialized successfully!');
+console.log("H-TV Video Streaming Platform initialized successfully!");
