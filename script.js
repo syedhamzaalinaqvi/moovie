@@ -27,7 +27,7 @@ const videoData = [
         tmdbId: 66732,
         type: "tv",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F7%2F9%2F2%2Fe%2F3%2F792e3bc844401.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src='' allowfullscreen width='640' height='360' frameborder='0'></iframe>`,
         description:
             "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
     },
