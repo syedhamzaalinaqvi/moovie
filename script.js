@@ -77,54 +77,83 @@ const movieCache = new Map();
 async function fetchTMDBData(tmdbId, type) {
     const cacheKey = `${type}_${tmdbId}`;
     if (movieCache.has(cacheKey)) {
+        console.log('Using cached data for:', cacheKey);
         return movieCache.get(cacheKey);
     }
 
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
+        console.log(`Fetching TMDB data for ${endpoint} ID:`, tmdbId);
 
         // Fetch both movie details and videos in parallel
-        const [detailsResponse, creditsResponse, videosResponse] = await Promise.all([
-            fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&language=en-US`),
-            fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}&language=en-US`),
-            fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}&language=en-US`)
+        const urls = [
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&language=en-US`,
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}&language=en-US`,
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
+        ];
+
+        console.log('API URLs:', urls);
+
+        // Add error handling for each fetch
+        const fetchWithTimeout = (url, options = {}) => {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Request timeout')), 10000)
+                )
+            ]);
+        };
+
+        const [detailsResponse, creditsResponse, videosResponse] = await Promise.allSettled([
+            fetchWithTimeout(urls[0]),
+            fetchWithTimeout(urls[1]),
+            fetchWithTimeout(urls[2])
         ]);
 
-        if (!detailsResponse.ok || !creditsResponse.ok || !videosResponse.ok) {
-            throw new Error(`Failed to fetch TMDB data: ${detailsResponse.status} ${creditsResponse.status} ${videosResponse.status}`);
-        }
+        // Process responses
+        const processResponse = (response) => {
+            if (response.status === 'fulfilled' && response.value.ok) {
+                return response.value.json();
+            }
+            console.warn('Failed to fetch data:', response.reason || response.value?.statusText);
+            return null;
+        };
 
         const [details, credits, videos] = await Promise.all([
-            detailsResponse.json(),
-            creditsResponse.json(),
-            videosResponse.json()
+            processResponse(detailsResponse),
+            processResponse(creditsResponse),
+            processResponse(videosResponse)
         ]);
+
+        if (!details) {
+            throw new Error('Failed to fetch required movie details');
+        }
 
         // Format the data to match our expected structure
         const formattedData = {
             id: details.id,
-            title: details.title || details.name,
-            description: details.overview,
-            release_date: details.release_date || details.first_air_date,
-            release_year: (details.release_date || details.first_air_date)?.substring(0, 4) || "Unknown",
-            rating: details.vote_average ? details.vote_average.toFixed(1) : null,
+            title: details.title || details.name || 'Unknown Title',
+            description: details.overview || 'No description available',
+            release_date: details.release_date || details.first_air_date || '',
+            release_year: (details.release_date || details.first_air_date)?.substring(0, 4) || 'Unknown',
+            rating: details.vote_average ? details.vote_average.toFixed(1) : 'N/A',
             runtime: details.runtime 
                 ? `${details.runtime} minutes` 
                 : details.number_of_seasons 
-                    ? `${details.number_of_seasons} seasons` 
-                    : "Unknown",
+                    ? `${details.number_of_seasons} season${details.number_of_seasons > 1 ? 's' : ''}` 
+                    : 'Unknown',
             genres: details.genres?.map((g) => g.name) || [],
             poster_path: details.poster_path
-                ? `${TMDB_IMAGE_BASE_URL}${details.poster_path}`
+                ? `https://image.tmdb.org/t/p/w500${details.poster_path}`
                 : null,
             backdrop_path: details.backdrop_path
                 ? `https://image.tmdb.org/t/p/w1280${details.backdrop_path}`
                 : null,
-            status: details.status || "Unknown",
-            tagline: details.tagline || "",
-            homepage: details.homepage || "",
-            budget: details.budget ? formatMoney(details.budget) : "Not disclosed",
-            revenue: details.revenue ? formatMoney(details.revenue) : "Not disclosed",
+            status: details.status || 'Unknown',
+            tagline: details.tagline || '',
+            homepage: details.homepage || '',
+            budget: details.budget ? formatMoney(details.budget) : 'Not disclosed',
+            revenue: details.revenue ? formatMoney(details.revenue) : 'Not disclosed',
             countries: details.production_countries?.map((c) => c.name) || [],
             directors: [],
             writers: [],
@@ -133,56 +162,58 @@ async function fetchTMDBData(tmdbId, type) {
             trailer: null,
         };
 
-        // Extract crew information from credits
-        if (credits.crew) {
+        // Extract crew information from credits if available
+        if (credits?.crew) {
             formattedData.directors = credits.crew
-                .filter((p) => p.job === "Director")
-                .map((p) => p.name);
+                .filter((p) => p.job === 'Director')
+                .map((p) => p.name)
+                .filter(Boolean);
+                
             formattedData.writers = credits.crew
-                .filter((p) => ["Writer", "Screenplay", "Story"].includes(p.job))
-                .map((p) => p.name);
+                .filter((p) => ['Writer', 'Screenplay', 'Story'].includes(p.job))
+                .map((p) => p.name)
+                .filter(Boolean);
         }
 
         // Extract cast information (top 12 for better display)
-        if (credits.cast) {
+        if (credits?.cast) {
             formattedData.cast = credits.cast
                 .slice(0, 12)
                 .map((actor) => ({
-                    name: actor.name,
+                    name: actor.name || 'Unknown',
                     character: actor.character || 'N/A',
                     profile_path: actor.profile_path
-                        ? `${TMDB_IMAGE_BASE_URL}${actor.profile_path}`
+                        ? `https://image.tmdb.org/t/w200${actor.profile_path}`
                         : null,
                 }));
         }
 
         // Find trailer (prioritize official trailers)
-        if (videos.results) {
+        if (videos?.results) {
             const trailers = videos.results.filter(
-                (v) => v.type === "Trailer" && v.site === "YouTube"
+                (v) => v.type === 'Trailer' && v.site === 'YouTube' && v.key
             );
             
-            // First try to find an official trailer
-            let officialTrailer = trailers.find(v => 
-                v.name.toLowerCase().includes("official trailer") ||
-                v.name.toLowerCase().includes("official teaser")
-            );
-            
-            // If no official trailer, try to find any trailer
-            if (!officialTrailer && trailers.length > 0) {
-                officialTrailer = trailers[0];
-            }
-            
-            if (officialTrailer) {
-                formattedData.trailer = `https://www.youtube.com/embed/${officialTrailer.key}`;
+            if (trailers.length > 0) {
+                // First try to find an official trailer
+                let trailer = trailers.find(v => 
+                    v.name.toLowerCase().includes('official trailer') ||
+                    v.name.toLowerCase().includes('official teaser')
+                ) || trailers[0]; // Fallback to first trailer
+                
+                if (trailer) {
+                    formattedData.trailer = `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`;
+                }
             }
         }
 
+        console.log('Formatted TMDB data:', formattedData);
+        
         // Cache the result
         movieCache.set(cacheKey, formattedData);
         return formattedData;
     } catch (error) {
-        console.error("Error fetching movie data:", error);
+        console.error('Error in fetchTMDBData:', error);
         return null;
     }
 }
@@ -480,86 +511,191 @@ function filterVideos() {
 
 // Open Video Modal
 async function openVideoModal(video) {
+    console.log('Opening video modal for:', video);
+    
     // Clear previous content and add the complete iframe
     modalPlayer.style.display = "none";
     const modalVideo = document.querySelector(".modal-video");
-    modalVideo.innerHTML = video.embedCode;
-
-    // Try to get TMDB data if not already available
-    let movieData = video.tmdbData;
     
-    // If no TMDB data but we have a TMDB ID, try to fetch it
-    if (!movieData && video.tmdbId) {
-        try {
-            movieData = await fetchTMDBData(video.tmdbId, video.type);
+    // Set a loading state
+    modalVideo.innerHTML = `
+        <div class="loading-container" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <div class="spinner"></div>
+            <p>Loading content...</p>
+        </div>`;
+
+    try {
+        // Try to get TMDB data if not already available
+        let movieData = video.tmdbData;
+        
+        // If no TMDB data but we have a TMDB ID, try to fetch it
+        if ((!movieData || Object.keys(movieData).length === 0) && video.tmdbId) {
+            console.log('Fetching TMDB data for ID:', video.tmdbId, 'Type:', video.type);
+            movieData = await fetchTMDBData(video.tmdbId, video.type || 'movie');
             // Store the fetched data for future use
             video.tmdbData = movieData;
-        } catch (error) {
-            console.error("Error fetching TMDB data:", error);
         }
-    }
 
-    if (movieData) {
         // Update the video object with the latest data
-        video.title = movieData.title || video.title;
-        video.duration = movieData.runtime || video.duration;
-        video.views = `⭐ ${movieData.rating || 'N/A'}`;
-        video.category = (movieData.genres && movieData.genres[0]?.toLowerCase()) || video.category || 'drama';
-        video.description = movieData.description || video.description;
+        if (movieData) {
+            console.log('TMDB Data loaded:', movieData);
+            
+            // Update video properties with TMDB data
+            video.title = movieData.title || video.title;
+            video.duration = movieData.runtime || video.duration;
+            video.views = `⭐ ${movieData.rating || 'N/A'}`;
+            video.category = (movieData.genres && movieData.genres[0]?.toLowerCase()) || video.category || 'drama';
+            video.description = movieData.overview || movieData.description || video.description;
+            
+            // Set the embed code if we have a trailer
+            if (movieData.trailer && !video.embedCode) {
+                video.embedCode = `
+                    <div class="aspect-ratio" style="padding-bottom: 56.25%;">
+                        <iframe 
+                            src="${movieData.trailer}"
+                            title="${movieData.title || video.title} Trailer"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>`;
+            }
+            
+            // Fallback if no trailer
+            if (!video.embedCode) {
+                video.embedCode = `
+                    <div style="text-align: center; padding: 50px; color: var(--text-secondary);">
+                        <p>No trailer available for this content</p>
+                    </div>`;
+            }
+        } else {
+            console.warn('No TMDB data available for video:', video);
+            if (!video.embedCode) {
+                video.embedCode = `
+                    <div style="text-align: center; padding: 50px; color: var(--text-secondary);">
+                        <p>No preview available</p>
+                    </div>`;
+            }
+        }
+        
+        // Update modal content with the embed code
+        modalVideo.innerHTML = video.embedCode;
 
-        // Update modal UI with TMDB data
-        modalTitle.textContent = movieData.title || video.title;
-        modalDuration.textContent = movieData.runtime || video.duration || "Unknown";
-        modalViews.textContent = movieData.rating ? `⭐ ${movieData.rating}` : (video.views || "");
-        modalCategory.textContent = movieData.genres ? movieData.genres.join(", ") : (video.category || "");
-        modalDescription.textContent = movieData.description || video.description || "";
+        // Update modal UI with video data
+        modalTitle.textContent = video.title || "";
+        modalDuration.textContent = video.duration || "Unknown";
+        modalViews.textContent = video.views || "";
+        modalCategory.textContent = video.category || "";
+        modalDescription.textContent = video.description || "";
 
-        // Update basic meta info
-        const modalYear = document.getElementById("modalYear");
-        const modalStatus = document.getElementById("modalStatus");
-        const modalRating = document.getElementById("modalRating");
+        // Update basic meta info if we have TMDB data
+        if (movieData) {
+            const modalYear = document.getElementById("modalYear");
+            const modalStatus = document.getElementById("modalStatus");
+            const modalRating = document.getElementById("modalRating");
 
-        if (modalYear) modalYear.textContent = movieData.release_year || "Unknown";
-        if (modalStatus) modalStatus.textContent = movieData.status || "";
-        if (modalRating) modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
+            if (modalYear) modalYear.textContent = movieData.release_year || "Unknown";
+            if (modalStatus) modalStatus.textContent = movieData.status || "";
+            if (modalRating) modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
-        // Display the TMDB details section
-        displayTMDBDetails(movieData, video.type || 'movie');
-    } else {
+            // Display the TMDB details section
+            displayTMDBDetails(movieData, video.type || 'movie');
+        } else {
+            // Hide or clear TMDB details section if no data
+            const tmdbDetails = document.getElementById("tmdbDetails");
+            if (tmdbDetails) tmdbDetails.innerHTML = '';
+        }
+        
+    } catch (error) {
+        console.error('Error in openVideoModal:', error);
+        
+        // Show error message to user
+        modalVideo.innerHTML = `
+            <div style="text-align: center; padding: 50px; color: var(--error-color);">
+                <p>Failed to load content. Please try again later.</p>
+                <button onclick="openVideoModal(${JSON.stringify(video).replace(/"/g, '&quot;')})" 
+                        style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); border: none; border-radius: 4px; color: white; cursor: pointer;">
+                    Retry
+                </button>
+            </div>`;
+            
         // Fallback to basic video data
         modalTitle.textContent = video.title || "";
         modalDuration.textContent = video.duration || "Unknown";
         modalViews.textContent = video.views || "";
         modalCategory.textContent = video.category || "";
         modalDescription.textContent = video.description || "";
-        
-        // Hide or clear TMDB details section if no data
-        const tmdbDetails = document.getElementById("tmdbDetails");
-        if (tmdbDetails) tmdbDetails.innerHTML = '';
     }
 
+    // Show the modal
     videoModal.classList.add("active");
     document.body.style.overflow = "hidden";
 }
 
 // Display TMDB Details
 function displayTMDBDetails(movieData, type) {
+    console.log('Displaying TMDB details for:', movieData.title || 'Unknown');
+    
     const tmdbDetails = document.getElementById("tmdbDetails");
+    if (!tmdbDetails) {
+        console.error('TMDB details container not found');
+        return;
+    }
     
-    // Create a safe string for title to prevent XSS
-    const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;') : '';
-    const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
+    try {
+        // Create safe strings to prevent XSS
+        const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;').replace(/'/g, '&apos;') : 'Unknown Title';
+        const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
+        const safeDescription = movieData.overview ? movieData.overview.replace(/[\"\']/g, '') : 'No description available';
+        
+        // Create cast section
+        let castHTML = createCastSection(movieData);
+        
+        // Create trailer section
+        let trailerHTML = createTrailerSection(movieData);
+        
+        // Create movie stats
+        let statsHTML = createMovieStats(movieData, type);
+        
+        // Combine all sections
+        const htmlContent = `
+            <div class="movie-info-header">
+                <h2>${safeTitle} <span class="release-year">(${safeReleaseYear})</span></h2>
+                <p class="movie-description">${safeDescription}</p>
+            </div>
+            ${statsHTML}
+            ${castHTML}
+            ${trailerHTML}
+            ${movieData.tagline ? `<div class="movie-tagline"><em>"${movieData.tagline}"</em></div>` : ''}
+        `;
+        
+        tmdbDetails.innerHTML = htmlContent;
+        
+    } catch (error) {
+        console.error('Error displaying TMDB details:', error);
+        tmdbDetails.innerHTML = '<div class="error-message">Error loading details. Please try again later.</div>';
+    }
+}
+
+// Helper function to create cast section
+function createCastSection(movieData) {
+    if (!movieData.cast || !Array.isArray(movieData.cast)) {
+        console.log('No cast information available');
+        return '';
+    }
     
-    // Create HTML for cast section
-    let castHTML = '';
-    if (movieData.cast && movieData.cast.length > 0) {
-        const castItems = movieData.cast.map(actor => {
-            const safeName = actor.name ? actor.name.replace(/"/g, '&quot;') : 'N/A';
-            const safeCharacter = actor.character ? actor.character.replace(/"/g, '&quot;') : 'N/A';
-            const profileImage = actor.profile_path || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';
+    const castItems = movieData.cast
+        .filter(actor => actor && (actor.name || actor.character))
+        .slice(0, 12) // Limit to first 12 cast members
+        .map(actor => {
+            const safeName = actor.name ? actor.name.replace(/[\"\']/g, '') : 'Unknown';
+            const safeCharacter = actor.character ? actor.character.replace(/[\"\']/g, '') : 'N/A';
+            const profileImage = actor.profile_path 
+                ? `https://image.tmdb.org/t/w200${actor.profile_path}`
+                : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';
             
             return `
-                <div class="cast-member" title="${safeName} as ${safeCharacter}">
+                <div class="cast-member">
                     <div class="cast-photo-container">
                         <img 
                             class="cast-photo" 
@@ -567,107 +703,133 @@ function displayTMDBDetails(movieData, type) {
                             alt="${safeName}"
                             onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';"
                             loading="lazy"
-                        >
+                            title="${safeName} as ${safeCharacter}">
                     </div>
                     <div class="cast-info">
                         <div class="cast-name" title="${safeName}">${safeName}</div>
                         <div class="cast-character" title="${safeCharacter}">${safeCharacter}</div>
                     </div>
                 </div>`;
-        }).join('');
-        
-        castHTML = `
-            <div class="cast-section">
-                <h3 class="section-title">🎭 Cast & Characters</h3>
-                <div class="cast-grid">${castItems}</div>
-            </div>`;
+        });
+    
+    if (castItems.length === 0) {
+        console.log('No valid cast members to display');
+        return '';
     }
     
-    // Create HTML for trailer section
-    let trailerHTML = '';
-    if (movieData.trailer) {
-        trailerHTML = `
-            <div class="trailer-section">
-                <h3 class="section-title">🎬 Official Trailer</h3>
-                <div class="trailer-container">
-                    <div class="trailer-player">
-                        <div class="aspect-ratio">
-                            <iframe 
-                                src="${movieData.trailer}"
-                                title="${safeTitle} Official Trailer"
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen
-                                loading="lazy">
-                            </iframe>
-                        </div>
-                    </div>
-                    <p class="trailer-note">Watch the official trailer for ${safeTitle}${safeReleaseYear ? ` (${safeReleaseYear})` : ''}</p>
-                </div>
-            </div>`;
-    }
-    
-    // Create the final HTML
-    tmdbDetails.innerHTML = `
-        <div class="movie-info-header">
-            <div class="download-section">
-                <button class="download-btn" onclick="downloadMovie('${safeTitle}', '${safeReleaseYear}', '${movieData.id || ''}')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7,10 12,15 17,10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                    </svg>
-                    Download Movie
-                </button>
+    return `
+        <div class="cast-section">
+            <h3 class="section-title">🎭 Cast & Characters</h3>
+            <div class="cast-grid">
+                ${castItems.join('')}
             </div>
-        </div>
+        </div>`;
+}
 
+// Helper function to create movie stats section
+function createMovieStats(movieData, type) {
+    const stats = [];
+    
+    // Runtime
+    if (movieData.runtime) {
+        const hours = Math.floor(movieData.runtime / 60);
+        const minutes = movieData.runtime % 60;
+        stats.push(`<div class="stat-item"><span class="stat-label">⏱️ Runtime:</span> ${hours}h ${minutes}m</div>`);
+    }
+    
+    // Rating
+    if (movieData.vote_average) {
+        stats.push(`<div class="stat-item"><span class="stat-label">⭐ Rating:</span> ${movieData.vote_average.toFixed(1)}/10</div>`);
+    }
+    
+    // Status
+    if (movieData.status) {
+        stats.push(`<div class="stat-item"><span class="stat-label">📊 Status:</span> ${movieData.status}</div>`);
+    }
+    
+    // Release Date
+    if (movieData.release_date) {
+        const releaseDate = new Date(movieData.release_date);
+        stats.push(`<div class="stat-item"><span class="stat-label">📅 Release Date:</span> ${releaseDate.toLocaleDateString()}</div>`);
+    }
+    
+    // Genres
+    if (movieData.genres && movieData.genres.length > 0) {
+        const genres = movieData.genres.map(g => g.name).join(', ');
+        stats.push(`<div class="stat-item"><span class="stat-label">🎭 Genres:</span> ${genres}</div>`);
+    }
+    
+    // Budget (for movies)
+    if (type === 'movie' && movieData.budget && movieData.budget > 0) {
+        stats.push(`<div class="stat-item"><span class="stat-label">💰 Budget:</span> $${movieData.budget.toLocaleString()}</div>`);
+    }
+    
+    // Revenue (for movies)
+    if (type === 'movie' && movieData.revenue && movieData.revenue > 0) {
+        stats.push(`<div class="stat-item"><span class="stat-label">💵 Revenue:</span> $${movieData.revenue.toLocaleString()}</div>`);
+    }
+    
+    // Production Companies
+    if (movieData.production_companies && movieData.production_companies.length > 0) {
+        const companies = movieData.production_companies.map(c => c.name).join(', ');
+        stats.push(`<div class="stat-item"><span class="stat-label">🏢 Production:</span> ${companies}</div>`);
+    }
+    
+    if (stats.length === 0) {
+        return '';
+    }
+    
+    return `
         <div class="movie-stats">
-            <div class="stat-item">
-                <label>Release Year:</label>
-                <span>${safeReleaseYear || "Unknown"}</span>
+            <h3 class="section-title">📊 Details</h3>
+            <div class="stats-grid">
+                ${stats.join('')}
             </div>
-            <div class="stat-item">
-                <label>Runtime:</label>
-                <span>${movieData.runtime || "Unknown"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Budget:</label>
-                <span>${movieData.budget || "Not disclosed"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Revenue:</label>
-                <span>${movieData.revenue || "Not disclosed"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Director:</label>
-                <span>${(movieData.directors && movieData.directors.length > 0) ? movieData.directors.join(", ") : 
-                           (movieData.creators && movieData.creators.length > 0) ? movieData.creators.join(", ") : "Unknown"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Writers:</label>
-                <span>${(movieData.writers && movieData.writers.length > 0) ? movieData.writers.join(", ") : "Unknown"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Countries:</label>
-                <span>${(movieData.countries && movieData.countries.length > 0) ? movieData.countries.join(", ") : "Unknown"}</span>
-            </div>
-            <div class="stat-item">
-                <label>Genres:</label>
-                <span>${(movieData.genres && movieData.genres.length > 0) ? movieData.genres.join(", ") : "Unknown"}</span>
-            </div>
-        </div>
+        </div>`;
+}
+
+// Helper function to create trailer section
+function createTrailerSection(movieData) {
+    if (!movieData.trailer) {
+        console.log('No trailer available');
+        return '';
+    }
+    
+    try {
+        // Extract video ID from YouTube URL
+        const videoId = movieData.trailer.includes('youtube.com') 
+            ? new URL(movieData.trailer).searchParams.get('v')
+            : movieData.trailer.split('/').pop();
+            
+        if (!videoId) {
+            console.error('Could not extract video ID from trailer URL:', movieData.trailer);
+            return '';
+        }
         
-        ${castHTML}
-        ${trailerHTML}
-        ${
-            movieData.tagline
-                ? `
-        <div class="movie-tagline">
-            <em>"${movieData.tagline}"</em>
-        </div>`
-                : ''
-        }`;
+        // Create safe title for the trailer note
+        const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;').replace(/'/g, '&apos;') : 'this content';
+        const safeReleaseYear = movieData.release_date ? new Date(movieData.release_date).getFullYear() : '';
+        
+        return `
+            <div class="trailer-section">
+                <h3 class="section-title">🎬 Trailer</h3>
+                <div class="video-container">
+                    <iframe 
+                        width="560" 
+                        height="315" 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        loading="lazy"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p class="trailer-note">Watch the official trailer for ${safeTitle}${safeReleaseYear ? ` (${safeReleaseYear})` : ''}</p>
+            </div>`;
+    } catch (error) {
+        console.error('Error creating trailer section:', error);
+        return '';
+    }
 }
 
 // Close Video Modal
