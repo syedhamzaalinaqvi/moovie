@@ -12,9 +12,9 @@ const API_BASE_URL = window.location.origin.includes("replit")
 const videoData = [
     {
         id: 1,
-        tmdbId: 299534, // Avengers: Endgame
+        tmdbId: 1061474, // Updated to use the requested movie ID
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/TcMBFSGVi1c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
     {
         id: 2,
@@ -94,10 +94,8 @@ async function fetchTMDBData(tmdbId, type) {
             );
         } else {
             // Use CORS proxy for static hosting
-            const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
-            response = await fetch(
-                `${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`,
-            );
+            const url = `${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
+            response = await fetch(url);
         }
 
         if (!response.ok) {
