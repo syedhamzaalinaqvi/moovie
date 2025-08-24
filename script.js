@@ -18,7 +18,7 @@ const videoData = [
         id: 2,
         tmdbId: 1510251, //Murderbaad
         type: "movie",
-        embedCode: `<iframe id="pjsfrrsplayer-f03a7b29827a4bef70f99554177387fb" scrolling="no" title="pjsfrrsplayer-f03a7b29827a4bef70f99554177387fb" allowfullscreen="true" allowtransparency="true" allow-scripts="true" style="position: absolute; width: 100%; height: 100%; border: 0px; pointer-events: none;"></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt37392885" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 3,
@@ -30,7 +30,7 @@ const videoData = [
         id: 4,
         tmdbId: 911430, // F1
         type: "movie",
-        embedCode: `<iframe id="pjsfrrsplayer-d68c60140582b6802ce0c0423e244230" scrolling="no" title="pjsfrrsplayer-d68c60140582b6802ce0c0423e244230" allowfullscreen="true" allowtransparency="true" allow-scripts="true" style="position: absolute; width: 100%; height: 100%; border: 0px; pointer-events: none;"></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 5,
@@ -40,9 +40,9 @@ const videoData = [
     },
     {
         id: 6,
-        tmdbId: 27205, // Inception
+        tmdbId: 110492, // Peacemaker
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 7,
