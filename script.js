@@ -1,12 +1,10 @@
-// TMDB API Configuration - Works both with backend and pure frontend
+// TMDB API Configuration - Pure frontend implementation
 const TMDB_API_KEY = "46d13701165988b5bb5fb4d123c0447e";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-// Auto-detect if backend is available, fallback to CORS proxy
-const API_BASE_URL = window.location.origin.includes("replit")
-    ? window.location.origin + "/api/tmdb"
-    : "https://cors-anywhere.herokuapp.com/https://api.themoviedb.org/3";
+// Use direct TMDB API with API key
+const API_BASE_URL = TMDB_BASE_URL;
 
 // Simplified Video Data - Only tmdbId and embedCode needed
 const videoData = [
@@ -85,18 +83,15 @@ async function fetchTMDBData(tmdbId, type) {
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
 
-        // Try backend first, fallback to direct API with CORS proxy
-        let response;
-        if (API_BASE_URL.includes("replit")) {
-            // Use existing backend
-            response = await fetch(
-                `${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`,
-            );
-        } else {
-            // Use CORS proxy for static hosting
-            const url = `${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
-            response = await fetch(url);
-        }
+        // Use direct TMDB API with API key
+        const url = `${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates&language=en-US`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -189,23 +184,23 @@ async function fetchTMDBData(tmdbId, type) {
 
 async function fetchTrendingContent() {
     try {
-        let response;
-        if (API_BASE_URL.includes("replit")) {
-            // Use existing backend
-            response = await fetch(`${API_BASE_URL}/trending/all/week`);
-        } else {
-            // Use CORS proxy for static hosting
-            response = await fetch(
-                `${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`,
-            );
-        }
-
+        const response = await fetch(
+            `${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+        
         const data = await response.json();
-        return data.results?.slice(0, 20) || [];
+        return data.results || [];
     } catch (error) {
         console.error("Error fetching trending data:", error);
         return [];
