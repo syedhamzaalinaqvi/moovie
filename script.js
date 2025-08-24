@@ -10,9 +10,9 @@ const API_BASE_URL = TMDB_BASE_URL;
 const videoData = [
     {
         id: 1,
-        tmdbId: 1061474, // Updated to use the requested movie ID
+        tmdbId: 1061474, // Superman 
         type: "movie",
-        embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
     {
         id: 2,
