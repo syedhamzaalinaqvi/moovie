@@ -569,22 +569,27 @@ function displayTMDBDetails(movieData, type) {
             movieData.cast && movieData.cast.length > 0
                 ? `
         <div class="cast-section">
-            <h4>🎭 Cast & Characters</h4>
+            <h3 class="section-title">🎭 Cast & Characters</h3>
             <div class="cast-grid">
                 ${movieData.cast
                     .map(
                         (actor) => `
-                    <div class="cast-member">
-                        <img 
-                            class="cast-photo" 
-                            src="${actor.profile_path || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
-                            alt="${actor.name}"
-                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
-                        >
-                        <div class="cast-name">${actor.name}</div>
-                        <div class="cast-character">${actor.character}</div>
+                    <div class="cast-member" title="${actor.name} as ${actor.character}">
+                        <div class="cast-photo-container">
+                            <img 
+                                class="cast-photo" 
+                                src="${actor.profile_path || `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+`}" 
+                                alt="${actor.name}"
+                                onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';"
+                                loading="lazy"
+                            >
+                        </div>
+                        <div class="cast-info">
+                            <div class="cast-name" title="${actor.name}">${actor.name}</div>
+                            <div class="cast-character" title="${actor.character}">${actor.character}</div>
+                        </div>
                     </div>
-                `,
+                `
                     )
                     .join("")}
             </div>
@@ -597,20 +602,25 @@ function displayTMDBDetails(movieData, type) {
             movieData.trailer
                 ? `
         <div class="trailer-section">
-            <h4>🎬 Official Trailer</h4>
-            <div class="trailer-player">
-                <iframe 
-                    src="${movieData.trailer}" 
-                    width="100%" 
-                    height="315"
-                    frameborder="0" 
-                    allowfullscreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-                </iframe>
+            <h3 class="section-title">🎬 Official Trailer</h3>
+            <div class="trailer-container">
+                <div class="trailer-player">
+                    <div class="aspect-ratio">
+                        <iframe 
+                            src="${movieData.trailer}"
+                            title="${movieData.title} Official Trailer"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+                <p class="trailer-note">Watch the official trailer for ${movieData.title}${movieData.release_year ? ` (${movieData.release_year})` : ''}</p>
             </div>
         </div>
         `
-                : ""
+                : '<div class="no-trailer">No trailer available for this content.</div>'
         }
         
         ${
