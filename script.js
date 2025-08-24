@@ -25,11 +25,7 @@ const videoData = [
         tmdbId: 66732,
         type: "tv",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-<<<<<<< HEAD
-        embedCode: `<iframe src='' allowfullscreen width='640' height='360' frameborder='0'></iframe>`,
-=======
         embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
->>>>>>> 1fc3a64cf89ed2e45ab95dc137a13ba51aa0de25
         description:
             "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
     },
