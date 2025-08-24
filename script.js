@@ -16,7 +16,7 @@ const videoData = [
     },
     {
         id: 2,
-        tmdbId: 66732, // Stranger Things
+        tmdbId: 119051, // Wednesday
         type: "tv",
         embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
     },
