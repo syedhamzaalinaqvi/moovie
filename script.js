@@ -9,7 +9,7 @@ const videoData = [
         duration: "181 min",
         views: "2.8B views",
         category: "action",
-        tmdbId: 299534,
+        tmdbId: 1061474,
         type: "movie",
         thumbnail: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UY2048_.jpg",
         embedCode: `<iframe src="https://www.youtube.com/embed/TcMBFSGVi1c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
@@ -450,143 +450,111 @@ async function openVideoModal(video) {
 
 // Display TMDB Details
 function displayTMDBDetails(movieData, type) {
-    // Update additional meta info
+    console.log('🎬 Displaying movie details:', movieData);
+    
+    // Update basic meta info
     const modalYear = document.getElementById("modalYear");
     const modalStatus = document.getElementById("modalStatus");
     const modalRating = document.getElementById("modalRating");
 
-    if (type === "movie") {
-        modalYear.textContent = movieData.release_date
-            ? new Date(movieData.release_date).getFullYear()
-            : "";
-        modalStatus.textContent = movieData.status || "";
-    } else {
-        modalYear.textContent = movieData.first_air_date
-            ? new Date(movieData.first_air_date).getFullYear()
-            : "";
-        modalStatus.textContent = movieData.status || "";
-    }
-    modalRating.textContent = movieData.vote_average
-        ? `⭐ ${movieData.vote_average.toFixed(1)}`
-        : "";
+    modalYear.textContent = movieData.release_year || "Unknown";
+    modalStatus.textContent = movieData.status || "";
+    modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
-    // Update movie stats
-    document.getElementById("movieBudget").textContent =
-        movieData.budget && type === "movie"
-            ? formatBudget(movieData.budget)
-            : "-";
-    document.getElementById("movieRevenue").textContent =
-        movieData.revenue && type === "movie"
-            ? formatBudget(movieData.revenue)
-            : "-";
+    // Update modal title and description with fetched data
+    document.getElementById("modalTitle").textContent = movieData.title;
+    document.getElementById("modalDescription").textContent = movieData.description || "No description available.";
 
-    // Find director
-    const director = movieData.credits?.crew?.find(
-        (person) => person.job === "Director",
-    );
-    document.getElementById("movieDirector").textContent = director
-        ? director.name
-        : "-";
-
-    // Display genres
-    const genres =
-        movieData.genres?.map((genre) => genre.name).join(", ") || "-";
-    document.getElementById("movieGenres").textContent = genres;
-
-    // Display trailer if available
-    const trailerSection = document.getElementById("trailerSection");
-    const trailerPlayer = document.getElementById("trailerPlayer");
-    const trailer = movieData.videos?.results?.find(
-        (video) => video.type === "Trailer" && video.site === "YouTube",
-    );
-
-    if (trailer) {
-        trailerSection.style.display = "block";
-        trailerPlayer.innerHTML = `
-            <iframe 
-                src="https://www.youtube.com/embed/${trailer.key}" 
-                frameborder="0" 
-                allowfullscreen>
-            </iframe>
-        `;
-    } else {
-        trailerSection.style.display = "none";
-    }
-
-    // Display cast
-    const castGrid = document.getElementById("castGrid");
-    const cast = movieData.credits?.cast?.slice(0, 12) || [];
-
-    castGrid.innerHTML = cast
-        .map(
-            (actor) => `
-        <div class="cast-member">
-            <img 
-                class="cast-photo" 
-                src="${actor.profile_path ? TMDB_IMAGE_BASE_URL + actor.profile_path : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGB0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
-                alt="${actor.name}"
-                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGB0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
-            >
-            <div class="cast-name">${actor.name}</div>
-            <div class="cast-character">${actor.character}</div>
-        </div>
-    `,
-        )
-        .join("");
-
-    // Restore the TMDB details structure
+    // Create the complete movie information section with proper backend API structure
     const tmdbDetails = document.getElementById("tmdbDetails");
     tmdbDetails.innerHTML = `
+        <div class="movie-info-header">
+            <div class="download-section">
+                <button class="download-btn" onclick="downloadMovie('${movieData.title}', '${movieData.release_year}', '${movieData.id}')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Movie
+                </button>
+            </div>
+        </div>
+
         <div class="movie-stats">
             <div class="stat-item">
+                <label>Release Year:</label>
+                <span>${movieData.release_year || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Runtime:</label>
+                <span>${movieData.runtime || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
                 <label>Budget:</label>
-                <span id="movieBudget">${movieData.budget && type === "movie" ? formatBudget(movieData.budget) : "-"}</span>
+                <span>${movieData.budget || "Not disclosed"}</span>
             </div>
             <div class="stat-item">
                 <label>Revenue:</label>
-                <span id="movieRevenue">${movieData.revenue && type === "movie" ? formatBudget(movieData.revenue) : "-"}</span>
+                <span>${movieData.revenue || "Not disclosed"}</span>
             </div>
             <div class="stat-item">
                 <label>Director:</label>
-                <span id="movieDirector">${director ? director.name : "-"}</span>
+                <span>${movieData.directors?.join(", ") || movieData.creators?.join(", ") || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Writers:</label>
+                <span>${movieData.writers?.join(", ") || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Countries:</label>
+                <span>${movieData.countries?.join(", ") || "Unknown"}</span>
             </div>
             <div class="stat-item">
                 <label>Genres:</label>
-                <span id="movieGenres">${genres}</span>
+                <span>${movieData.genres?.join(", ") || "Unknown"}</span>
             </div>
         </div>
         
-        <div class="trailer-section" id="trailerSection" style="${trailer ? "display: block;" : "display: none;"}">
-            <h4>Official Trailer</h4>
-            <div class="trailer-player" id="trailerPlayer">
-                ${trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allowfullscreen></iframe>` : ""}
-            </div>
-        </div>
-        
+        ${movieData.cast && movieData.cast.length > 0 ? `
         <div class="cast-section">
-            <h4>Cast</h4>
-            <div class="cast-grid" id="castGrid">
-                ${cast
-                    .map(
-                        (actor) => `
+            <h4>🎭 Cast & Characters</h4>
+            <div class="cast-grid">
+                ${movieData.cast.map(actor => `
                     <div class="cast-member">
                         <img 
                             class="cast-photo" 
-                            src="${actor.profile_path ? TMDB_IMAGE_BASE_URL + actor.profile_path : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGJ0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
+                            src="${actor.profile_path || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='}" 
                             alt="${actor.name}"
-                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGJ0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
                         >
                         <div class="cast-name">${actor.name}</div>
                         <div class="cast-character">${actor.character}</div>
                     </div>
-                `,
-                    )
-                    .join("")}
+                `).join("")}
             </div>
         </div>
+        ` : ""}
+        
+        ${movieData.trailer ? `
+        <div class="trailer-section">
+            <h4>🎬 Official Trailer</h4>
+            <div class="trailer-player">
+                <iframe 
+                    src="${movieData.trailer}" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        ` : ""}
+        
+        ${movieData.tagline ? `
+        <div class="movie-tagline">
+            <em>"${movieData.tagline}"</em>
+        </div>
+        ` : ""}
     `;
 }
-
 // Close Video Modal
 function closeVideoModal() {
     videoModal.classList.remove("active");
