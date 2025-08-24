@@ -480,33 +480,57 @@ async function openVideoModal(video) {
     const modalVideo = document.querySelector(".modal-video");
     modalVideo.innerHTML = video.embedCode;
 
-    // Use TMDB data if available
-    const movieData = video.tmdbData;
+    // Try to get TMDB data if not already available
+    let movieData = video.tmdbData;
+    
+    // If no TMDB data but we have a TMDB ID, try to fetch it
+    if (!movieData && video.tmdbId) {
+        try {
+            movieData = await fetchTMDBData(video.tmdbId, video.type);
+            // Store the fetched data for future use
+            video.tmdbData = movieData;
+        } catch (error) {
+            console.error("Error fetching TMDB data:", error);
+        }
+    }
+
     if (movieData) {
-        modalTitle.textContent = movieData.title;
-        modalDuration.textContent = movieData.runtime;
-        modalViews.textContent = `⭐ ${movieData.rating}`;
-        modalCategory.textContent = movieData.genres.join(", ");
-        modalDescription.textContent = movieData.description;
+        // Update the video object with the latest data
+        video.title = movieData.title || video.title;
+        video.duration = movieData.runtime || video.duration;
+        video.views = `⭐ ${movieData.rating || 'N/A'}`;
+        video.category = (movieData.genres && movieData.genres[0]?.toLowerCase()) || video.category || 'drama';
+        video.description = movieData.description || video.description;
+
+        // Update modal UI with TMDB data
+        modalTitle.textContent = movieData.title || video.title;
+        modalDuration.textContent = movieData.runtime || video.duration || "Unknown";
+        modalViews.textContent = movieData.rating ? `⭐ ${movieData.rating}` : (video.views || "");
+        modalCategory.textContent = movieData.genres ? movieData.genres.join(", ") : (video.category || "");
+        modalDescription.textContent = movieData.description || video.description || "";
 
         // Update basic meta info
         const modalYear = document.getElementById("modalYear");
         const modalStatus = document.getElementById("modalStatus");
         const modalRating = document.getElementById("modalRating");
 
-        modalYear.textContent = movieData.release_year || "Unknown";
-        modalStatus.textContent = movieData.status || "";
-        modalRating.textContent = movieData.rating
-            ? `⭐ ${movieData.rating}`
-            : "";
+        if (modalYear) modalYear.textContent = movieData.release_year || "Unknown";
+        if (modalStatus) modalStatus.textContent = movieData.status || "";
+        if (modalRating) modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
-        displayTMDBDetails(movieData, video.type);
+        // Display the TMDB details section
+        displayTMDBDetails(movieData, video.type || 'movie');
     } else {
-        modalTitle.textContent = video.title;
-        modalDuration.textContent = video.duration;
-        modalViews.textContent = video.views;
-        modalCategory.textContent = video.category;
-        modalDescription.textContent = video.description;
+        // Fallback to basic video data
+        modalTitle.textContent = video.title || "";
+        modalDuration.textContent = video.duration || "Unknown";
+        modalViews.textContent = video.views || "";
+        modalCategory.textContent = video.category || "";
+        modalDescription.textContent = video.description || "";
+        
+        // Hide or clear TMDB details section if no data
+        const tmdbDetails = document.getElementById("tmdbDetails");
+        if (tmdbDetails) tmdbDetails.innerHTML = '';
     }
 
     videoModal.classList.add("active");
@@ -816,16 +840,44 @@ async function loadTrendingSlider() {
                 </div>
             `;
 
-            trendingCard.addEventListener("click", () => {
-                // Create a temporary video object for trending content
-                const trendingVideo = {
-                    id: `trending_${item.id}`,
-                    tmdbId: item.id,
-                    type: item.media_type,
-                    embedCode:
-                        '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Trailer not available for trending content</div>',
-                };
-                openVideoModal(trendingVideo);
+            trendingCard.addEventListener("click", async () => {
+                try {
+                    // Fetch TMDB data for the trending item
+                    const tmdbData = await fetchTMDBData(item.id, item.media_type);
+                    
+                    // Create a video object with the fetched data
+                    const trendingVideo = {
+                        id: `trending_${item.id}`,
+                        tmdbId: item.id,
+                        type: item.media_type,
+                        title: item.title || item.name,
+                        description: item.overview || 'No description available',
+                        views: item.vote_average ? `⭐ ${item.vote_average.toFixed(1)}` : 'N/A',
+                        duration: item.runtime ? `${item.runtime} min` : 'N/A',
+                        category: item.genre_ids ? item.genre_ids[0]?.toString() : 'unknown',
+                        tmdbData: tmdbData, // Include the full TMDB data
+                        embedCode: tmdbData?.trailer 
+                            ? `<iframe src="${tmdbData.trailer}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+                            : '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Trailer not available for this content</div>',
+                    };
+                    
+                    openVideoModal(trendingVideo);
+                } catch (error) {
+                    console.error('Error loading trending content:', error);
+                    // Fallback to basic info if TMDB fetch fails
+                    const trendingVideo = {
+                        id: `trending_${item.id}`,
+                        tmdbId: item.id,
+                        type: item.media_type,
+                        title: item.title || item.name,
+                        description: item.overview || 'No description available',
+                        views: item.vote_average ? `⭐ ${item.vote_average.toFixed(1)}` : 'N/A',
+                        duration: item.runtime ? `${item.runtime} min` : 'N/A',
+                        category: item.genre_ids ? item.genre_ids[0]?.toString() : 'unknown',
+                        embedCode: '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Failed to load content details. Please try again later.</div>',
+                    };
+                    openVideoModal(trendingVideo);
+                }
             });
 
             trendingGrid.appendChild(trendingCard);
