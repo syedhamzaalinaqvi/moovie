@@ -1,5 +1,6 @@
-// TMDB API Configuration - direct frontend integration
+// TMDB API Configuration - direct frontend integration with CORS proxy
 const TMDB_API_KEY = 'ba4ef0b8fc0f0efd7ef0e53e8e96b9da'; // Your TMDB API key
+const CORS_PROXY = 'https://corsproxy.io/?';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -148,7 +149,7 @@ async function fetchTMDBData(tmdbId, type) {
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
         const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
-        const response = await fetch(url);
+        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -207,6 +208,8 @@ async function fetchTMDBData(tmdbId, type) {
         return formattedData;
     } catch (error) {
         console.error("Error fetching movie data:", error);
+        console.error("Error details:", error.message);
+        console.error("URL attempted:", url);
         return null;
     }
 }
@@ -225,7 +228,8 @@ function formatMoney(amount) {
 
 async function fetchTrendingContent() {
     try {
-        const response = await fetch(`${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`);
+        const url = `${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`;
+        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -235,6 +239,7 @@ async function fetchTrendingContent() {
         return data.results?.slice(0, 20) || [];
     } catch (error) {
         console.error("Error fetching trending data:", error);
+        console.error("Error details:", error.message);
         return [];
     }
 }

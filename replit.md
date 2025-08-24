@@ -23,9 +23,10 @@ Preferred communication style: Simple, everyday language.
 - **Progressive Enhancement**: Core functionality works without JavaScript, enhanced with interactive features
 
 ### Data Management
-- **Mock Data Structure**: Videos stored as JavaScript objects with properties including ID, title, duration, views, category, thumbnails, and embed URLs
+- **TMDB Integration**: Videos stored as JavaScript objects with TMDB IDs for fetching real movie data
 - **Client-side Filtering**: Category and search filtering implemented in JavaScript
-- **No Backend**: Currently operates as a static frontend application with hardcoded video data
+- **Frontend API Calls**: Direct TMDB API integration using CORS proxy for real movie data
+- **Pure Frontend**: No backend server required - all functionality runs client-side
 
 ### Video Integration
 - **YouTube Embeds**: Uses YouTube's embed API for video playback
@@ -34,10 +35,15 @@ Preferred communication style: Simple, everyday language.
 
 ## External Dependencies
 
-### Media Services
+### API Services
+- **TMDB (The Movie Database)**: Real movie and TV show data
+  - Movie details, ratings, cast, crew information
+  - Images and poster paths
+  - Trending content and search
+  - Accessed via CORS proxy for frontend compatibility
 - **YouTube**: Primary video hosting and playback service
   - Embed API for video players
-  - Thumbnail API for video previews
+  - Trailer integration from TMDB video data
   - No authentication required for public videos
 
 ### Assets and Resources
@@ -51,4 +57,4 @@ Preferred communication style: Simple, everyday language.
 - **DOM Manipulation**: Vanilla JavaScript for interactive features
 - **Local Storage**: Potential for user preferences (implementation not visible in current code)
 
-Note: The application currently has no server-side components, database connections, or external API integrations beyond YouTube embeds. All functionality is client-side with static data.
+Note: The application is a pure frontend project with TMDB API integration for real movie data. No backend server required - all functionality runs client-side with external API calls handled via CORS proxy.
