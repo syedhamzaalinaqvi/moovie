@@ -36,7 +36,7 @@ const videoData = [
         id: 5,
         tmdbId: 1241894, // Woodwalker 2024
         type: "movie",
-        embedCode: `<video preload="none" crossorigin="anonymous" src="blob:https://fuhho374key.com/17088878-3a83-49f5-ba1f-8f3a98a02594" x-webkit-airplay="allow" disableremoteplayback="true" pip="false" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; object-fit: contain; transition: filter 0.2s linear; min-height: auto; max-height: none; min-width: auto; max-width: none;"></video>`,
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30398905" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 6,
