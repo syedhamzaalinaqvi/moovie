@@ -30,11 +30,22 @@ def serve_static(filename):
 def proxy_tmdb(endpoint):
     """Simple proxy for TMDB API calls"""
     try:
+        from flask import request
         url = f"{TMDB_BASE_URL}/{endpoint}"
-        params = {'api_key': TMDB_API_KEY}
+        
+        # Get all query parameters from the frontend request
+        params = dict(request.args)
+        params['api_key'] = TMDB_API_KEY
+        
+        print(f"🔍 Proxying request to: {url}")
+        print(f"🔍 With params: {params}")
+        
         response = requests.get(url, params=params, timeout=10)
         response.raise_for_status()
-        return jsonify(response.json())
+        data = response.json()
+        
+        print(f"🔍 TMDB Response keys: {data.keys()}")
+        return jsonify(data)
     except requests.exceptions.RequestException as e:
         print(f"TMDB API Error: {e}")
         return jsonify({'error': 'Failed to fetch data'}), 500
