@@ -1,5 +1,7 @@
-// Local API Configuration - secure backend handles TMDB requests
-const API_BASE_URL = window.location.origin + '/api';
+// TMDB API Configuration - direct frontend integration
+const TMDB_API_KEY = 'ba4ef0b8fc0f0efd7ef0e53e8e96b9da'; // Your TMDB API key
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Video Data - Now supporting Movies/Series with TMDB integration
 const videoData = [
@@ -145,30 +147,92 @@ const videoData = [
 async function fetchTMDBData(tmdbId, type) {
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}`);
+        const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
+        const response = await fetch(url);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        return data;
+        
+        // Format the data to match our expected structure
+        const formattedData = {
+            id: data.id,
+            title: data.title || data.name,
+            description: data.overview,
+            release_date: data.release_date || data.first_air_date,
+            release_year: (data.release_date || data.first_air_date)?.substring(0, 4) || 'Unknown',
+            rating: data.vote_average ? data.vote_average.toFixed(1) : null,
+            runtime: data.runtime ? `${data.runtime} minutes` : (data.number_of_seasons ? `${data.number_of_seasons} seasons` : 'Unknown'),
+            genres: data.genres?.map(g => g.name) || [],
+            poster_path: data.poster_path ? `${TMDB_IMAGE_BASE_URL}${data.poster_path}` : null,
+            backdrop_path: data.backdrop_path ? `https://image.tmdb.org/t/p/w1280${data.backdrop_path}` : null,
+            status: data.status || 'Unknown',
+            tagline: data.tagline || '',
+            homepage: data.homepage || '',
+            budget: data.budget ? formatMoney(data.budget) : 'Not disclosed',
+            revenue: data.revenue ? formatMoney(data.revenue) : 'Not disclosed',
+            countries: data.production_countries?.map(c => c.name) || [],
+            directors: [],
+            writers: [],
+            creators: data.created_by?.map(c => c.name) || [],
+            cast: [],
+            trailer: null
+        };
+        
+        // Extract crew information
+        if (data.credits?.crew) {
+            formattedData.directors = data.credits.crew.filter(p => p.job === 'Director').map(p => p.name);
+            formattedData.writers = data.credits.crew.filter(p => ['Writer', 'Screenplay', 'Story'].includes(p.job)).map(p => p.name);
+        }
+        
+        // Extract cast information (top 10)
+        if (data.credits?.cast) {
+            formattedData.cast = data.credits.cast.slice(0, 10).map(actor => ({
+                name: actor.name,
+                character: actor.character,
+                profile_path: actor.profile_path ? `${TMDB_IMAGE_BASE_URL}${actor.profile_path}` : null
+            }));
+        }
+        
+        // Find trailer
+        if (data.videos?.results) {
+            const trailer = data.videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+            if (trailer) {
+                formattedData.trailer = `https://www.youtube.com/embed/${trailer.key}`;
+            }
+        }
+        
+        return formattedData;
     } catch (error) {
         console.error("Error fetching movie data:", error);
         return null;
     }
 }
 
+function formatMoney(amount) {
+    if (amount >= 1000000000) {
+        return `$${(amount/1000000000).toFixed(1)}B`;
+    } else if (amount >= 1000000) {
+        return `$${(amount/1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+        return `$${(amount/1000).toFixed(1)}K`;
+    } else {
+        return amount > 0 ? `$${amount}` : "Not disclosed";
+    }
+}
+
 async function fetchTrendingContent() {
     try {
-        const response = await fetch(`${API_BASE_URL}/trending`);
+        const response = await fetch(`${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        return data;
+        return data.results?.slice(0, 20) || [];
     } catch (error) {
         console.error("Error fetching trending data:", error);
         return [];
@@ -185,15 +249,6 @@ async function fetchTMDBCredits(tmdbId, type) {
 async function fetchTMDBVideos(tmdbId, type) {
     const data = await fetchTMDBData(tmdbId, type);
     return data && data.trailer ? { results: [{ key: data.trailer.split('/').pop(), site: 'YouTube', type: 'Trailer' }] } : { results: [] };
-}
-
-function formatBudget(amount) {
-    if (amount >= 1000000) {
-        return "$" + (amount / 1000000).toFixed(1) + "M";
-    } else if (amount >= 1000) {
-        return "$" + (amount / 1000).toFixed(1) + "K";
-    }
-    return "$" + amount;
 }
 
 function formatRuntime(minutes) {
