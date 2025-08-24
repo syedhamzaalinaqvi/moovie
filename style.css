@@ -1137,3 +1137,99 @@ html {
     background: var(--accent-purple);
     color: white;
 }
+
+/* Download Button */
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+.download-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Download Notification */
+.download-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--secondary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 3000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.download-notification.show {
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-primary);
+}
+
+.notification-content svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent-purple);
+}
+
+/* Enhanced Movie Stats */
+.movie-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.movie-tagline {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    background: var(--tertiary-dark);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-purple);
+}
+
+.movie-tagline em {
+    font-size: 18px;
+    color: var(--accent-purple);
+    font-style: italic;
+}
+
+/* Enhanced Cast Section */
+.cast-section h4,
+.trailer-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    margin-bottom: 15px;
+}

@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "python-3.11"]
+modules = ["nodejs-20", "web", "python-3.11"]
 [agent]
 expertMode = true
 
@@ -15,19 +15,19 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Video Streaming Server"
+args = "H-TV Server"
 
 [[workflows.workflow]]
-name = "Video Streaming Server"
+name = "H-TV Server"
 author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python -m http.server 5000"
-waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python api_server.py"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000

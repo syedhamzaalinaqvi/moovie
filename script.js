@@ -1,7 +1,5 @@
-// TMDB API Configuration
-const TMDB_API_KEY = "46d13701165988b5bb5fb4d123c0447e";
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+// Local API Configuration - secure backend handles TMDB requests
+const API_BASE_URL = window.location.origin + '/api';
 
 // Video Data - Now supporting Movies/Series with TMDB integration
 const videoData = [
@@ -11,10 +9,10 @@ const videoData = [
         duration: "181 min",
         views: "2.8B views",
         category: "action",
-        tmdbId: 299534,
+        tmdbId: 1061474,
         type: "movie",
         thumbnail: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UY2048_.jpg",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt4154796" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/TcMBFSGVi1c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "The direct sequel to Avengers: Infinity War, the surviving members of the Avengers and their allies work to reverse the damage caused by Thanos.",
     },
@@ -27,7 +25,11 @@ const videoData = [
         tmdbId: 66732,
         type: "tv",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+<<<<<<< HEAD
         embedCode: `<iframe src='' allowfullscreen width='640' height='360' frameborder='0'></iframe>`,
+=======
+        embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+>>>>>>> 1fc3a64cf89ed2e45ab95dc137a13ba51aa0de25
         description:
             "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
     },
@@ -40,7 +42,7 @@ const videoData = [
         tmdbId: 634649,
         type: "movie",
         thumbnail: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F8%2F3%2F5%2Fa%2F6%2F835a6d7f22830.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
     },
@@ -51,7 +53,7 @@ const videoData = [
         views: "3.2M views",
         category: "sports",
         thumbnail: "https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2F9%2F1%2F2%2Fc%2F8%2F912c8e3a44507.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "The best moments from the latest Champions League matches.",
     },
@@ -62,7 +64,7 @@ const videoData = [
         views: "1.8M views",
         category: "comedy",
         thumbnail: "https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fa%2F4%2F7%2Fd%2F2%2Fa47d2f9b55603.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Laugh out loud with this hilarious stand-up comedy performance.",
     },
@@ -73,7 +75,7 @@ const videoData = [
         views: "965K views",
         category: "entertainment",
         thumbnail: "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fb%2F5%2F8%2Fe%2F4%2Fb58e4c6a77409.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description: "All the latest celebrity news and entertainment updates.",
     },
     {
@@ -83,7 +85,7 @@ const videoData = [
         views: "742K views",
         category: "educational",
         thumbnail: "https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fc%2F3%2F9%2Fa%2F7%2Fc39a7d8e44301.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Complete JavaScript tutorial for beginners in just 30 minutes.",
     },
@@ -94,7 +96,7 @@ const videoData = [
         views: "1.5M views",
         category: "gaming",
         thumbnail: "https://img.youtube.com/vi/Ks-_Mh1QhMc/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fd%2F2%2F6%2Fb%2F9%2Fd26b9f3c88502.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/Ks-_Mh1QhMc" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Ultimate guide to building the perfect gaming setup in 2024.",
     },
@@ -105,7 +107,7 @@ const videoData = [
         views: "890K views",
         category: "music",
         thumbnail: "https://img.youtube.com/vi/jgpJVI3tDbY/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fe%2F4%2F1%2Fc%2F5%2Fe41c5a7d99604.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/jgpJVI3tDbY" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Beautiful collection of classical music for relaxation and focus.",
     },
@@ -116,7 +118,7 @@ const videoData = [
         views: "2.1M views",
         category: "sports",
         thumbnail: "https://img.youtube.com/vi/XBhY347jmgI/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Ff%2F5%2F2%2Fd%2F8%2Ff52d8b6c11705.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/XBhY347jmgI" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description: "The most incredible basketball plays from this season.",
     },
     {
@@ -126,7 +128,7 @@ const videoData = [
         views: "3.4M views",
         category: "comedy",
         thumbnail: "https://img.youtube.com/vi/hFZFjoX2cGg/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fg%2F7%2F3%2Fe%2F9%2Fg73e9d4f22806.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/hFZFjoX2cGg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Hilarious sketch comedy compilation that will make you laugh.",
     },
@@ -137,7 +139,7 @@ const videoData = [
         views: "1.2M views",
         category: "entertainment",
         thumbnail: "https://img.youtube.com/vi/C0DPdy98e4c/maxresdefault.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Fh%2F8%2F4%2Fa%2F3%2Fh84a3e5d33907.mp4&splashImgUrl=https%3A%2F%2Fbradmax.com%2Fstatic%2Fimages%2Fstartsplash.jpg" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://www.youtube.com/embed/C0DPdy98e4c" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
         description:
             "Exclusive behind-the-scenes footage from the latest blockbuster movies.",
     },
@@ -147,13 +149,7 @@ const videoData = [
 async function fetchTMDBData(tmdbId, type) {
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
+        const response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -162,59 +158,37 @@ async function fetchTMDBData(tmdbId, type) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("Error fetching TMDB data:", error);
+        console.error("Error fetching movie data:", error);
         return null;
     }
 }
 
 async function fetchTrendingContent() {
     try {
-        const url = `${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
+        const response = await fetch(`${API_BASE_URL}/trending`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        return data.results;
+        return data;
     } catch (error) {
         console.error("Error fetching trending data:", error);
         return [];
     }
 }
 
+// Credits are now included in the main fetchTMDBData response
 async function fetchTMDBCredits(tmdbId, type) {
-    try {
-        const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(
-            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}`,
-        );
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching TMDB credits:", error);
-        return null;
-    }
+    const data = await fetchTMDBData(tmdbId, type);
+    return data ? { cast: data.cast, crew: [] } : null;
 }
 
+// Videos/trailers are now included in the main fetchTMDBData response
 async function fetchTMDBVideos(tmdbId, type) {
-    try {
-        const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(
-            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}`,
-        );
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching TMDB videos:", error);
-        return null;
-    }
+    const data = await fetchTMDBData(tmdbId, type);
+    return data && data.trailer ? { results: [{ key: data.trailer.split('/').pop(), site: 'YouTube', type: 'Trailer' }] } : { results: [] };
 }
 
 function formatBudget(amount) {
@@ -239,35 +213,35 @@ const liveTvChannels = [
         name: 'News 24/7',
         channel: 'CNN Live',
         thumbnail: 'https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive1.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/W1NTtBs8M2Q" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv2',
         name: 'Sports Central',
         channel: 'ESPN HD',
         thumbnail: 'https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive2.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv3',
         name: 'Music Hits',
         channel: 'MTV Live',
         thumbnail: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive3.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/9bZkp7q19f0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv4',
         name: 'Comedy Central',
         channel: 'Comedy HD',
         thumbnail: 'https://img.youtube.com/vi/DLzxrzFCyOs/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive4.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/DLzxrzFCyOs" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     },
     {
         id: 'tv5',
         name: 'Discovery Science',
         channel: 'Discovery HD',
         thumbnail: 'https://img.youtube.com/vi/PkZNo7MFNFg/maxresdefault.jpg',
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmedia.tubewankers.com%2Fvideos%2Flive5.mp4" width="100%" height="100%" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+        embedCode: `<iframe src="https://www.youtube.com/embed/PkZNo7MFNFg" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
     }
 ];
 
@@ -480,143 +454,111 @@ async function openVideoModal(video) {
 
 // Display TMDB Details
 function displayTMDBDetails(movieData, type) {
-    // Update additional meta info
+    console.log('🎬 Displaying movie details:', movieData);
+    
+    // Update basic meta info
     const modalYear = document.getElementById("modalYear");
     const modalStatus = document.getElementById("modalStatus");
     const modalRating = document.getElementById("modalRating");
 
-    if (type === "movie") {
-        modalYear.textContent = movieData.release_date
-            ? new Date(movieData.release_date).getFullYear()
-            : "";
-        modalStatus.textContent = movieData.status || "";
-    } else {
-        modalYear.textContent = movieData.first_air_date
-            ? new Date(movieData.first_air_date).getFullYear()
-            : "";
-        modalStatus.textContent = movieData.status || "";
-    }
-    modalRating.textContent = movieData.vote_average
-        ? `⭐ ${movieData.vote_average.toFixed(1)}`
-        : "";
+    modalYear.textContent = movieData.release_year || "Unknown";
+    modalStatus.textContent = movieData.status || "";
+    modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
-    // Update movie stats
-    document.getElementById("movieBudget").textContent =
-        movieData.budget && type === "movie"
-            ? formatBudget(movieData.budget)
-            : "-";
-    document.getElementById("movieRevenue").textContent =
-        movieData.revenue && type === "movie"
-            ? formatBudget(movieData.revenue)
-            : "-";
+    // Update modal title and description with fetched data
+    document.getElementById("modalTitle").textContent = movieData.title;
+    document.getElementById("modalDescription").textContent = movieData.description || "No description available.";
 
-    // Find director
-    const director = movieData.credits?.crew?.find(
-        (person) => person.job === "Director",
-    );
-    document.getElementById("movieDirector").textContent = director
-        ? director.name
-        : "-";
-
-    // Display genres
-    const genres =
-        movieData.genres?.map((genre) => genre.name).join(", ") || "-";
-    document.getElementById("movieGenres").textContent = genres;
-
-    // Display trailer if available
-    const trailerSection = document.getElementById("trailerSection");
-    const trailerPlayer = document.getElementById("trailerPlayer");
-    const trailer = movieData.videos?.results?.find(
-        (video) => video.type === "Trailer" && video.site === "YouTube",
-    );
-
-    if (trailer) {
-        trailerSection.style.display = "block";
-        trailerPlayer.innerHTML = `
-            <iframe 
-                src="https://www.youtube.com/embed/${trailer.key}" 
-                frameborder="0" 
-                allowfullscreen>
-            </iframe>
-        `;
-    } else {
-        trailerSection.style.display = "none";
-    }
-
-    // Display cast
-    const castGrid = document.getElementById("castGrid");
-    const cast = movieData.credits?.cast?.slice(0, 12) || [];
-
-    castGrid.innerHTML = cast
-        .map(
-            (actor) => `
-        <div class="cast-member">
-            <img 
-                class="cast-photo" 
-                src="${actor.profile_path ? TMDB_IMAGE_BASE_URL + actor.profile_path : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGB0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
-                alt="${actor.name}"
-                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGB0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
-            >
-            <div class="cast-name">${actor.name}</div>
-            <div class="cast-character">${actor.character}</div>
-        </div>
-    `,
-        )
-        .join("");
-
-    // Restore the TMDB details structure
+    // Create the complete movie information section with proper backend API structure
     const tmdbDetails = document.getElementById("tmdbDetails");
     tmdbDetails.innerHTML = `
+        <div class="movie-info-header">
+            <div class="download-section">
+                <button class="download-btn" onclick="downloadMovie('${movieData.title}', '${movieData.release_year}', '${movieData.id}')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Movie
+                </button>
+            </div>
+        </div>
+
         <div class="movie-stats">
             <div class="stat-item">
+                <label>Release Year:</label>
+                <span>${movieData.release_year || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Runtime:</label>
+                <span>${movieData.runtime || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
                 <label>Budget:</label>
-                <span id="movieBudget">${movieData.budget && type === "movie" ? formatBudget(movieData.budget) : "-"}</span>
+                <span>${movieData.budget || "Not disclosed"}</span>
             </div>
             <div class="stat-item">
                 <label>Revenue:</label>
-                <span id="movieRevenue">${movieData.revenue && type === "movie" ? formatBudget(movieData.revenue) : "-"}</span>
+                <span>${movieData.revenue || "Not disclosed"}</span>
             </div>
             <div class="stat-item">
                 <label>Director:</label>
-                <span id="movieDirector">${director ? director.name : "-"}</span>
+                <span>${movieData.directors?.join(", ") || movieData.creators?.join(", ") || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Writers:</label>
+                <span>${movieData.writers?.join(", ") || "Unknown"}</span>
+            </div>
+            <div class="stat-item">
+                <label>Countries:</label>
+                <span>${movieData.countries?.join(", ") || "Unknown"}</span>
             </div>
             <div class="stat-item">
                 <label>Genres:</label>
-                <span id="movieGenres">${genres}</span>
+                <span>${movieData.genres?.join(", ") || "Unknown"}</span>
             </div>
         </div>
         
-        <div class="trailer-section" id="trailerSection" style="${trailer ? "display: block;" : "display: none;"}">
-            <h4>Official Trailer</h4>
-            <div class="trailer-player" id="trailerPlayer">
-                ${trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allowfullscreen></iframe>` : ""}
-            </div>
-        </div>
-        
+        ${movieData.cast && movieData.cast.length > 0 ? `
         <div class="cast-section">
-            <h4>Cast</h4>
-            <div class="cast-grid" id="castGrid">
-                ${cast
-                    .map(
-                        (actor) => `
+            <h4>🎭 Cast & Characters</h4>
+            <div class="cast-grid">
+                ${movieData.cast.map(actor => `
                     <div class="cast-member">
                         <img 
                             class="cast-photo" 
-                            src="${actor.profile_path ? TMDB_IMAGE_BASE_URL + actor.profile_path : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGJ0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=="}" 
+                            src="${actor.profile_path || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPHR0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='}" 
                             alt="${actor.name}"
-                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMzMzMiLz4KPGJ0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+Cjwvc3ZnPg=='"
                         >
                         <div class="cast-name">${actor.name}</div>
                         <div class="cast-character">${actor.character}</div>
                     </div>
-                `,
-                    )
-                    .join("")}
+                `).join("")}
             </div>
         </div>
+        ` : ""}
+        
+        ${movieData.trailer ? `
+        <div class="trailer-section">
+            <h4>🎬 Official Trailer</h4>
+            <div class="trailer-player">
+                <iframe 
+                    src="${movieData.trailer}" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        ` : ""}
+        
+        ${movieData.tagline ? `
+        <div class="movie-tagline">
+            <em>"${movieData.tagline}"</em>
+        </div>
+        ` : ""}
     `;
 }
-
 // Close Video Modal
 function closeVideoModal() {
     videoModal.classList.remove("active");
@@ -941,3 +883,54 @@ async function openTrendingModal(tmdbId, mediaType) {
 }
 
 console.log("H-TV Video Streaming Platform initialized successfully!");
+
+// Download functionality
+function downloadMovie(title, year, id) {
+    const downloadInfo = `
+🎬 Movie: ${title}
+📅 Year: ${year}
+⭐ Quality: HD Available
+🆔 ID: ${id}
+
+This download feature connects to your streaming service.
+Click OK to proceed with download.`;
+    
+    if (confirm(`Download "${title}"?\n\n${downloadInfo}`)) {
+        // Create download notification
+        showDownloadNotification(title);
+        
+        // You can customize this to integrate with your actual download service
+        console.log("🎬 Initiating download for:", title);
+        
+        // Example: Open in new tab (replace with your download logic)
+        // window.open(`/download/${id}`, "_blank");
+    }
+}
+
+// Download notification
+function showDownloadNotification(title) {
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = "download-notification";
+    notification.innerHTML = `
+        <div class="notification-content">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+            </svg>
+            <span>Download started: ${title}</span>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Show animation
+    setTimeout(() => notification.classList.add("show"), 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove("show");
+        setTimeout(() => document.body.removeChild(notification), 300);
+    }, 3000);
+}
