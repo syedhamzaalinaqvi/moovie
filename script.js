@@ -24,7 +24,7 @@ const videoData = [
         duration: "Season 1-4",
         views: "890M views",
         category: "horror",
-        tmdbId: 66732,
+        tmdbId: 1151334,
         type: "tv",
         thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
         embedCode: `<iframe src="https://www.youtube.com/embed/StTqXEQ2l-Y" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
@@ -147,18 +147,20 @@ const videoData = [
 async function fetchTMDBData(tmdbId, type) {
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`);
+        const response = await fetch(
+            `${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`,
+        );
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        
+
         // Debug: log the raw TMDB response to see what we're getting
-        console.log('🔍 Raw TMDB API response:', data);
-        console.log('🔍 Credits data:', data.credits);
-        console.log('🔍 Videos data:', data.videos);
+        console.log("🔍 Raw TMDB API response:", data);
+        console.log("🔍 Credits data:", data.credits);
+        console.log("🔍 Videos data:", data.videos);
 
         // Format the data to match our expected structure
         const formattedData = {
@@ -222,8 +224,13 @@ async function fetchTMDBData(tmdbId, type) {
 
         // Find trailer (prioritize official trailers)
         if (data.videos?.results) {
-            const trailers = data.videos.results.filter(v => v.type === 'Trailer' && v.site === 'YouTube');
-            const officialTrailer = trailers.find(v => v.name.toLowerCase().includes('official')) || trailers[0];
+            const trailers = data.videos.results.filter(
+                (v) => v.type === "Trailer" && v.site === "YouTube",
+            );
+            const officialTrailer =
+                trailers.find((v) =>
+                    v.name.toLowerCase().includes("official"),
+                ) || trailers[0];
             if (officialTrailer) {
                 formattedData.trailer = `https://www.youtube.com/embed/${officialTrailer.key}`;
             }
