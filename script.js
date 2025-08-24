@@ -1,8 +1,12 @@
-// TMDB API Configuration - direct frontend calls with CORS proxy
+// TMDB API Configuration - Works both with backend and pure frontend
 const TMDB_API_KEY = "46d13701165988b5bb5fb4d123c0447e";
-const CORS_PROXY = "https://api.allorigins.win/raw?url=";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+
+// Auto-detect if backend is available, fallback to CORS proxy
+const API_BASE_URL = window.location.origin.includes('replit') ? 
+    window.location.origin + "/api/tmdb" : 
+    "https://cors-anywhere.herokuapp.com/https://api.themoviedb.org/3";
 
 // Simplified Video Data - Only tmdbId and embedCode needed
 const videoData = [
@@ -71,7 +75,7 @@ const videoData = [
 // Cache for movie data to avoid repeated API calls
 const movieCache = new Map();
 
-// TMDB API Functions - Pure Frontend with CORS Proxy
+// TMDB API Functions - Hybrid approach (backend or CORS proxy)
 async function fetchTMDBData(tmdbId, type) {
     const cacheKey = `${type}_${tmdbId}`;
     if (movieCache.has(cacheKey)) {
@@ -80,8 +84,17 @@ async function fetchTMDBData(tmdbId, type) {
     
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
-        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
+        
+        // Try backend first, fallback to direct API with CORS proxy
+        let response;
+        if (API_BASE_URL.includes('replit')) {
+            // Use existing backend
+            response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?append_to_response=credits,videos,release_dates`);
+        } else {
+            // Use CORS proxy for static hosting
+            const url = `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`;
+            response = await fetch(`${API_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,videos,release_dates`);
+        }
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -149,8 +162,14 @@ async function fetchTMDBData(tmdbId, type) {
 
 async function fetchTrendingContent() {
     try {
-        const url = `${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`;
-        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
+        let response;
+        if (API_BASE_URL.includes('replit')) {
+            // Use existing backend
+            response = await fetch(`${API_BASE_URL}/trending/all/week`);
+        } else {
+            // Use CORS proxy for static hosting
+            response = await fetch(`${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}`);
+        }
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
