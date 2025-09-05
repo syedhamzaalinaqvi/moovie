@@ -12,6 +12,7 @@ const videoData = [
         id: 1,
         tmdbId: 1061474, // Superman 
         type: "movie",
+        download: "https://example.com/download/superman",
         embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
     {
@@ -623,7 +624,7 @@ async function openVideoModal(video) {
             if (modalRating) modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
             // Display the TMDB details section
-            displayTMDBDetails(movieData, video.type || 'movie');
+            displayTMDBDetails(movieData, video.type || 'movie', video);
         } else {
             // Hide or clear TMDB details section if no data
             const tmdbDetails = document.getElementById("tmdbDetails");
@@ -657,8 +658,9 @@ async function openVideoModal(video) {
 }
 
 // Display TMDB Details
-function displayTMDBDetails(movieData, type) {
+function displayTMDBDetails(movieData, type, video) {
     console.log('Displaying TMDB details for:', movieData.title || 'Unknown');
+    console.log('Video data in displayTMDBDetails:', video); // Debug log
     
     const tmdbDetails = document.getElementById("tmdbDetails");
     if (!tmdbDetails) {
@@ -671,6 +673,32 @@ function displayTMDBDetails(movieData, type) {
         const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;').replace(/'/g, '&apos;') : 'Unknown Title';
         const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
         const safeDescription = movieData.overview ? movieData.overview.replace(/[\"\']/g, '') : 'No description available';
+        
+        // Create download button if download link exists
+        console.log('Video object:', video); // Debug log
+        const downloadButton = video && video.download ? `
+            <div class="download-button-container" style="text-align: center; margin: 20px 0;">
+                <button onclick="handleDownload('${safeTitle}', '${safeReleaseYear}', '${video.download}')" 
+                        class="download-button" 
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                               color: white;
+                               padding: 12px 24px;
+                               border: none;
+                               border-radius: 8px;
+                               font-size: 16px;
+                               cursor: pointer;
+                               transition: transform 0.2s, box-shadow 0.2s;
+                               display: inline-flex;
+                               align-items: center;
+                               gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Movie
+                </button>
+            </div>` : '';
         
         // Create cast section
         let castHTML = createCastSection(movieData);
@@ -687,6 +715,7 @@ function displayTMDBDetails(movieData, type) {
                 <h2>${safeTitle} <span class="release-year">(${safeReleaseYear})</span></h2>
                 <p class="movie-description">${safeDescription}</p>
             </div>
+            ${downloadButton}
             ${statsHTML}
             ${castHTML}
             ${trailerHTML}
@@ -959,7 +988,13 @@ function handleViewToggle(e) {
 }
 
 // Download Movie Function
-function downloadMovie(title, year, movieId) {
+function handleDownload(title, year, downloadUrl) {
+    // Create download link
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `${title} (${year})`;  // Suggested filename
+    a.target = '_blank';  // Open in new tab if direct download not possible
+    
     // Show download notification
     const notification = document.createElement("div");
     notification.className = "download-notification show";
@@ -974,6 +1009,9 @@ function downloadMovie(title, year, movieId) {
         </div>
     `;
     document.body.appendChild(notification);
+
+    // Trigger download
+    a.click();
 
     // Remove notification after 3 seconds
     setTimeout(() => {
