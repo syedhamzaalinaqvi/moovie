@@ -448,7 +448,12 @@ function setupEventListeners() {
 
     // Login form submission
     const loginForm = document.querySelector(".login-form form");
-    loginForm.addEventListener("submit", handleLogin);
+    if (loginForm) {
+        loginForm.addEventListener("submit", handleLogin);
+    }
+    
+    // Slider navigation for Trending and Live TV
+    setupSliders();
 }
 
 // Render Videos
@@ -1100,4 +1105,53 @@ function openLiveTvModal(channel) {
     document.body.style.overflow = "hidden";
 }
 
-console.log("H-TV Video Streaming Platform initialized successfully!");
+// Initialize sliders when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupSliders();
+    console.log("H-TV Video Streaming Platform initialized successfully!");
+});
+
+// Slider functionality
+function setupSliders() {
+    // Live TV Slider
+    const liveTvGrid = document.querySelector('.live-tv-grid');
+    const liveTvNext = document.getElementById('liveTvNext');
+    const liveTvPrev = document.getElementById('liveTvPrev');
+    
+    if (liveTvNext && liveTvPrev && liveTvGrid) {
+        liveTvNext.addEventListener('click', () => {
+            liveTvGrid.scrollBy({
+                left: 300, // Adjust this value based on your card width + margin
+                behavior: 'smooth'
+            });
+        });
+        
+        liveTvPrev.addEventListener('click', () => {
+            liveTvGrid.scrollBy({
+                left: -300, // Adjust this value based on your card width + margin
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Trending Slider
+    const trendingGrid = document.querySelector('.trending-grid');
+    const trendingNext = document.getElementById('trendingNext');
+    const trendingPrev = document.getElementById('trendingPrev');
+    
+    if (trendingNext && trendingPrev && trendingGrid) {
+        trendingNext.addEventListener('click', () => {
+            trendingGrid.scrollBy({
+                left: 300, // Adjust this value based on your card width + margin
+                behavior: 'smooth'
+            });
+        });
+        
+        trendingPrev.addEventListener('click', () => {
+            trendingGrid.scrollBy({
+                left: -300, // Adjust this value based on your card width + margin
+                behavior: 'smooth'
+            });
+        });
+    }
+}
