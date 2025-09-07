@@ -6,6 +6,32 @@ const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 // Use direct TMDB API with API key
 const API_BASE_URL = TMDB_BASE_URL;
 
+// ===== FEATURED MOVIE CONFIGURATION =====
+// Just change the TMDB ID below to feature any movie/series you want!
+
+// Option 1: Use direct configuration
+const FEATURED_MOVIE_CONFIG = {
+    tmdbId: 1061474,    // Superman (2025) - Change this ID to feature any movie you want!
+    type: "movie"       // "movie" or "tv"
+};
+
+// Option 2: Choose from pre-configured popular movies (uncomment one to use)
+/*
+const FEATURED_MOVIE_OPTIONS = {
+    superman: { tmdbId: 1061474, type: "movie" },        // Superman (2025)
+    venom: { tmdbId: 912649, type: "movie" },            // Venom: The Last Dance
+    deadpool: { tmdbId: 533535, type: "movie" },         // Deadpool & Wolverine
+    avatar: { tmdbId: 76600, type: "movie" },            // Avatar: The Way of Water
+    batman: { tmdbId: 414906, type: "movie" },           // The Batman
+    spiderman: { tmdbId: 634649, type: "movie" },        // Spider-Man: No Way Home
+    wednesday: { tmdbId: 119051, type: "tv" },           // Wednesday (Netflix)
+    stranger: { tmdbId: 66732, type: "tv" },             // Stranger Things
+};
+
+// To use pre-configured options, uncomment this line and comment the FEATURED_MOVIE_CONFIG above:
+// const FEATURED_MOVIE_CONFIG = FEATURED_MOVIE_OPTIONS.superman;
+*/
+
 // Simplified Video Data - Only tmdbId and embedCode needed
 const videoData = [
     {
@@ -149,20 +175,22 @@ async function fetchTMDBData(tmdbId, type) {
             throw new Error('Failed to fetch required movie details');
         }
 
-        // Format the data to match our expected structure
+        // Format the data to match our expected structure with enhanced data
         const formattedData = {
             id: details.id,
             title: details.title || details.name || 'Unknown Title',
+            overview: details.overview || 'No description available',
             description: details.overview || 'No description available',
             release_date: details.release_date || details.first_air_date || '',
             release_year: (details.release_date || details.first_air_date)?.substring(0, 4) || 'Unknown',
+            vote_average: details.vote_average || 0,
             rating: details.vote_average ? details.vote_average.toFixed(1) : 'N/A',
-            runtime: details.runtime 
-                ? `${details.runtime} minutes` 
-                : details.number_of_seasons 
-                    ? `${details.number_of_seasons} season${details.number_of_seasons > 1 ? 's' : ''}` 
-                    : 'Unknown',
-            genres: details.genres?.map((g) => g.name) || [],
+            runtime: details.runtime || null,
+            number_of_seasons: details.number_of_seasons || null,
+            genres: details.genres || [],
+            production_countries: details.production_countries || [],
+            spoken_languages: details.spoken_languages || [],
+            original_language: details.original_language || '',
             poster_path: details.poster_path
                 ? `https://image.tmdb.org/t/p/w500${details.poster_path}`
                 : null,
@@ -172,9 +200,9 @@ async function fetchTMDBData(tmdbId, type) {
             status: details.status || 'Unknown',
             tagline: details.tagline || '',
             homepage: details.homepage || '',
-            budget: details.budget ? formatMoney(details.budget) : 'Not disclosed',
-            revenue: details.revenue ? formatMoney(details.revenue) : 'Not disclosed',
-            countries: details.production_countries?.map((c) => c.name) || [],
+            budget: details.budget || 0,
+            revenue: details.revenue || 0,
+            production_companies: details.production_companies || [],
             directors: [],
             writers: [],
             creators: details.created_by?.map((c) => c.name) || [],
@@ -197,31 +225,44 @@ async function fetchTMDBData(tmdbId, type) {
 
         // Extract cast information (top 12 for better display)
         if (credits?.cast) {
+            console.log('Processing cast data:', credits.cast.length, 'members found');
             formattedData.cast = credits.cast
                 .slice(0, 12)
-                .map((actor) => ({
-                    name: actor.name || 'Unknown',
-                    character: actor.character || 'N/A',
-                    profile_path: actor.profile_path
-                        ? `https://image.tmdb.org/t/w200${actor.profile_path}`
-                        : null,
-                }));
+                .map((actor) => {
+                    const profileUrl = actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                        : null;
+                    console.log('Cast member:', actor.name, 'Profile path:', actor.profile_path, 'Full URL:', profileUrl);
+                    return {
+                        name: actor.name || 'Unknown',
+                        character: actor.character || 'N/A',
+                        profile_path: profileUrl,
+                    };
+                });
         }
 
         // Find trailer (prioritize official trailers)
         if (videos?.results) {
-            const trailers = videos.results.filter(
-                (v) => v.type === 'Trailer' && v.site === 'YouTube' && v.key
-            );
+            console.log('Video results found:', videos.results.length, 'for', details.title || details.name);
+            
+            // Only include YouTube trailers and teasers
+            const trailers = videos.results.filter(v => {
+                return v.site === 'YouTube' && v.key && ['Trailer', 'Teaser'].includes(v.type);
+            });
+            
+            console.log('Filtered trailers:', trailers.length);
             
             if (trailers.length > 0) {
                 // First try to find an official trailer
                 let trailer = trailers.find(v => 
-                    v.name.toLowerCase().includes('official trailer') ||
+                    v.name.toLowerCase().includes('official trailer')
+                ) || trailers.find(v =>
+                    v.name.toLowerCase().includes('trailer') || 
                     v.name.toLowerCase().includes('official teaser')
                 ) || trailers[0]; // Fallback to first trailer
                 
                 if (trailer) {
+                    console.log('Selected trailer:', trailer.name, trailer.key);
                     formattedData.trailer = `https://www.youtube.com/embed/${trailer.key}?rel=0&modestbranding=1`;
                 }
             }
@@ -352,34 +393,150 @@ const gridViewBtn = document.getElementById("gridViewBtn");
 const listViewBtn = document.getElementById("listViewBtn");
 const viewBtns = document.querySelectorAll(".view-btn");
 
+// Load Featured Movie
+async function loadFeaturedMovie() {
+    console.log('Loading featured movie with TMDB ID:', FEATURED_MOVIE_CONFIG.tmdbId);
+    
+    try {
+        // Fetch TMDB data for featured movie
+        const movieData = await fetchTMDBData(FEATURED_MOVIE_CONFIG.tmdbId, FEATURED_MOVIE_CONFIG.type);
+        
+        if (movieData) {
+            // Update featured section with dynamic data
+            const featuredTitle = document.querySelector('.featured-title');
+            const featuredDescription = document.querySelector('.featured-description');
+            const featuredDuration = document.querySelector('.duration');
+            const featuredViews = document.querySelector('.views');
+            const featuredCategory = document.querySelector('.category');
+            const featuredPlayer = document.getElementById('featuredPlayer');
+            const watchNowBtn = document.querySelectorAll('.featured-section .login-btn')[0];
+            
+            // Update content
+            if (featuredTitle) {
+                featuredTitle.textContent = `${movieData.title} (${movieData.release_year})`;
+            }
+            
+            if (featuredDescription) {
+                featuredDescription.textContent = movieData.overview || movieData.description;
+            }
+            
+            if (featuredDuration && movieData.runtime) {
+                const hours = Math.floor(movieData.runtime / 60);
+                const minutes = movieData.runtime % 60;
+                featuredDuration.textContent = `${hours}h ${minutes}m`;
+            } else if (featuredDuration && movieData.number_of_seasons) {
+                featuredDuration.textContent = `${movieData.number_of_seasons} Season${movieData.number_of_seasons > 1 ? 's' : ''}`;
+            }
+            
+            if (featuredViews) {
+                featuredViews.textContent = `⭐ ${movieData.rating} TMDB`;
+            }
+            
+            if (featuredCategory && movieData.genres && movieData.genres.length > 0) {
+                featuredCategory.textContent = movieData.genres[0].name;
+            }
+            
+            // Update trailer if available
+            if (featuredPlayer && movieData.trailer) {
+                // Extract video ID from trailer URL
+                let videoId = null;
+                if (movieData.trailer.includes('youtube.com/embed/')) {
+                    videoId = movieData.trailer.split('/embed/')[1]?.split('?')[0];
+                } else if (movieData.trailer.includes('youtube.com/watch')) {
+                    videoId = new URL(movieData.trailer).searchParams.get('v');
+                } else if (movieData.trailer.includes('youtu.be/')) {
+                    videoId = movieData.trailer.split('youtu.be/')[1]?.split('?')[0];
+                }
+                
+                if (videoId) {
+                    featuredPlayer.src = `https://www.youtube.com/embed/${videoId}?si=qm5j12OBg51YoIMN&autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+                }
+            }
+            
+            // Make Watch Now button clickable
+            if (watchNowBtn) {
+                watchNowBtn.onclick = () => {
+                    // Create featured movie object for modal
+                    const featuredMovieForModal = {
+                        id: `featured_${FEATURED_MOVIE_CONFIG.tmdbId}`,
+                        tmdbId: FEATURED_MOVIE_CONFIG.tmdbId,
+                        type: FEATURED_MOVIE_CONFIG.type,
+                        title: movieData.title,
+                        description: movieData.overview || movieData.description,
+                        views: `⭐ ${movieData.rating}`,
+                        duration: movieData.runtime ? `${Math.floor(movieData.runtime / 60)}h ${movieData.runtime % 60}m` : 'N/A',
+                        category: movieData.genres?.[0]?.name?.toLowerCase() || 'unknown',
+                        tmdbData: movieData,
+                        embedCode: movieData.trailer 
+                            ? `<iframe src="${movieData.trailer}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`
+                            : '<div style="text-align: center; padding: 50px; color: var(--text-secondary);">Trailer not available for this content</div>',
+                    };
+                    
+                    openVideoModal(featuredMovieForModal);
+                };
+            }
+            
+            console.log('Featured movie loaded successfully:', movieData.title);
+        } else {
+            console.error('Failed to load featured movie data');
+        }
+    } catch (error) {
+        console.error('Error loading featured movie:', error);
+    }
+}
+
 // Initialize the application
 document.addEventListener("DOMContentLoaded", function () {
-    loadMoviesWithTMDBData();
-    setupEventListeners();
-    loadLiveTvSlider();
-    loadTrendingSlider();
+    console.log('DOM Content Loaded - Starting H-TV initialization...');
+    
+    // Show loading indicator
+    if (videosGrid) {
+        videosGrid.innerHTML = '<div style="text-align: center; padding: 60px; color: var(--text-secondary);"><h3>Loading movies...</h3><p>Fetching data from TMDB...</p></div>';
+    }
+    
+    // Initialize app
+    setTimeout(async () => {
+        try {
+            await loadFeaturedMovie();      // Load featured movie first
+            await loadMoviesWithTMDBData(); // Then load other movies
+            setupEventListeners();
+            loadLiveTvSlider();
+            loadTrendingSlider();
+            console.log('H-TV initialization complete!');
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            if (videosGrid) {
+                videosGrid.innerHTML = '<div style="text-align: center; padding: 60px; color: red;"><h3>Loading Error</h3><p>Please refresh the page to try again.</p></div>';
+            }
+        }
+    }, 100);
 });
 
 // Load movies with TMDB data
 async function loadMoviesWithTMDBData() {
+    console.log('Starting to load movies with TMDB data...');
     loadedMovies = [];
 
     for (const video of videoData) {
         try {
+            console.log(`Loading movie ${video.id} - TMDB ID: ${video.tmdbId}`);
             const tmdbData = await fetchTMDBData(video.tmdbId, video.type);
             if (tmdbData) {
                 const movieWithData = {
                     ...video,
                     title: tmdbData.title,
-                    duration: tmdbData.runtime,
+                    duration: tmdbData.runtime ? `${Math.floor(tmdbData.runtime / 60)}h ${tmdbData.runtime % 60}m` : 
+                             tmdbData.number_of_seasons ? `${tmdbData.number_of_seasons} seasons` : "Unknown",
                     views: `${tmdbData.rating}★ TMDB`,
-                    category: tmdbData.genres[0]?.toLowerCase() || "drama",
+                    category: (tmdbData.genres && tmdbData.genres.length > 0) ? tmdbData.genres[0].name.toLowerCase() : "drama",
                     thumbnail: tmdbData.poster_path,
-                    description: tmdbData.description,
+                    description: tmdbData.overview || tmdbData.description,
                     tmdbData: tmdbData,
                 };
                 loadedMovies.push(movieWithData);
+                console.log(`Successfully loaded: ${tmdbData.title}`);
             } else {
+                console.warn(`No TMDB data for movie ${video.id}, using fallback`);
                 // Fallback if TMDB data fails
                 loadedMovies.push({
                     ...video,
@@ -394,9 +551,21 @@ async function loadMoviesWithTMDBData() {
             }
         } catch (error) {
             console.error(`Error loading movie ${video.id}:`, error);
+            // Add fallback movie anyway
+            loadedMovies.push({
+                ...video,
+                title: `Movie ${video.id}`,
+                duration: "Unknown",
+                views: "Error",
+                category: "unknown",
+                thumbnail:
+                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg==",
+                description: "Failed to load movie details",
+            });
         }
     }
 
+    console.log(`Loaded ${loadedMovies.length} movies total`);
     filteredVideos = [...loadedMovies];
     renderVideos();
 }
@@ -459,9 +628,17 @@ function setupEventListeners() {
 
 // Render Videos
 function renderVideos() {
+    console.log('Rendering videos...', filteredVideos.length, 'videos to render');
+    
+    if (!videosGrid) {
+        console.error('videosGrid element not found!');
+        return;
+    }
+    
     videosGrid.innerHTML = "";
 
     if (filteredVideos.length === 0) {
+        console.log('No videos to display');
         videosGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-secondary);">
                 <h3>No videos found</h3>
@@ -471,10 +648,17 @@ function renderVideos() {
         return;
     }
 
-    filteredVideos.forEach((video) => {
-        const videoCard = createVideoCard(video);
-        videosGrid.appendChild(videoCard);
+    filteredVideos.forEach((video, index) => {
+        try {
+            console.log(`Rendering video ${index + 1}: ${video.title}`);
+            const videoCard = createVideoCard(video);
+            videosGrid.appendChild(videoCard);
+        } catch (error) {
+            console.error(`Error rendering video ${index + 1}:`, error, video);
+        }
     });
+    
+    console.log('Finished rendering videos');
 }
 
 // Create Video Card
@@ -536,131 +720,127 @@ function filterVideos() {
 
 // Open Video Modal
 async function openVideoModal(video) {
+    if (!video) {
+        console.error('No video data provided');
+        return;
+    }
+
     console.log('Opening video modal for:', video);
     
-    // Clear previous content and add the complete iframe
-    modalPlayer.style.display = "none";
-    const modalVideo = document.querySelector(".modal-video");
-    
-    // Set a loading state
-    modalVideo.innerHTML = `
-        <div class="loading-container" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-            <div class="spinner"></div>
-            <p>Loading content...</p>
-        </div>`;
+    // Get all modal elements
+    const modalElements = {
+        video: document.querySelector(".modal-video"),
+        title: document.getElementById("modalTitle"),
+        duration: document.getElementById("modalDuration"),
+        views: document.getElementById("modalViews"),
+        category: document.getElementById("modalCategory"),
+        description: document.getElementById("modalDescription"),
+        year: document.getElementById("modalYear"),
+        status: document.getElementById("modalStatus"),
+        rating: document.getElementById("modalRating")
+    };
 
     try {
+        // Set up iframe sizing handler
+        const setupIframeStyles = () => {
+            const iframes = modalElements.video.getElementsByTagName('iframe');
+            for (let iframe of iframes) {
+                iframe.style.position = 'absolute';
+                iframe.style.top = '0';
+                iframe.style.left = '0';
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+            }
+        };
+
+        // Add the video with proper responsive container (removed old download button)
+        modalElements.video.innerHTML = `
+            <div class="modal-content-wrapper">
+                <div class="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 15px; background: #000;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        ${video.embedCode}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Set up iframe styles after a small delay
+        setTimeout(setupIframeStyles, 100);
+
         // Try to get TMDB data if not already available
         let movieData = video.tmdbData;
         
-        // If no TMDB data but we have a TMDB ID, try to fetch it
         if ((!movieData || Object.keys(movieData).length === 0) && video.tmdbId) {
             console.log('Fetching TMDB data for ID:', video.tmdbId, 'Type:', video.type);
             movieData = await fetchTMDBData(video.tmdbId, video.type || 'movie');
-            // Store the fetched data for future use
             video.tmdbData = movieData;
         }
 
-        // Update the video object with the latest data
         if (movieData) {
-            console.log('TMDB Data loaded:', movieData);
-            
-            // Update video properties with TMDB data
+            // Update video properties
             video.title = movieData.title || video.title;
             video.duration = movieData.runtime || video.duration;
             video.views = `⭐ ${movieData.rating || 'N/A'}`;
-            video.category = (movieData.genres && movieData.genres[0]?.toLowerCase()) || video.category || 'drama';
+            video.category = (movieData.genres && movieData.genres.length > 0 && movieData.genres[0].name) 
+                           ? movieData.genres[0].name.toLowerCase() 
+                           : video.category || 'drama';
             video.description = movieData.overview || movieData.description || video.description;
-            
-            // Set the embed code if we have a trailer
-            if (movieData.trailer && !video.embedCode) {
-                video.embedCode = `
-                    <div class="aspect-ratio" style="padding-bottom: 56.25%;">
-                        <iframe 
-                            src="${movieData.trailer}"
-                            title="${movieData.title || video.title} Trailer"
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                        </iframe>
-                    </div>`;
-            }
-            
-            // Fallback if no trailer
-            if (!video.embedCode) {
-                video.embedCode = `
-                    <div style="text-align: center; padding: 50px; color: var(--text-secondary);">
-                        <p>No trailer available for this content</p>
-                    </div>`;
-            }
-        } else {
-            console.warn('No TMDB data available for video:', video);
-            if (!video.embedCode) {
-                video.embedCode = `
-                    <div style="text-align: center; padding: 50px; color: var(--text-secondary);">
-                        <p>No preview available</p>
-                    </div>`;
-            }
-        }
-        
-        // Update modal content with the embed code
-        modalVideo.innerHTML = video.embedCode;
 
-        // Update modal UI with video data
-        modalTitle.textContent = video.title || "";
-        modalDuration.textContent = video.duration || "Unknown";
-        modalViews.textContent = video.views || "";
-        modalCategory.textContent = video.category || "";
-        modalDescription.textContent = video.description || "";
+            // Update meta information
+            if (modalElements.year) modalElements.year.textContent = movieData.release_year || "Unknown";
+            if (modalElements.status) modalElements.status.textContent = movieData.status || "";
+            if (modalElements.rating) modalElements.rating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
 
-        // Update basic meta info if we have TMDB data
-        if (movieData) {
-            const modalYear = document.getElementById("modalYear");
-            const modalStatus = document.getElementById("modalStatus");
-            const modalRating = document.getElementById("modalRating");
-
-            if (modalYear) modalYear.textContent = movieData.release_year || "Unknown";
-            if (modalStatus) modalStatus.textContent = movieData.status || "";
-            if (modalRating) modalRating.textContent = movieData.rating ? `⭐ ${movieData.rating}` : "";
-
-            // Display the TMDB details section
+            // Display TMDB details
             displayTMDBDetails(movieData, video.type || 'movie', video);
-        } else {
-            // Hide or clear TMDB details section if no data
-            const tmdbDetails = document.getElementById("tmdbDetails");
-            if (tmdbDetails) tmdbDetails.innerHTML = '';
         }
-        
+
+        // Clear the basic modal info since we'll show detailed TMDB info instead
+        modalElements.title.textContent = "";
+        modalElements.duration.textContent = "";
+        modalElements.views.textContent = "";
+        modalElements.category.textContent = "";
+        modalElements.description.textContent = "";
+
+        // Add video container iframe styles if not already added
+        if (!document.getElementById('video-container-styles')) {
+            const style = document.createElement('style');
+            style.id = 'video-container-styles';
+            style.textContent = `
+                .video-container iframe {
+                    border: none;
+                    border-radius: 8px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Show modal
+        const videoModal = document.getElementById('videoModal');
+        if (videoModal) {
+            videoModal.classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
     } catch (error) {
         console.error('Error in openVideoModal:', error);
-        
-        // Show error message to user
-        modalVideo.innerHTML = `
-            <div style="text-align: center; padding: 50px; color: var(--error-color);">
-                <p>Failed to load content. Please try again later.</p>
-                <button onclick="openVideoModal(${JSON.stringify(video).replace(/"/g, '&quot;')})" 
-                        style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); border: none; border-radius: 4px; color: white; cursor: pointer;">
-                    Retry
-                </button>
-            </div>`;
-            
-        // Fallback to basic video data
-        modalTitle.textContent = video.title || "";
-        modalDuration.textContent = video.duration || "Unknown";
-        modalViews.textContent = video.views || "";
-        modalCategory.textContent = video.category || "";
-        modalDescription.textContent = video.description || "";
+        if (modalElements?.video) {
+            modalElements.video.innerHTML = `
+                <div style="text-align: center; padding: 50px; color: var(--error-color);">
+                    <p>Failed to load content. Please try again later.</p>
+                    <button onclick="openVideoModal(${JSON.stringify(video).replace(/"/g, '&quot;')})" 
+                            style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); border: none; border-radius: 4px; color: white; cursor: pointer;">
+                        Retry
+                    </button>
+                </div>`;
+        }
     }
-
-    // Show the modal
-    videoModal.classList.add("active");
-    document.body.style.overflow = "hidden";
 }
-
-// Display TMDB Details
+// Display TMDB details
 function displayTMDBDetails(movieData, type, video) {
     console.log('Displaying TMDB details for:', movieData.title || 'Unknown');
-    console.log('Video data in displayTMDBDetails:', video); // Debug log
+    console.log('Trailer available:', movieData.trailer ? 'Yes' : 'No');
     
     const tmdbDetails = document.getElementById("tmdbDetails");
     if (!tmdbDetails) {
@@ -668,37 +848,31 @@ function displayTMDBDetails(movieData, type, video) {
         return;
     }
     
+    // Make sure the details section is visible
+    tmdbDetails.style.display = "block";
+    
     try {
         // Create safe strings to prevent XSS
         const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;').replace(/'/g, '&apos;') : 'Unknown Title';
         const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
         const safeDescription = movieData.overview ? movieData.overview.replace(/[\"\']/g, '') : 'No description available';
         
-        // Create download button if download link exists
-        console.log('Video object:', video); // Debug log
+        // Create new responsive download button if download link exists
         const downloadButton = video && video.download ? `
-            <div class="download-button-container" style="text-align: center; margin: 20px 0;">
+            <div class="download-section">
                 <button onclick="handleDownload('${safeTitle}', '${safeReleaseYear}', '${video.download}')" 
-                        class="download-button" 
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                               color: white;
-                               padding: 12px 24px;
-                               border: none;
-                               border-radius: 8px;
-                               font-size: 16px;
-                               cursor: pointer;
-                               transition: transform 0.2s, box-shadow 0.2s;
-                               display: inline-flex;
-                               align-items: center;
-                               gap: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        class="new-download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7,10 12,15 17,10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                     </svg>
-                    Download Movie
+                    <span>Download ${movieData.title || 'Movie'}</span>
                 </button>
             </div>` : '';
+        
+        // Create compact movie info
+        let compactInfoHTML = createCompactMovieInfo(movieData, type);
         
         // Create cast section
         let castHTML = createCastSection(movieData);
@@ -706,20 +880,17 @@ function displayTMDBDetails(movieData, type, video) {
         // Create trailer section
         let trailerHTML = createTrailerSection(movieData);
         
-        // Create movie stats
-        let statsHTML = createMovieStats(movieData, type);
-        
-        // Combine all sections
+        // Combine all sections with new layout
         const htmlContent = `
-            <div class="movie-info-header">
-                <h2>${safeTitle} <span class="release-year">(${safeReleaseYear})</span></h2>
+            <div class="modern-movie-header">
+                <h2 class="movie-title">${safeTitle} <span class="year-badge">${safeReleaseYear}</span></h2>
+                ${movieData.tagline ? `<p class="movie-tagline">${movieData.tagline}</p>` : ''}
                 <p class="movie-description">${safeDescription}</p>
             </div>
             ${downloadButton}
-            ${statsHTML}
+            ${compactInfoHTML}
             ${castHTML}
             ${trailerHTML}
-            ${movieData.tagline ? `<div class="movie-tagline"><em>"${movieData.tagline}"</em></div>` : ''}
         `;
         
         tmdbDetails.innerHTML = htmlContent;
@@ -743,24 +914,22 @@ function createCastSection(movieData) {
         .map(actor => {
             const safeName = actor.name ? actor.name.replace(/[\"\']/g, '') : 'Unknown';
             const safeCharacter = actor.character ? actor.character.replace(/[\"\']/g, '') : 'N/A';
-            const profileImage = actor.profile_path 
-                ? `https://image.tmdb.org/t/w200${actor.profile_path}`
-                : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';
+            // Use the profile path already processed from TMDB data
+            const profileImage = actor.profile_path || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNjAiIGZpbGw9IiMzMzMiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjQ1IiByPSIyMCIgZmlsbD0iIzY2NiIvPjxlbGxpcHNlIGN4PSI2MCIgY3k9IjEwMCIgcng9IjMwIiByeT0iMjUiIGZpbGw9IiM2NjYiLz48L3N2Zz4=';
+            console.log('Cast member image for', safeName + ':', profileImage);
             
             return `
-                <div class="cast-member">
-                    <div class="cast-photo-container">
-                        <img 
-                            class="cast-photo" 
-                            src="${profileImage}" 
-                            alt="${safeName}"
-                            onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5OL0E8L3RleHQ+PC9zdmc+';"
-                            loading="lazy"
-                            title="${safeName} as ${safeCharacter}">
-                    </div>
-                    <div class="cast-info">
-                        <div class="cast-name" title="${safeName}">${safeName}</div>
-                        <div class="cast-character" title="${safeCharacter}">${safeCharacter}</div>
+                <div class="compact-cast-member">
+                    <img 
+                        class="compact-cast-photo" 
+                        src="${profileImage}" 
+                        alt="${safeName}"
+                        onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIzMCIgZmlsbD0iIzMzMyIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMjIiIHI9IjEwIiBmaWxsPSIjNjY2Ii8+PGVsbGlwc2UgY3g9IjMwIiBjeT0iNDgiIHJ4PSIxNSIgcnk9IjEyIiBmaWxsPSIjNjY2Ii8+PC9zdmc+';"
+                        loading="lazy"
+                        title="${safeName} as ${safeCharacter}">
+                    <div class="compact-cast-info">
+                        <div class="compact-cast-name">${safeName}</div>
+                        <div class="compact-cast-character">${safeCharacter}</div>
                     </div>
                 </div>`;
         });
@@ -771,93 +940,127 @@ function createCastSection(movieData) {
     }
     
     return `
-        <div class="cast-section">
-            <h3 class="section-title">🎭 Cast & Characters</h3>
-            <div class="cast-grid">
+        <div class="compact-cast-section">
+            <h3 class="section-title">🎭 Cast</h3>
+            <div class="compact-cast-grid">
                 ${castItems.join('')}
             </div>
         </div>`;
 }
 
-// Helper function to create movie stats section
-function createMovieStats(movieData, type) {
-    const stats = [];
+// Helper function to create compact movie info section
+function createCompactMovieInfo(movieData, type) {
+    // Create compact movie details
+    const primaryInfo = [];
+    const secondaryInfo = [];
     
-    // Runtime
+    // Primary info (always show)
+    if (movieData.vote_average) {
+        primaryInfo.push(`<div class="info-chip"><span class="chip-icon">⭐</span>${movieData.vote_average.toFixed(1)}</div>`);
+    }
+    
+    if (movieData.release_date) {
+        const year = movieData.release_date.substring(0, 4);
+        primaryInfo.push(`<div class="info-chip"><span class="chip-icon">📅</span>${year}</div>`);
+    }
+    
     if (movieData.runtime) {
         const hours = Math.floor(movieData.runtime / 60);
         const minutes = movieData.runtime % 60;
-        stats.push(`<div class="stat-item"><span class="stat-label">⏱️ Runtime:</span> ${hours}h ${minutes}m</div>`);
+        primaryInfo.push(`<div class="info-chip"><span class="chip-icon">⏱️</span>${hours}h ${minutes}m</div>`);
+    } else if (movieData.number_of_seasons) {
+        primaryInfo.push(`<div class="info-chip"><span class="chip-icon">📺</span>${movieData.number_of_seasons} Season${movieData.number_of_seasons > 1 ? 's' : ''}</div>`);
     }
     
-    // Rating
-    if (movieData.vote_average) {
-        stats.push(`<div class="stat-item"><span class="stat-label">⭐ Rating:</span> ${movieData.vote_average.toFixed(1)}/10</div>`);
+    if (movieData.status && movieData.status !== 'Released') {
+        primaryInfo.push(`<div class="info-chip status-chip"><span class="chip-icon">📊</span>${movieData.status}</div>`);
     }
     
-    // Status
-    if (movieData.status) {
-        stats.push(`<div class="stat-item"><span class="stat-label">📊 Status:</span> ${movieData.status}</div>`);
-    }
-    
-    // Release Date
-    if (movieData.release_date) {
-        const releaseDate = new Date(movieData.release_date);
-        stats.push(`<div class="stat-item"><span class="stat-label">📅 Release Date:</span> ${releaseDate.toLocaleDateString()}</div>`);
-    }
-    
-    // Genres
+    // Secondary info (additional details)
     if (movieData.genres && movieData.genres.length > 0) {
-        const genres = movieData.genres.map(g => g.name).join(', ');
-        stats.push(`<div class="stat-item"><span class="stat-label">🎭 Genres:</span> ${genres}</div>`);
+        const genres = movieData.genres.slice(0, 3).map(g => g.name).join(', ');
+        secondaryInfo.push(`<div class="info-detail"><strong>Genre:</strong> ${genres}</div>`);
     }
     
-    // Budget (for movies)
-    if (type === 'movie' && movieData.budget && movieData.budget > 0) {
-        stats.push(`<div class="stat-item"><span class="stat-label">💰 Budget:</span> $${movieData.budget.toLocaleString()}</div>`);
+    if (movieData.production_countries && movieData.production_countries.length > 0) {
+        const countries = movieData.production_countries.slice(0, 2).map(c => c.name).join(', ');
+        secondaryInfo.push(`<div class="info-detail"><strong>Country:</strong> ${countries}</div>`);
     }
     
-    // Revenue (for movies)
-    if (type === 'movie' && movieData.revenue && movieData.revenue > 0) {
-        stats.push(`<div class="stat-item"><span class="stat-label">💵 Revenue:</span> $${movieData.revenue.toLocaleString()}</div>`);
+    if (movieData.original_language) {
+        const languageNames = {
+            'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
+            'it': 'Italian', 'ja': 'Japanese', 'ko': 'Korean', 'zh': 'Chinese',
+            'hi': 'Hindi', 'ar': 'Arabic', 'ru': 'Russian', 'pt': 'Portuguese'
+        };
+        const lang = languageNames[movieData.original_language] || movieData.original_language.toUpperCase();
+        secondaryInfo.push(`<div class="info-detail"><strong>Language:</strong> ${lang}</div>`);
     }
     
-    // Production Companies
-    if (movieData.production_companies && movieData.production_companies.length > 0) {
-        const companies = movieData.production_companies.map(c => c.name).join(', ');
-        stats.push(`<div class="stat-item"><span class="stat-label">🏢 Production:</span> ${companies}</div>`);
+    if (movieData.directors && movieData.directors.length > 0) {
+        const directors = movieData.directors.slice(0, 2).join(', ');
+        secondaryInfo.push(`<div class="info-detail"><strong>Director:</strong> ${directors}</div>`);
     }
     
-    if (stats.length === 0) {
-        return '';
+    if (movieData.writers && movieData.writers.length > 0) {
+        const writers = movieData.writers.slice(0, 2).join(', ');
+        secondaryInfo.push(`<div class="info-detail"><strong>Writer:</strong> ${writers}</div>`);
+    }
+    
+    // Budget & Revenue (only for movies with significant amounts)
+    if (type === 'movie' && movieData.budget > 100000) {
+        secondaryInfo.push(`<div class="info-detail"><strong>Budget:</strong> ${formatMoney(movieData.budget)}</div>`);
+    }
+    
+    if (type === 'movie' && movieData.revenue > 100000) {
+        secondaryInfo.push(`<div class="info-detail"><strong>Box Office:</strong> ${formatMoney(movieData.revenue)}</div>`);
     }
     
     return `
-        <div class="movie-stats">
-            <h3 class="section-title">📊 Details</h3>
-            <div class="stats-grid">
-                ${stats.join('')}
+        <div class="compact-movie-info">
+            <div class="primary-info">
+                ${primaryInfo.join('')}
             </div>
-        </div>`;
+            <div class="secondary-info">
+                ${secondaryInfo.join('')}
+            </div>
+        </div>
+    `;
 }
 
 // Helper function to create trailer section
 function createTrailerSection(movieData) {
     if (!movieData.trailer) {
-        console.log('No trailer available');
+        console.log('No trailer available for:', movieData.title || 'Unknown movie');
         return '';
     }
     
     try {
-        // Extract video ID from YouTube URL
-        const videoId = movieData.trailer.includes('youtube.com') 
-            ? new URL(movieData.trailer).searchParams.get('v')
-            : movieData.trailer.split('/').pop();
+        console.log('Creating trailer section for:', movieData.title, '- Trailer URL:', movieData.trailer);
+        
+        // Extract video ID from YouTube URL - handles multiple URL formats
+        let videoId = null;
+        
+        if (movieData.trailer.includes('youtube.com/embed/')) {
+            // Handle embed URLs: https://www.youtube.com/embed/VIDEO_ID
+            videoId = movieData.trailer.split('/embed/')[1]?.split('?')[0];
+        } else if (movieData.trailer.includes('youtube.com/watch')) {
+            // Handle watch URLs: https://www.youtube.com/watch?v=VIDEO_ID
+            videoId = new URL(movieData.trailer).searchParams.get('v');
+        } else if (movieData.trailer.includes('youtu.be/')) {
+            // Handle short URLs: https://youtu.be/VIDEO_ID
+            videoId = movieData.trailer.split('youtu.be/')[1]?.split('?')[0];
+        } else if (movieData.trailer.match(/^[\w-]{11}$/)) {
+            // Handle case where it's just the video ID
+            videoId = movieData.trailer;
+        }
             
         if (!videoId) {
             console.error('Could not extract video ID from trailer URL:', movieData.trailer);
             return '';
         }
+        
+        console.log('Extracted video ID:', videoId);
         
         // Create safe title for the trailer note
         const safeTitle = movieData.title ? movieData.title.replace(/"/g, '&quot;').replace(/'/g, '&apos;') : 'this content';
@@ -865,12 +1068,12 @@ function createTrailerSection(movieData) {
         
         return `
             <div class="trailer-section">
-                <h3 class="section-title">🎬 Trailer</h3>
+                <h3 class="section-title">🎬 Official Trailer</h3>
                 <div class="video-container">
                     <iframe 
                         width="560" 
                         height="315" 
-                        src="https://www.youtube.com/embed/${videoId}" 
+                        src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         loading="lazy"
@@ -952,7 +1155,8 @@ function toggleMobileMenu() {
 // Handle Navigation
 function handleNavigation(e) {
     e.preventDefault();
-    const target = e.target.getAttribute("href");
+    const sectionName = e.target.getAttribute("data-section");
+    console.log('Navigation clicked:', sectionName);
 
     // Close mobile menu
     navMenu.classList.remove("active");
@@ -961,11 +1165,34 @@ function handleNavigation(e) {
     navLinks.forEach((link) => link.classList.remove("active"));
     e.target.classList.add("active");
 
-    // Scroll to section
-    if (target && target.startsWith("#")) {
-        const section = document.querySelector(target);
-        if (section) {
-            section.scrollIntoView({ behavior: "smooth" });
+    // Navigate to section using the section ID
+    if (sectionName) {
+        const targetSection = document.getElementById(sectionName);
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Special actions for specific sections
+            switch(sectionName) {
+                case 'search':
+                    // Focus on search input when navigating to search
+                    setTimeout(() => {
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) {
+                            searchInput.focus();
+                        }
+                    }, 800);
+                    break;
+                    
+                case 'categories':
+                    // Could add special category actions here if needed
+                    break;
+                    
+                case 'popular':
+                    // Could add popular filtering here if needed
+                    break;
+            }
+        } else {
+            console.log('Section not found:', sectionName);
         }
     }
 }
@@ -989,10 +1216,12 @@ function handleViewToggle(e) {
 
 // Download Movie Function
 function handleDownload(title, year, downloadUrl) {
+    console.log('Download initiated:', { title, year, downloadUrl });
+    
     // Create download link
     const a = document.createElement('a');
     a.href = downloadUrl;
-    a.download = `${title} (${year})`;  // Suggested filename
+    a.download = `${title} (${year})`.trim();  // Suggested filename
     a.target = '_blank';  // Open in new tab if direct download not possible
     
     // Show download notification

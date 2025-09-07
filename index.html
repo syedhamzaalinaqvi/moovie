@@ -47,29 +47,25 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Featured Section -->
-        <section class="featured-section">
+        <!-- Featured Section - Now Dynamically Loaded from JavaScript! -->
+        <!-- To change featured content: Go to script.js and modify FEATURED_MOVIE_CONFIG -->
+        <section class="featured-section" id="home">
             <div class="container">
                 <div class="featured-video">
                     <div class="video-player">
-                     <!--   <iframe 
-                        
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                            frameborder="0" 
-                            allowfullscreen>
-                        </iframe> --- title="YouTube video player"  ---- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"  -->
-                        <iframe     id="featuredPlayer"  src="https://www.youtube.com/embed/2woCZg5QdVE?si=qm5j12OBg51YoIMN" frameborder="0" allowfullscreen></iframe>
-                       
+                        <!-- Trailer iframe - will be updated dynamically -->
+                        <iframe id="featuredPlayer" src="https://www.youtube.com/embed/2woCZg5QdVE?si=qm5j12OBg51YoIMN" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <div class="featured-info">
-                        <h2 class="featured-title">Superman (2025)</h2>
-                        <p class="featured-description">Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent."</p>
+                        <!-- All content below will be automatically updated from TMDB -->
+                        <h2 class="featured-title">Loading...</h2>
+                        <p class="featured-description">Fetching movie details from TMDB...</p>
                         <div class="featured-meta">
-                            <span class="duration">3:00</span>
-                            <span class="views">3.4M views</span>
-                            <span class="category">Movie</span>
+                            <span class="duration">Loading...</span>
+                            <span class="views">Loading...</span>
+                            <span class="category">Loading...</span>
                         </div>
-                        <button class="login-btn" id="loginBtn">Watch Now</button>
+                        <button class="login-btn">Watch Now</button>
                     </div>
                 </div>
             </div>
@@ -90,7 +86,7 @@
         </section>
 
         <!-- Trending Section -->
-        <section class="trending-section">
+        <section class="trending-section" id="popular">
             <div class="container">
                 <h2 class="section-title">Trending This Week</h2>
                 <div class="trending-slider">
@@ -104,7 +100,7 @@
         </section>
 
         <!-- Category Filters -->
-        <section class="filters-section">
+        <section class="filters-section" id="categories">
             <div class="container">
                 <div class="category-filters">
                     <button class="filter-btn active" data-category="all">All</button>
@@ -119,7 +115,7 @@
         </section>
 
         <!-- Video Grid -->
-        <section class="videos-section">
+        <section class="videos-section" id="search">
             <div class="container">
                 <div class="view-controls">
                     <button class="view-btn active" data-view="grid" id="gridViewBtn">
@@ -176,7 +172,7 @@
                 <p id="modalDescription"></p>
                 
                 <!-- TMDB Movie Details -->
-                <div class="tmdb-details" id="tmdbDetails" style="display: none;">
+                <div class="tmdb-details" id="tmdbDetails">
                     <div class="movie-stats">
                         <div class="stat-item">
                             <label>Budget:</label>
@@ -196,10 +192,7 @@
                         </div>
                     </div>
                     
-                    <div class="trailer-section" id="trailerSection" style="display: none;">
-                        <h4>Official Trailer</h4>
-                        <div class="trailer-player" id="trailerPlayer"></div>
-                    </div>
+                    <!-- Trailer section will be dynamically inserted here by createTrailerSection function -->
                     
                     <div class="cast-section">
                         <h4>Cast</h4>
