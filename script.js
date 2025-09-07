@@ -459,6 +459,15 @@ let currentView = "grid";
 let displayedMovies = 16; // Show 16 movies initially
 const moviesPerLoad = 16; // Load 16 more movies when "Load More" is clicked
 
+// Page memory functionality
+const PAGE_MEMORY_KEY = 'htv-page-state';
+let pageMemory = {
+    displayedMovies: 16,
+    scrollPosition: 0,
+    currentCategory: 'all',
+    searchQuery: ''
+};
+
 // DOM Elements
 const videosGrid = document.getElementById("videosGrid");
 const categoryFilters = document.querySelectorAll(".filter-btn");
@@ -579,9 +588,88 @@ async function loadFeaturedMovie() {
     }
 }
 
+// Page memory functions
+function savePageState() {
+    pageMemory.displayedMovies = displayedMovies;
+    pageMemory.scrollPosition = window.scrollY;
+    pageMemory.currentCategory = currentCategory;
+    pageMemory.searchQuery = searchQuery;
+    
+    try {
+        localStorage.setItem(PAGE_MEMORY_KEY, JSON.stringify(pageMemory));
+        console.log('Page state saved:', pageMemory);
+    } catch (error) {
+        console.warn('Could not save page state:', error);
+    }
+}
+
+function loadPageState() {
+    try {
+        const saved = localStorage.getItem(PAGE_MEMORY_KEY);
+        if (saved) {
+            pageMemory = JSON.parse(saved);
+            displayedMovies = pageMemory.displayedMovies || 16;
+            currentCategory = pageMemory.currentCategory || 'all';
+            searchQuery = pageMemory.searchQuery || '';
+            
+            console.log('Page state loaded:', pageMemory);
+            return true;
+        }
+    } catch (error) {
+        console.warn('Could not load page state:', error);
+    }
+    return false;
+}
+
+function clearPageState() {
+    try {
+        localStorage.removeItem(PAGE_MEMORY_KEY);
+        console.log('Page state cleared');
+    } catch (error) {
+        console.warn('Could not clear page state:', error);
+    }
+}
+
+function restorePageState() {
+    console.log('Restoring page state...');
+    
+    // Restore search input
+    if (searchInput && pageMemory.searchQuery) {
+        searchInput.value = pageMemory.searchQuery;
+        console.log('Restored search query:', pageMemory.searchQuery);
+    }
+    
+    // Restore active category filter
+    if (pageMemory.currentCategory !== 'all') {
+        const categoryBtn = document.querySelector(`[data-category="${pageMemory.currentCategory}"]`);
+        if (categoryBtn) {
+            categoryFilters.forEach(btn => btn.classList.remove('active'));
+            categoryBtn.classList.add('active');
+            console.log('Restored category filter:', pageMemory.currentCategory);
+        }
+    }
+    
+    // Apply filters and render with restored movie count
+    filterVideos(true); // Pass true to indicate we're restoring state
+    
+    // Restore scroll position after a delay to ensure content is loaded
+    setTimeout(() => {
+        if (pageMemory.scrollPosition > 0) {
+            window.scrollTo({
+                top: pageMemory.scrollPosition,
+                behavior: 'smooth'
+            });
+            console.log('Restored scroll position:', pageMemory.scrollPosition);
+        }
+    }, 500);
+}
+
 // Initialize the application
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM Content Loaded - Starting H-TV initialization...');
+    
+    // Load previous page state
+    const hasState = loadPageState();
     
     // Show loading indicator
     if (videosGrid) {
@@ -596,6 +684,12 @@ document.addEventListener("DOMContentLoaded", function () {
             setupEventListeners();
             loadLiveTvSlider();
             loadTrendingSlider();
+            
+            // Restore page state if available
+            if (hasState) {
+                restorePageState();
+            }
+            
             console.log('H-TV initialization complete!');
         } catch (error) {
             console.error('Error during initialization:', error);
@@ -735,6 +829,20 @@ function setupEventListeners() {
     
     // Scroll to top button functionality
     setupScrollToTop();
+    
+    // Page state saving on scroll (throttled)
+    let scrollTimer;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            savePageState();
+        }, 500); // Save state 500ms after user stops scrolling
+    });
+    
+    // Save state when user navigates away
+    window.addEventListener('beforeunload', () => {
+        savePageState();
+    });
 }
 
 // Render Videos
@@ -805,6 +913,9 @@ function renderVideos() {
                 displayedMovies += moviesPerLoad;
                 renderVideos();
                 
+                // Save page state after loading more
+                savePageState();
+                
                 // Smooth scroll to the newly loaded content
                 setTimeout(() => {
                     const newlyLoadedCards = videosGrid.querySelectorAll('.video-card');
@@ -829,16 +940,23 @@ function renderVideos() {
 function createVideoCard(video) {
     const card = document.createElement("div");
     card.className = "video-card";
+    
+    // Normalize category name for CSS class (remove special characters and spaces)
+    const categoryClass = video.category ? video.category.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') : 'unknown';
+    
+    // Debug: Log category information
+    console.log(`Creating card for: ${video.title}, Category: ${video.category}, CSS Class: ${categoryClass}`);
+    
     card.innerHTML = `
         <div class="video-thumbnail">
             <img src="${video.thumbnail}" alt="${video.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
             <div class="video-duration">${video.duration}</div>
+            <span class="video-category ${categoryClass}">${video.category}</span>
         </div>
         <div class="video-info">
             <h3 class="video-title">${video.title}</h3>
             <div class="video-meta">
                 <span class="video-views">${video.views}</span>
-                <span class="video-category">${video.category}</span>
             </div>
         </div>
     `;
@@ -866,7 +984,7 @@ function handleSearch() {
 }
 
 // Filter Videos
-function filterVideos() {
+function filterVideos(isRestoringState = false) {
     filteredVideos = loadedMovies.filter((video) => {
         const matchesCategory =
             currentCategory === "all" || video.category === currentCategory;
@@ -879,8 +997,12 @@ function filterVideos() {
         return matchesCategory && matchesSearch;
     });
 
-    // Reset displayed movies count when filtering
-    displayedMovies = 16;
+    // Only reset displayed movies count when not restoring state
+    if (!isRestoringState) {
+        displayedMovies = 16;
+        savePageState(); // Save state when user actively filters
+    }
+    
     renderVideos();
 }
 
