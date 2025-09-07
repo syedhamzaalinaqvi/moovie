@@ -115,6 +115,92 @@ const videoData = [
         embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
+
+// DUBLICAT MOVIES ..............
+  {
+        id: 1,
+        tmdbId: 1061474, // Superman 
+        type: "movie",
+        download: "https://example.com/download/superman",
+        embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
+    },
+    {
+        id: 2,
+        tmdbId: 1510251, //Murderbaad
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt37392885" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 3,
+        tmdbId: 575265, // mission imposible 2025
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 4,
+        tmdbId: 911430, // F1
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 5,
+        tmdbId: 1241894, // Woodwalker 2024
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30398905" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 6,
+        tmdbId: 110492, // Peacemaker
+        type: "tv",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 7,
+        tmdbId: 1254624, // Night Always Comes
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31567422" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 8,
+        tmdbId: 227114, // Butterfly
+        type: "tv",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26672404" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 9,
+        tmdbId: 1071585, // Megan 2.0
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26342662" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 10,
+        tmdbId: 1234821, //Jurassic world rebirth
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31036941" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 11,
+        tmdbId: 119051, //Wednesday
+        type: "tv",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 12,
+        tmdbId: 1148817, //Vena: Before 7 Days
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt28857853" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 13,
+        tmdbId: 1106289, //Pickup 2025
+        type: "movie",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+   
+
+
+
+
 ];
 
 // Cache for movie data to avoid repeated API calls
@@ -369,6 +455,10 @@ let searchQuery = "";
 let filteredVideos = [];
 let currentView = "grid";
 
+// Load more functionality variables
+let displayedMovies = 16; // Show 16 movies initially
+const moviesPerLoad = 16; // Load 16 more movies when "Load More" is clicked
+
 // DOM Elements
 const videosGrid = document.getElementById("videosGrid");
 const categoryFilters = document.querySelectorAll(".filter-btn");
@@ -393,6 +483,9 @@ const navLinks = document.querySelectorAll(".nav-link");
 const gridViewBtn = document.getElementById("gridViewBtn");
 const listViewBtn = document.getElementById("listViewBtn");
 const viewBtns = document.querySelectorAll(".view-btn");
+
+// Scroll to top button
+const scrollToTopBtn = document.getElementById("scrollToTop");
 
 // Load Featured Movie
 async function loadFeaturedMovie() {
@@ -528,7 +621,7 @@ async function loadMoviesWithTMDBData() {
                     title: tmdbData.title,
                     duration: tmdbData.runtime ? `${Math.floor(tmdbData.runtime / 60)}h ${tmdbData.runtime % 60}m` : 
                              tmdbData.number_of_seasons ? `${tmdbData.number_of_seasons} seasons` : "Unknown",
-                    views: `${tmdbData.rating}★ TMDB`,
+                    views: `${tmdbData.rating}⭐`,
                     category: (tmdbData.genres && tmdbData.genres.length > 0) ? tmdbData.genres[0].name.toLowerCase() : "drama",
                     thumbnail: tmdbData.poster_path,
                     description: tmdbData.overview || tmdbData.description,
@@ -582,10 +675,24 @@ function setupEventListeners() {
     searchBtn.addEventListener("click", handleSearch);
     searchInput.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
+            e.preventDefault(); // Prevent page scroll on Enter
             handleSearch();
         }
+        // Prevent page scrolling on any key press in search
+        e.stopPropagation();
     });
-    searchInput.addEventListener("input", handleSearch);
+    searchInput.addEventListener("input", function(e) {
+        e.stopPropagation(); // Prevent bubbling that might cause scrolling
+        handleSearch();
+    });
+    
+    // Prevent search input from causing page scroll
+    searchInput.addEventListener("focus", function(e) {
+        e.stopPropagation();
+    });
+    searchInput.addEventListener("blur", function(e) {
+        e.stopPropagation();
+    });
 
     // Modal functionality
     modalOverlay.addEventListener("click", closeVideoModal);
@@ -625,6 +732,9 @@ function setupEventListeners() {
     
     // Slider navigation for Trending and Live TV
     setupSliders();
+    
+    // Scroll to top button functionality
+    setupScrollToTop();
 }
 
 // Render Videos
@@ -649,7 +759,10 @@ function renderVideos() {
         return;
     }
 
-    filteredVideos.forEach((video, index) => {
+    // Show only the number of movies specified by displayedMovies
+    const moviesToShow = filteredVideos.slice(0, displayedMovies);
+    
+    moviesToShow.forEach((video, index) => {
         try {
             console.log(`Rendering video ${index + 1}: ${video.title}`);
             const videoCard = createVideoCard(video);
@@ -659,7 +772,57 @@ function renderVideos() {
         }
     });
     
-    console.log('Finished rendering videos');
+    // Add Load More button if there are more movies to show
+    if (displayedMovies < filteredVideos.length) {
+        const loadMoreContainer = document.createElement("div");
+        loadMoreContainer.className = "load-more-container";
+        
+        const loadMoreBtn = document.createElement("button");
+        loadMoreBtn.className = "load-more-btn";
+        loadMoreBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <circle cx="12" cy="21" r="3"></circle>
+                <circle cx="12" cy="3" r="3"></circle>
+            </svg>
+            <span>Load More Movies (${filteredVideos.length - displayedMovies} remaining)</span>
+        `;
+        
+        loadMoreBtn.onclick = () => {
+            // Add loading state
+            loadMoreBtn.classList.add('loading');
+            loadMoreBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <circle cx="12" cy="21" r="3"></circle>
+                    <circle cx="12" cy="3" r="3"></circle>
+                </svg>
+                <span>Loading more movies...</span>
+            `;
+            
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                displayedMovies += moviesPerLoad;
+                renderVideos();
+                
+                // Smooth scroll to the newly loaded content
+                setTimeout(() => {
+                    const newlyLoadedCards = videosGrid.querySelectorAll('.video-card');
+                    if (newlyLoadedCards.length > displayedMovies - moviesPerLoad) {
+                        const targetCard = newlyLoadedCards[displayedMovies - moviesPerLoad];
+                        if (targetCard) {
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                }, 100);
+            }, 500); // Small delay to show loading state
+        };
+        
+        loadMoreContainer.appendChild(loadMoreBtn);
+        videosGrid.appendChild(loadMoreContainer);
+    }
+    
+    console.log(`Finished rendering videos - Showing ${moviesToShow.length} of ${filteredVideos.length} movies`);
 }
 
 // Create Video Card
@@ -716,6 +879,8 @@ function filterVideos() {
         return matchesCategory && matchesSearch;
     });
 
+    // Reset displayed movies count when filtering
+    displayedMovies = 16;
     renderVideos();
 }
 
@@ -1422,4 +1587,29 @@ function setupSliders() {
             });
         });
     }
+}
+
+// Scroll to Top functionality
+function setupScrollToTop() {
+    if (!scrollToTopBtn) {
+        console.warn('Scroll to top button not found');
+        return;
+    }
+    
+    // Show/hide scroll to top button based on scroll position
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            scrollToTopBtn.classList.add('visible');
+        } else {
+            scrollToTopBtn.classList.remove('visible');
+        }
+    });
+    
+    // Smooth scroll to top when button is clicked
+    scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
 }
