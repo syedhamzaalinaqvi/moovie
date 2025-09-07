@@ -11,8 +11,9 @@ const API_BASE_URL = TMDB_BASE_URL;
 
 // Option 1: Use direct configuration
 const FEATURED_MOVIE_CONFIG = {
-    tmdbId: 1061474,    // Superman (2025) - Change this ID to feature any movie you want!
-    type: "movie"       // "movie" or "tv"
+   // tmdbId: 1061474,    // Superman (2025) - Change this ID to feature any movie you want!
+    //type: "movie"       // "movie" or "tv"
+tmdbId: 119051, type: "tv"  
 };
 
 // Option 2: Choose from pre-configured popular movies (uncomment one to use)
