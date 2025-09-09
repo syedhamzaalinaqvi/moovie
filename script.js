@@ -414,9 +414,9 @@ const liveTvChannels = [
     {
         id: "tv1",
         name: "News 24/7",
-        channel: "CNN Live",
-        thumbnail: "https://img.youtube.com/vi/W1NTtBs8M2Q/maxresdefault.jpg",
-        embedCode: `<iframe src="https://www.youtube.com/embed/W1NTtBs8M2Q" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`,
+        channel: "ARY NEWS",
+        thumbnail: "https://canvas.tamashaweb.com/jazzlive/uploads/channels/1707716722.webp?id=20240917093633",
+        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn24lhr.tamashaweb.com%3A8087%2Fjazzauth%2FARYnews-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTE6NTY6MTAgQU0maGFzaF92YWx1ZT1oVGRRSkRyTWZXNWppZTdGREtpT0xRPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2FARYnews-abr%2Fplaylist.m3u8&title=ARY%20NEWS" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv2",
