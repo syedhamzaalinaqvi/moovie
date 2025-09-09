@@ -428,7 +428,7 @@ const liveTvChannels = [
     {
         id: "tv3",
         name: "Music",
-        channel: "*8XM HD",
+        channel: "8XM HD",
         thumbnail: "https://canvas.tamashaweb.com/jazzlive/uploads/channels/logo/8xm-live.webp?id=80",
         embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn21lhr.tamashaweb.com%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTI6MzQ6MjMgUE0maGFzaF92YWx1ZT1XajJJMVkyRzFheFdnUDdTOHFRWkdRPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8&title=Tensports" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
