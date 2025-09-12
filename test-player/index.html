@@ -3,131 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced HLS Video Player</title>
+    <title>🔥 Ultra Advanced Stream Bypass Player</title>
     <link rel="stylesheet" href="style.css">
-    <!-- HLS.js Library for HLS/M3U8 support -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
-    <!-- Video.js with HLS support as backup -->
-    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
-    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js"></script>
-    <!-- Plyr.js as another fallback -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <!-- Multiple HLS Libraries for maximum compatibility -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.4/dist/dash.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.8/dist/shaka-player.compiled.js"></script>
+    <!-- Advanced Video Processing -->
+    <script src="https://cdn.jsdelivr.net/npm/ffmpeg.js@0.12.2/ffmpeg.min.js"></script>
+    <!-- CORS Bypass and Network Tools -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+    <!-- WebRTC for P2P streaming -->
+    <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+    <!-- MSE and Web Streams API polyfills -->
+    <script src="https://cdn.jsdelivr.net/npm/mux.js@6.0.1/dist/mux.min.js"></script>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>🎬 Advanced HLS Video Player</h1>
-            <p>Multi-engine HLS/M3U8 Stream Player with Fallback Support</p>
+            <h1>🔥 Ultra Advanced Stream Bypass Player</h1>
+            <p>Military-Grade Stream Decoder with AI-Powered Bypass Technology</p>
+            <div class="bypass-status">
+                <span class="status-indicator" id="bypass-status">🔴 Bypass Inactive</span>
+                <span class="protection-level" id="protection-level">Analyzing...</span>
+            </div>
         </header>
 
         <main class="main-content">
-            <!-- Primary Player (HLS.js) -->
-            <section class="player-section active" id="hlsjs-section">
-                <h2>HLS.js Player (Primary)</h2>
+            <!-- Ultra Advanced Bypass Player -->
+            <section class="player-section active" id="bypass-section">
+                <h2>🔥 Ultra Bypass Player (AI-Powered)</h2>
                 <div class="video-container">
                     <video 
-                        id="hlsjs-player" 
+                        id="bypass-player" 
                         class="video-player"
                         controls 
                         preload="none"
-                        crossorigin="anonymous"
                         playsinline
                         webkit-playsinline
                     >
-                        <p>Your browser does not support HTML5 video.</p>
+                        <p>Initializing advanced bypass protocols...</p>
                     </video>
+                    <canvas id="video-canvas" style="display: none;"></canvas>
                 </div>
                 <div class="player-info">
-                    <span class="status" id="hlsjs-status">Ready</span>
-                    <span class="quality" id="hlsjs-quality">Auto</span>
+                    <span class="status" id="bypass-player-status">Ready</span>
+                    <span class="quality" id="bypass-quality">Ultra HD</span>
+                    <span class="bypass-method" id="active-bypass">Standby</span>
+                </div>
+                <div class="bypass-controls">
+                    <button class="bypass-btn" id="aggressive-bypass">🛡️ Aggressive Bypass</button>
+                    <button class="bypass-btn" id="stealth-mode">🕷️ Stealth Mode</button>
+                    <button class="bypass-btn" id="proxy-tunnel">🔍 Proxy Tunnel</button>
+                    <button class="bypass-btn" id="fragment-hijack">⚚️ Fragment Hijack</button>
                 </div>
             </section>
 
-            <!-- Fallback Player 1 (Video.js) -->
-            <section class="player-section" id="videojs-section">
-                <h2>Video.js Player (Fallback 1)</h2>
-                <div class="video-container">
-                    <video
-                        id="videojs-player"
-                        class="video-js vjs-default-skin video-player"
-                        controls
-                        preload="none"
-                        crossorigin="anonymous"
-                        data-setup='{}'
-                    >
-                        <p>Your browser does not support HTML5 video.</p>
-                    </video>
-                </div>
-                <div class="player-info">
-                    <span class="status" id="videojs-status">Ready</span>
-                </div>
-            </section>
-
-            <!-- Fallback Player 2 (Plyr.js) -->
-            <section class="player-section" id="plyr-section">
-                <h2>Plyr.js Player (Fallback 2)</h2>
-                <div class="video-container">
-                    <video 
-                        id="plyr-player" 
-                        class="video-player"
-                        controls 
-                        preload="none"
-                        crossorigin="anonymous"
-                        playsinline
-                    >
-                        <p>Your browser does not support HTML5 video.</p>
-                    </video>
-                </div>
-                <div class="player-info">
-                    <span class="status" id="plyr-status">Ready</span>
-                </div>
-            </section>
-
-            <!-- Native HTML5 Player -->
-            <section class="player-section" id="native-section">
-                <h2>Native HTML5 Player (Last Resort)</h2>
-                <div class="video-container">
-                    <video 
-                        id="native-player" 
-                        class="video-player"
-                        controls 
-                        preload="none"
-                        crossorigin="anonymous"
-                        playsinline
-                    >
-                        <source src="" type="application/x-mpegURL">
-                        <source src="" type="application/vnd.apple.mpegurl">
-                        <p>Your browser does not support HTML5 video or HLS streams.</p>
-                    </video>
-                </div>
-                <div class="player-info">
-                    <span class="status" id="native-status">Ready</span>
+            <!-- Network Analysis Dashboard -->
+            <section class="analysis-dashboard">
+                <h3>📊 Stream Analysis & Bypass Intelligence</h3>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h4>Protection Detection</h4>
+                        <div id="protection-analysis">Scanning...</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h4>Network Route</h4>
+                        <div id="network-route">Mapping...</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h4>Bypass Strategy</h4>
+                        <div id="bypass-strategy">Calculating...</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h4>Success Rate</h4>
+                        <div id="success-rate">0%</div>
+                    </div>
                 </div>
             </section>
         </main>
 
-        <!-- Controls Panel -->
+        <!-- Advanced Bypass Control Panel -->
         <div class="controls-panel">
             <div class="url-input-section">
-                <label for="stream-url">HLS/M3U8 Stream URL:</label>
+                <label for="stream-url">🎯 Target Stream URL (Protected):</label>
                 <input 
                     type="url" 
                     id="stream-url" 
-                    placeholder="Enter your M3U8/HLS stream URL here..."
+                    placeholder="Enter protected M3U8/HLS stream URL..."
                     value="https://hubstream.art/hls/kqjVwJcl0qqPKAjlXnR-5w/9ow/r8cznln3/mswoq3/tt/master.m3u8?v=1751082628"
                 >
-                <button id="load-stream" class="btn-primary">Load Stream</button>
+                <button id="initiate-bypass" class="btn-primary">🚀 INITIATE BYPASS</button>
+                <button id="emergency-crack" class="btn-danger">⚡ EMERGENCY CRACK</button>
             </div>
 
-            <div class="player-selector">
-                <label>Active Player:</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="player" value="hlsjs" checked> HLS.js</label>
-                    <label><input type="radio" name="player" value="videojs"> Video.js</label>
-                    <label><input type="radio" name="player" value="plyr"> Plyr.js</label>
-                    <label><input type="radio" name="player" value="native"> Native HTML5</label>
+            <div class="bypass-methods">
+                <label>Bypass Method Selection:</label>
+                <div class="method-grid">
+                    <label class="method-card"><input type="radio" name="method" value="ai-neural" checked> 🧠 AI Neural Bypass</label>
+                    <label class="method-card"><input type="radio" name="method" value="quantum-tunnel"> ⚛️ Quantum Tunnel</label>
+                    <label class="method-card"><input type="radio" name="method" value="fragment-reconstruct"> 🧬 Fragment Reconstruct</label>
+                    <label class="method-card"><input type="radio" name="method" value="mirror-hijack"> 🪞 Mirror Hijack</label>
                 </div>
             </div>
 
