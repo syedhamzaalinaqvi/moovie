@@ -421,9 +421,9 @@ const liveTvChannels = [
     {
         id: "tv2",
         name: "Sports",
-        channel: "Tensports HD",
-        thumbnail: "https://canvas.tamashaweb.com/jazzlive/uploads/channels/logo/ten-sports-hd-logo.webp?id=19",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn22lhr.tamashaweb.com%3A8087%2Fjazzauth%2FTensports-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTI6Mjg6MzIgUE0maGFzaF92YWx1ZT0rbGpnZ1hrUVp0Q1RGbkJkWHI3RkRnPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2FTensports-abr%2Fplaylist.m3u8&title=Tensports" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        channel: "AsiCup Live",
+        thumbnail: "https://myco.io/_next/image?url=https%3A%2F%2Fmyco.io%2Fapi%2Fimage-proxy%3Furl%3D%2Fpublic%2Fbanners%2F390120af3eab4840d90dc5a52025-09-08T09%3A13%3A06.535Z.jpg&w=1920&q=60",
+        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fml-pull-rtmp-pk1.myco.io%2FAsiaCupMain%2Fhls%2Findex.m3u8&title=Asia%20Cup%202025" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv3",
