@@ -413,24 +413,24 @@ function formatRuntime(minutes) {
 const liveTvChannels = [
     {
         id: "tv1",
-        name: "News 24/7",
-        channel: "ARY NEWS",
+        name: "ARY NEWS",
+        channel: "News",
         thumbnail: "https://canvas.tamashaweb.com/jazzlive/uploads/channels/1707716722.webp?id=20240917093633",
         embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn24lhr.tamashaweb.com%3A8087%2Fjazzauth%2FARYnews-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTE6NTY6MTAgQU0maGFzaF92YWx1ZT1oVGRRSkRyTWZXNWppZTdGREtpT0xRPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2FARYnews-abr%2Fplaylist.m3u8&title=ARY%20NEWS" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv2",
-        name: "Sports",
-        channel: "AsiCup Live",
+        name: "AsiaCup 2025 ",
+        channel: "Sports",
         thumbnail: "https://myco.io/_next/image?url=https%3A%2F%2Fmyco.io%2Fapi%2Fimage-proxy%3Furl%3D%2Fpublic%2Fbanners%2F390120af3eab4840d90dc5a52025-09-08T09%3A13%3A06.535Z.jpg&w=1920&q=60",
         embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fml-pull-rtmp-pk1.myco.io%2FAsiaCupMain%2Fhls%2Findex.m3u8&title=Asia%20Cup%202025" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv3",
-        name: "Music",
-        channel: "8XM HD",
+        name: "8XM HD",
+        channel: "Music",
         thumbnail: "https://canvas.tamashaweb.com/jazzlive/uploads/channels/logo/8xm-live.webp?id=80",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn21lhr.tamashaweb.com%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTI6MzQ6MjMgUE0maGFzaF92YWx1ZT1XajJJMVkyRzFheFdnUDdTOHFRWkdRPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8&title=Tensports" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fcdn21lhr.tamashaweb.com%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8%3FwmsAuthSign%3Dc2VydmVyX3RpbWU9OS85LzIwMjUgMTI6MzQ6MjMgUE0maGFzaF92YWx1ZT1XajJJMVkyRzFheFdnUDdTOHFRWkdRPT0mdmFsaWRtaW51dGVzPTYw%3A8087%2Fjazzauth%2F8xm-abr%2Fplaylist.m3u8&title=8XM" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv4",
