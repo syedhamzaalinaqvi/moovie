@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced HLS Video Player</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- HLS.js Library for HLS/M3U8 support -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+    <!-- Video.js with HLS support as backup -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js"></script>
+    <!-- Plyr.js as another fallback -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎬 Advanced HLS Video Player</h1>
+            <p>Multi-engine HLS/M3U8 Stream Player with Fallback Support</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Primary Player (HLS.js) -->
+            <section class="player-section active" id="hlsjs-section">
+                <h2>HLS.js Player (Primary)</h2>
+                <div class="video-container">
+                    <video 
+                        id="hlsjs-player" 
+                        class="video-player"
+                        controls 
+                        preload="none"
+                        crossorigin="anonymous"
+                        playsinline
+                        webkit-playsinline
+                    >
+                        <p>Your browser does not support HTML5 video.</p>
+                    </video>
+                </div>
+                <div class="player-info">
+                    <span class="status" id="hlsjs-status">Ready</span>
+                    <span class="quality" id="hlsjs-quality">Auto</span>
+                </div>
+            </section>
+
+            <!-- Fallback Player 1 (Video.js) -->
+            <section class="player-section" id="videojs-section">
+                <h2>Video.js Player (Fallback 1)</h2>
+                <div class="video-container">
+                    <video
+                        id="videojs-player"
+                        class="video-js vjs-default-skin video-player"
+                        controls
+                        preload="none"
+                        crossorigin="anonymous"
+                        data-setup='{}'
+                    >
+                        <p>Your browser does not support HTML5 video.</p>
+                    </video>
+                </div>
+                <div class="player-info">
+                    <span class="status" id="videojs-status">Ready</span>
+                </div>
+            </section>
+
+            <!-- Fallback Player 2 (Plyr.js) -->
+            <section class="player-section" id="plyr-section">
+                <h2>Plyr.js Player (Fallback 2)</h2>
+                <div class="video-container">
+                    <video 
+                        id="plyr-player" 
+                        class="video-player"
+                        controls 
+                        preload="none"
+                        crossorigin="anonymous"
+                        playsinline
+                    >
+                        <p>Your browser does not support HTML5 video.</p>
+                    </video>
+                </div>
+                <div class="player-info">
+                    <span class="status" id="plyr-status">Ready</span>
+                </div>
+            </section>
+
+            <!-- Native HTML5 Player -->
+            <section class="player-section" id="native-section">
+                <h2>Native HTML5 Player (Last Resort)</h2>
+                <div class="video-container">
+                    <video 
+                        id="native-player" 
+                        class="video-player"
+                        controls 
+                        preload="none"
+                        crossorigin="anonymous"
+                        playsinline
+                    >
+                        <source src="" type="application/x-mpegURL">
+                        <source src="" type="application/vnd.apple.mpegurl">
+                        <p>Your browser does not support HTML5 video or HLS streams.</p>
+                    </video>
+                </div>
+                <div class="player-info">
+                    <span class="status" id="native-status">Ready</span>
+                </div>
+            </section>
+        </main>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="url-input-section">
+                <label for="stream-url">HLS/M3U8 Stream URL:</label>
+                <input 
+                    type="url" 
+                    id="stream-url" 
+                    placeholder="Enter your M3U8/HLS stream URL here..."
+                    value="https://hubstream.art/hls/kqjVwJcl0qqPKAjlXnR-5w/9ow/r8cznln3/mswoq3/tt/master.m3u8?v=1751082628"
+                >
+                <button id="load-stream" class="btn-primary">Load Stream</button>
+            </div>
+
+            <div class="player-selector">
+                <label>Active Player:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="player" value="hlsjs" checked> HLS.js</label>
+                    <label><input type="radio" name="player" value="videojs"> Video.js</label>
+                    <label><input type="radio" name="player" value="plyr"> Plyr.js</label>
+                    <label><input type="radio" name="player" value="native"> Native HTML5</label>
+                </div>
+            </div>
+
+            <div class="debug-info">
+                <h3>Debug Information</h3>
+                <div id="debug-log" class="debug-log"></div>
+                <button id="clear-debug" class="btn-secondary">Clear Debug</button>
+            </div>
+        </div>
+
+        <!-- Test URLs for Quick Testing -->
+        <div class="test-urls">
+            <h3>Quick Test URLs</h3>
+            <div class="url-buttons">
+                <button class="test-url-btn" data-url="https://hubstream.art/hls/kqjVwJcl0qqPKAjlXnR-5w/9ow/r8cznln3/mswoq3/tt/master.m3u8?v=1751082628">Your Stream</button>
+                <button class="test-url-btn" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Mux Test Stream</button>
+                <button class="test-url-btn" data-url="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8">Bitdash Test</button>
+                <button class="test-url-btn" data-url="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">Unified Streaming</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
