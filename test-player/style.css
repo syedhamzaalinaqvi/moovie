@@ -235,6 +235,26 @@ body {
     transform: translateY(-2px);
 }
 
+.btn-danger {
+    background: linear-gradient(135deg, var(--accent-red), #ff6b6b);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 56, 56, 0.3);
+}
+
 /* Player Selector */
 .player-selector {
     margin-bottom: 30px;
@@ -375,6 +395,19 @@ body {
     background: rgba(0, 210, 211, 0.1);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 210, 211, 0.2);
+}
+
+.test-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.test-actions button {
+    flex: 1;
+    min-width: 200px;
 }
 
 /* Responsive Design */

@@ -116,12 +116,17 @@
 
         <!-- Test URLs for Quick Testing -->
         <div class="test-urls">
-            <h3>Quick Test URLs</h3>
+            <h3>🧪 Test Stream URLs</h3>
             <div class="url-buttons">
-                <button class="test-url-btn" data-url="https://hubstream.art/hls/kqjVwJcl0qqPKAjlXnR-5w/9ow/r8cznln3/mswoq3/tt/master.m3u8?v=1751082628">Your Stream</button>
-                <button class="test-url-btn" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Mux Test Stream</button>
-                <button class="test-url-btn" data-url="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8">Bitdash Test</button>
-                <button class="test-url-btn" data-url="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">Unified Streaming</button>
+                <button class="test-url-btn" data-url="https://ml-pull-rtmp-pk1.myco.io/AsiaCupMain/hls/index.m3u8">✅ Working Stream (AsiaCup)</button>
+                <button class="test-url-btn" data-url="https://hubstream.art/hls/kqjVwJcl0qqPKAjlXnR-5w/9ow/r8cznln3/mswoq3/tt/master.m3u8?v=1751082628">🔴 Your Problematic Stream</button>
+                <button class="test-url-btn" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">🌟 Mux Test Stream</button>
+                <button class="test-url-btn" data-url="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8">🎬 Bitdash Test</button>
+            </div>
+            <div class="test-actions">
+                <button onclick="testSimple()" class="btn-primary">🧪 Test Working Stream</button>
+                <button onclick="testOriginal()" class="btn-danger">🔴 Test Original Stream</button>
+                <button onclick="stopStream()" class="btn-secondary">⏹️ Stop Stream</button>
             </div>
         </div>
     </div>
