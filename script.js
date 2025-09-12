@@ -1,11 +1,10 @@
-// TMDB API Configuration - Hybrid approach for local/deployment
+// TMDB API Configuration - Pure frontend implementation
 const TMDB_API_KEY = "46d13701165988b5bb5fb4d123c0447e";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-// Detect if we're running locally or in production
-const IS_PRODUCTION = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-const API_BASE_URL = IS_PRODUCTION ? '' : TMDB_BASE_URL; // Use relative URLs in production
+// Use direct TMDB API with API key
+const API_BASE_URL = TMDB_BASE_URL;
 
 // ===== FEATURED MOVIE CONFIGURATION =====
 // Just change the TMDB ID below to feature any movie/series you want!
@@ -217,87 +216,51 @@ async function fetchTMDBData(tmdbId, type) {
 
     try {
         const endpoint = type === "movie" ? "movie" : "tv";
-        console.log(`Fetching TMDB data for ${endpoint} ID:`, tmdbId, 'Production mode:', IS_PRODUCTION);
+        console.log(`Fetching TMDB data for ${endpoint} ID:`, tmdbId);
 
-        let response;
-        if (IS_PRODUCTION) {
-            // Use backend API endpoints in production
-            const apiUrl = `/api/${endpoint}/${tmdbId}`;
-            console.log('Using production API:', apiUrl);
-            response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const combinedData = await response.json();
-            const details = combinedData.details;
-            const credits = combinedData.credits;
-            const videos = combinedData.videos;
-            
-            return processMovieData(details, credits, videos, cacheKey);
-        } else {
-            // Use direct TMDB API in local development
-            const urls = [
-                `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&language=en-US`,
-                `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}&language=en-US`,
-                `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
-            ];
+        // Fetch both movie details and videos in parallel
+        const urls = [
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}?api_key=${TMDB_API_KEY}&language=en-US`,
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/credits?api_key=${TMDB_API_KEY}&language=en-US`,
+            `${TMDB_BASE_URL}/${endpoint}/${tmdbId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
+        ];
 
-            console.log('API URLs:', urls);
+        console.log('API URLs:', urls);
 
-            // Add error handling for each fetch
-            const fetchWithTimeout = (url, options = {}) => {
-                return Promise.race([
-                    fetch(url, options),
-                    new Promise((_, reject) => 
-                        setTimeout(() => reject(new Error('Request timeout')), 10000)
-                    )
-                ]);
-            };
-
-            const [detailsResponse, creditsResponse, videosResponse] = await Promise.allSettled([
-                fetchWithTimeout(urls[0]),
-                fetchWithTimeout(urls[1]),
-                fetchWithTimeout(urls[2])
+        // Add error handling for each fetch
+        const fetchWithTimeout = (url, options = {}) => {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Request timeout')), 10000)
+                )
             ]);
+        };
 
-            // Process responses
-            const processResponse = (response) => {
-                if (response.status === 'fulfilled' && response.value.ok) {
-                    return response.value.json();
-                }
-                console.warn('Failed to fetch data:', response.reason || response.value?.statusText);
-                return null;
-            };
+        const [detailsResponse, creditsResponse, videosResponse] = await Promise.allSettled([
+            fetchWithTimeout(urls[0]),
+            fetchWithTimeout(urls[1]),
+            fetchWithTimeout(urls[2])
+        ]);
 
-            const [details, credits, videos] = await Promise.all([
-                processResponse(detailsResponse),
-                processResponse(creditsResponse),
-                processResponse(videosResponse)
-            ]);
-
-            if (!details) {
-                throw new Error('Failed to fetch required movie details');
+        // Process responses
+        const processResponse = (response) => {
+            if (response.status === 'fulfilled' && response.value.ok) {
+                return response.value.json();
             }
-            
-            return processMovieData(details, credits, videos, cacheKey);
+            console.warn('Failed to fetch data:', response.reason || response.value?.statusText);
+            return null;
+        };
+
+        const [details, credits, videos] = await Promise.all([
+            processResponse(detailsResponse),
+            processResponse(creditsResponse),
+            processResponse(videosResponse)
+        ]);
+
+        if (!details) {
+            throw new Error('Failed to fetch required movie details');
         }
-    } catch (error) {
-        console.error('Error in fetchTMDBData:', error);
-        return null;
-    }
-}
-
-// Extract movie data processing into separate function for reuse
-function processMovieData(details, credits, videos, cacheKey) {
-    try {
 
         // Format the data to match our expected structure with enhanced data
         const formattedData = {
@@ -398,37 +361,23 @@ function processMovieData(details, credits, videos, cacheKey) {
         movieCache.set(cacheKey, formattedData);
         return formattedData;
     } catch (error) {
-        console.error('Error in processMovieData:', error);
+        console.error('Error in fetchTMDBData:', error);
         return null;
     }
 }
 
 async function fetchTrendingContent() {
     try {
-        let response;
-        
-        if (IS_PRODUCTION) {
-            // Use backend API in production
-            response = await fetch('/api/trending', {
+        const response = await fetch(
+            `${API_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`,
+            {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
-            });
-        } else {
-            // Use direct TMDB API in local development
-            response = await fetch(
-                `${TMDB_BASE_URL}/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-        }
+            }
+        );
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -458,20 +407,6 @@ function formatRuntime(minutes) {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
-}
-
-// Image fallback functionality
-function createImageWithFallback(src, fallbackSrc = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzMzMzMzMyIvPgo8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNzc3Nzc3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPg==') {
-    const img = new Image();
-    
-    return new Promise((resolve) => {
-        img.onload = () => resolve(src);
-        img.onerror = () => {
-            console.warn('Image failed to load:', src);
-            resolve(fallbackSrc);
-        };
-        img.src = src;
-    });
 }
 
 // Live TV Data
