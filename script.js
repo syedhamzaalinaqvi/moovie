@@ -39,7 +39,7 @@ const videoData = [
         id: 1,
         tmdbId: 1061474, // Superman 
         type: "movie",
-        download: "https://example.com/download/superman",
+        download: "https://linkmake.in/view/yz4V4eXOnt",
         embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
     {
