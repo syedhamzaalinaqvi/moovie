@@ -7,12 +7,20 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
 </head>
+
+    <style> 
+        .ad-banner {
+        width: 90%; 
+        margin: auto; 
+        overflow: hidden;
+        }   
+    </style>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="nav-brand">
-                <h1 class="logo">H-TV</h1>
+                <h1 class="logo">MOOVI3</h1>
             </div>
             
             <nav class="nav-menu" id="navMenu">
@@ -47,35 +55,71 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Featured Section -->
-        <section class="featured-section">
+        <!-- Featured Section - Now Dynamically Loaded from JavaScript! -->
+        <!-- To change featured content: Go to script.js and modify FEATURED_MOVIE_CONFIG -->
+        <section class="featured-section" id="home">
             <div class="container">
                 <div class="featured-video">
                     <div class="video-player">
-                     <!--   <iframe 
-                        
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                            frameborder="0" 
-                            allowfullscreen>
-                        </iframe> --- title="YouTube video player"  ---- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"  -->
-                        <iframe     id="featuredPlayer"  src="https://www.youtube.com/embed/2woCZg5QdVE?si=qm5j12OBg51YoIMN" frameborder="0" allowfullscreen></iframe>
-                       
+                        <!-- Trailer iframe - will be updated dynamically -->
+                        <iframe id="featuredPlayer" src="https://www.youtube.com/embed/2woCZg5QdVE?si=qm5j12OBg51YoIMN" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <div class="featured-info">
-                        <h2 class="featured-title">Superman (2025)</h2>
-                        <p class="featured-description">Superman, a journalist in Metropolis, embarks on a journey to reconcile his Kryptonian heritage with his human upbringing as Clark Kent."</p>
+                        <!-- All content below will be automatically updated from TMDB -->
+                        <h2 class="featured-title">Loading...</h2>
+                        <p class="featured-description">Fetching movie details from TMDB...</p>
                         <div class="featured-meta">
-                            <span class="duration">3:00</span>
-                            <span class="views">3.4M views</span>
-                            <span class="category">Movie</span>
+                            <span class="duration">Loading...</span>
+                            <span class="views">Loading...</span>
+                            <span class="category">Loading...</span>
                         </div>
-                        <button class="login-btn" id="loginBtn">Watch Now</button>
+                        <button class="login-btn">Watch Now</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Live TV Section -->
+<!-- Ad Banner 
+<iframe 
+    src="https://vidapi.xyz/embedmulti/tv/119051&s=2&e=1" 
+    width="100%" 
+    height="600" 
+    style="border:none;" 
+    allowfullscreen 
+    scrolling="no">
+</iframe>
+<iframe src="https://me.webcric.com/hindi.htm" 
+        width="100%" 
+        height="600" 
+        frameborder="0" 
+        allowfullscreen>
+</iframe>
+<iframe src="https://aryzap.com/live/v1/6613c6e55dc7c44b470f024a" 
+        width="100%" 
+        height="600" 
+        frameborder="0" 
+        allowfullscreen>
+</iframe>
+-->
+
+
+        <!-- Ad Banner -->
+         <div class="ad-banner" >
+            <script type="text/javascript">
+	atOptions = {
+		'key' : '195c62ea72509d1d2d7803f12f3f6d8a',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/195c62ea72509d1d2d7803f12f3f6d8a/invoke.js"></script>
+
+         </div>
+
+
+         <!-- Live TV Section -->
         <section class="live-tv-section">
             <div class="container">
                 <h2 class="section-title">Live TV Channels</h2>
@@ -88,9 +132,33 @@
                 </div>
             </div>
         </section>
+<<<<<<< HEAD
         
+=======
+
+
+
+
+
+
+           <!-- Ad Banner -->
+         <div class="ad-banner" >
+            <script type="text/javascript">
+	atOptions = {
+		'key' : '195c62ea72509d1d2d7803f12f3f6d8a',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/195c62ea72509d1d2d7803f12f3f6d8a/invoke.js"></script>
+
+         </div>
+
+>>>>>>> 97f8b0ea88b1ee3b866c6d672323b0335a112a37
         <!-- Trending Section -->
-        <section class="trending-section">
+        <section class="trending-section" id="popular">
             <div class="container">
                 <h2 class="section-title">Trending This Week</h2>
                 <div class="trending-slider">
@@ -104,7 +172,7 @@
         </section>
 
         <!-- Category Filters -->
-        <section class="filters-section">
+        <section class="filters-section" id="categories">
             <div class="container">
                 <div class="category-filters">
                     <button class="filter-btn active" data-category="all">All</button>
@@ -117,9 +185,23 @@
                 </div>
             </div>
         </section>
+   <!-- Ad Banner -->
+         <div class="ad-banner" >
+            <script type="text/javascript">
+	atOptions = {
+		'key' : '195c62ea72509d1d2d7803f12f3f6d8a',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/195c62ea72509d1d2d7803f12f3f6d8a/invoke.js"></script>
+
+         </div>
 
         <!-- Video Grid -->
-        <section class="videos-section">
+        <section class="videos-section" id="search">
             <div class="container">
                 <div class="view-controls">
                     <button class="view-btn active" data-view="grid" id="gridViewBtn">
@@ -163,6 +245,21 @@
             <div class="modal-video">
                 <iframe id="modalPlayer" frameborder="0" allowfullscreen></iframe>
             </div>
+               <!-- Ad Banner -->
+         <div class="ad-banner" >
+            <script type="text/javascript">
+	atOptions = {
+		'key' : '195c62ea72509d1d2d7803f12f3f6d8a',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/195c62ea72509d1d2d7803f12f3f6d8a/invoke.js"></script>
+
+         </div>
+
             <div class="modal-info">
                 <h3 id="modalTitle"></h3>
                 <div class="modal-meta">
@@ -176,7 +273,7 @@
                 <p id="modalDescription"></p>
                 
                 <!-- TMDB Movie Details -->
-                <div class="tmdb-details" id="tmdbDetails" style="display: none;">
+                <div class="tmdb-details" id="tmdbDetails">
                     <div class="movie-stats">
                         <div class="stat-item">
                             <label>Budget:</label>
@@ -196,15 +293,14 @@
                         </div>
                     </div>
                     
-                    <div class="trailer-section" id="trailerSection" style="display: none;">
-                        <h4>Official Trailer</h4>
-                        <div class="trailer-player" id="trailerPlayer"></div>
-                    </div>
+                    <!-- Trailer section will be dynamically inserted here by createTrailerSection function -->
                     
                     <div class="cast-section">
                         <h4>Cast</h4>
                         <div class="cast-grid" id="castGrid"></div>
                     </div>
+               
+
                 </div>
             </div>
         </div>
@@ -235,6 +331,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18,15 12,9 6,15"></polyline>
+        </svg>
+    </button>
+
+       <!-- Ad Banner -->
+         <div class="ad-banner" >
+            <script type="text/javascript">
+	atOptions = {
+		'key' : '195c62ea72509d1d2d7803f12f3f6d8a',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/195c62ea72509d1d2d7803f12f3f6d8a/invoke.js"></script>
+
+         </div>
 
     <!-- Footer -->
     <footer class="footer">
