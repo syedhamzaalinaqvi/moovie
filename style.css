@@ -599,6 +599,56 @@ body {
     line-height: 1.6;
 }
 
+/* Modal Action Buttons */
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn.watch-now {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.action-btn.watch-now:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+.action-btn.download {
+    background: var(--gradient-secondary);
+    color: white;
+}
+
+.action-btn.download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+}
+
+.action-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
 /* TMDB Movie Details */
 .tmdb-details {
     margin-top: 20px;
@@ -630,22 +680,44 @@ body {
     font-size: 14px;
 }
 
+/* Trailer Section */
 .trailer-section {
-    margin: 20px 0;
+    margin: 30px 0;
+    background: var(--secondary-dark);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .trailer-section h4 {
     color: var(--text-primary);
-    margin-bottom: 15px;
-    font-size: 18px;
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trailer-section h4::before {
+    content: '▶️';
+    font-size: 1.2em;
 }
 
 .trailer-player {
     position: relative;
-    padding-bottom: 56.25%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     height: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
+    background: #000;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trailer-player:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
 .trailer-player iframe {
@@ -654,7 +726,21 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    border: none;
     border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .trailer-section {
+        margin: 20px 0;
+        padding: 15px;
+    }
+    
+    .trailer-section h4 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
 }
 
 .cast-section h4 {
