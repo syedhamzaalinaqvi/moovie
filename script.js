@@ -52,153 +52,80 @@ const videoData = [
         id: 3,
         tmdbId: 575265, // mission imposible 2025
         type: "movie",
+        download: "https://linkmake.in/view/C7svoEz27W",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 4,
         tmdbId: 911430, // F1
         type: "movie",
+        download: "https://linkmake.in/view/AUi6XHpnNF",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 5,
         tmdbId: 1241894, // Woodwalker 2024
         type: "movie",
+        download: "https://hubdrive.space/file/1964106209",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt30398905" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 6,
         tmdbId: 110492, // Peacemaker
         type: "tv",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 7,
         tmdbId: 1254624, // Night Always Comes
         type: "movie",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt31567422" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 8,
         tmdbId: 227114, // Butterfly
         type: "tv",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt26672404" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 9,
         tmdbId: 1071585, // Megan 2.0
         type: "movie",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt26342662" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 10,
         tmdbId: 1234821, //Jurassic world rebirth
         type: "movie",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt31036941" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 11,
         tmdbId: 119051, //Wednesday
         type: "tv",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 12,
         tmdbId: 1148817, //Vena: Before 7 Days
         type: "movie",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt28857853" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 13,
         tmdbId: 1106289, //Pickup 2025
         type: "movie",
+        download: "",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
-
-// DUBLICAT MOVIES ..............
-  {
-        id: 1,
-        tmdbId: 1061474, // Superman 
-        type: "movie",
-        download: "https://example.com/download/superman",
-        embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
-    },
-    {
-        id: 2,
-        tmdbId: 1510251, //Murderbaad
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt37392885" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 3,
-        tmdbId: 575265, // mission imposible 2025
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 4,
-        tmdbId: 911430, // F1
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 5,
-        tmdbId: 1241894, // Woodwalker 2024
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt30398905" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 6,
-        tmdbId: 110492, // Peacemaker
-        type: "tv",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 7,
-        tmdbId: 1254624, // Night Always Comes
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt31567422" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 8,
-        tmdbId: 227114, // Butterfly
-        type: "tv",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt26672404" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 9,
-        tmdbId: 1071585, // Megan 2.0
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt26342662" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 10,
-        tmdbId: 1234821, //Jurassic world rebirth
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt31036941" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 11,
-        tmdbId: 119051, //Wednesday
-        type: "tv",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 12,
-        tmdbId: 1148817, //Vena: Before 7 Days
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt28857853" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-    {
-        id: 13,
-        tmdbId: 1106289, //Pickup 2025
-        type: "movie",
-        embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
-    },
-   
-
-
 
 
 ];
