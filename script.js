@@ -337,10 +337,10 @@ const liveTvChannels = [
     
     {
         id: "tv1",
-        name: "Asia Cup Live",
+        name: "Ten Sports",
         channel: "Sports",
-        thumbnail: "https://d3pt6y87jk0q7u.cloudfront.net/cpanel/client_14/2025/images/actual_0Hf5WBiD4q1756899512.jpg",
-        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Fmuc200.myluck1.top%3A8088%2Flive%2Fwebcrichindi%2Fplaylist.m3u8%3Fid%3D119771%26pk%3Dbf1df8f935edbacdb236923c0f6bc9aa35c88232b92b8a6bfad9a1b28897d184a3eef35ea575d84b1e9040edb9cb1c2f6562a6dfee21816d5c130924a580b55b" width="600px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
+        thumbnail: "https://upload.wikimedia.org/wikipedia/en/1/12/Ten_Sports_Logo.png",
+        embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Flive.streamly.com.co%3A8081%2Fpk-tensports%2Findex.m3u8" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
         id: "tv2",
