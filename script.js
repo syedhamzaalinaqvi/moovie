@@ -112,10 +112,12 @@ const videoData = [
         id: 11,
         tmdbId: 119051, //Wednesday
         type: "tv",
+        // NEW: You can now use objects with custom labels!
         downloads: [
-            "https://linkmake.in/view/CHFIed4Mo1",
-            "https://linkmake.in/view/YvYhQBrUpp",
+            { url: "https://linkmake.in/view/CHFIed4Mo1", label: "Season 1" },
+            { url: "https://linkmake.in/view/YvYhQBrUpp", label: "Season 2" },
         ],
+        // OLD way still works: downloads: ["url1", "url2"] (shows "Link 1", "Link 2")
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
