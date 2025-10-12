@@ -13,7 +13,7 @@ const API_BASE_URL = TMDB_BASE_URL;
 const FEATURED_MOVIE_CONFIG = {
    // tmdbId: 1061474,    // Superman (2025) - Change this ID to feature any movie you want!
     //type: "movie"       // "movie" or "tv"
-tmdbId: 119051, type: "tv"  
+tmdbId: 110492, type: "tv"  
 };
 
 // Option 2: Choose from pre-configured popular movies (uncomment one to use)
@@ -114,7 +114,7 @@ const videoData = [
         type: "tv",
         downloads: [
             "https://linkmake.in/view/CHFIed4Mo1",
-            "https://linkmake.in/view/YvYhQBrUpp"
+            "https://linkmake.in/view/YvYhQBrUpp",
         ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
@@ -987,20 +987,19 @@ async function openVideoModal(video) {
                     </div>
                 </div>
                 ${video.downloads && video.downloads.length > 0 ? `
-                    <div class="download-options" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                        ${video.downloads.map((link, index) => `
-                            <a href="${link}" target="_blank" rel="noopener noreferrer" 
-                               style="padding: 8px 15px; background: var(--primary-color, #007bff); 
-                                      color: white; text-decoration: none; border-radius: 5px; 
-                                      display: inline-flex; align-items: center; gap: 5px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download Link ${index + 1}
-                            </a>
-                        `).join('')}
+                    <div class="download-section">
+                        <div class="download-buttons">
+                            ${video.downloads.map((link, index) => `
+                                <button class="download-btn" onclick="window.open('${link}', '_blank')">
+                                    <span class="button-content">
+                                        <i class="fas fa-download"></i>
+                                        Download ${video.downloads.length > 1 ? `(Mirror ${index + 1})` : 'Movie'}
+                                    </span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    
+                        
                     </div>
                 ` : ''}
             </div>
