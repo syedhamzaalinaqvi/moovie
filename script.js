@@ -39,21 +39,21 @@ const videoData = [
         id: 1,
         tmdbId: 1061474, // Superman 
         type: "movie",
-        download: "https://linkmake.in/view/yz4V4eXOnt",
+        downloads: ["https://linkmake.in/view/yz4V4eXOnt"],
         embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
     {
         id: 2,
         tmdbId: 1510251, //Murderbaad
         type: "movie",
-        download: "https://linkmake.in/view/ejVFdx7Z7t",
+        downloads: ["https://linkmake.in/view/ejVFdx7Z7t"],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt37392885" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
         id: 3,
         tmdbId: 575265, // mission imposible 2025
         type: "movie",
-        download: "https://linkmake.in/view/C7svoEz27W",
+        downloads: ["https://linkmake.in/view/C7svoEz27W"],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
@@ -74,7 +74,10 @@ const videoData = [
         id: 6,
         tmdbId: 110492, // Peacemaker
         type: "tv",
-        download: "https://linkmake.in/view/1S43gUS4Vm",
+        downloads: [
+            "https://linkmake.in/view/1S43gUS4Vm",
+            // Add more download links here as needed
+        ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     {
@@ -109,8 +112,10 @@ const videoData = [
         id: 11,
         tmdbId: 119051, //Wednesday
         type: "tv",
-        download: "https://linkmake.in/view/CHFIed4Mo1",
-        download: "https://linkmake.in/view/YvYhQBrUpp",
+        downloads: [
+            "https://linkmake.in/view/CHFIed4Mo1",
+            "https://linkmake.in/view/YvYhQBrUpp"
+        ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
@@ -981,6 +986,23 @@ async function openVideoModal(video) {
                         ${video.embedCode}
                     </div>
                 </div>
+                ${video.downloads && video.downloads.length > 0 ? `
+                    <div class="download-options" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                        ${video.downloads.map((link, index) => `
+                            <a href="${link}" target="_blank" rel="noopener noreferrer" 
+                               style="padding: 8px 15px; background: var(--primary-color, #007bff); 
+                                      color: white; text-decoration: none; border-radius: 5px; 
+                                      display: inline-flex; align-items: center; gap: 5px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download Link ${index + 1}
+                            </a>
+                        `).join('')}
+                    </div>
+                ` : ''}
             </div>
         `;
 
