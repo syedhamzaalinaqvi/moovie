@@ -339,7 +339,7 @@ const liveTvChannels = [
         id: "tv1",
         name: "Ten Sports",
         channel: "Sports",
-        thumbnail: "https://upload.wikimedia.org/wikipedia/en/1/12/Ten_Sports_Logo.png",
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6unjd_eUOQbyUwmeg8a_C5yV-zdGaVeO1og&s",
         embedCode: `<iframe src="https://bradm.ax/build/202410/09/10dddbda311d7cd7ad4cb3ee7ffaaa441bf5a620/index.html?mediaUrl=https%3A%2F%2Flive.streamly.com.co%3A8081%2Fpk-tensports%2Findex.m3u8" width="800px" height="400px" frameBorder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`,
     },
     {
