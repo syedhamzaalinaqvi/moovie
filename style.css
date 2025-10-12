@@ -2158,10 +2158,14 @@ html {
 /* Download Options Container */
 .download-options {
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 20px;
     background: var(--secondary-dark);
     border-radius: 12px;
     border: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1;
+    clear: both;
 }
 
 .download-options-title {
