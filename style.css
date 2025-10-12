@@ -2163,9 +2163,9 @@ html {
     background: var(--secondary-dark);
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    position: relative;
-    z-index: 1;
-    clear: both;
+    position: static;
+    display: block;
+    width: 100%;
 }
 
 .download-options-title {
