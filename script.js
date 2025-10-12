@@ -13,7 +13,7 @@ const API_BASE_URL = TMDB_BASE_URL;
 const FEATURED_MOVIE_CONFIG = {
    // tmdbId: 1061474,    // Superman (2025) - Change this ID to feature any movie you want!
     //type: "movie"       // "movie" or "tv"
-tmdbId: 119051, type: "tv"  
+tmdbId: 110492, type: "tv"  
 };
 
 // Option 2: Choose from pre-configured popular movies (uncomment one to use)
@@ -114,7 +114,7 @@ const videoData = [
         type: "tv",
         downloads: [
             "https://linkmake.in/view/CHFIed4Mo1",
-            "https://linkmake.in/view/YvYhQBrUpp"
+            "https://linkmake.in/view/YvYhQBrUpp",
         ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
