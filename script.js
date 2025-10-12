@@ -978,7 +978,7 @@ async function openVideoModal(video) {
             }
         };
 
-        // Add the video with proper responsive container (removed old download button)
+        // Add the video with proper responsive container
         modalElements.video.innerHTML = `
             <div class="modal-content-wrapper">
                 <div class="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 15px; background: #000;">
@@ -987,20 +987,48 @@ async function openVideoModal(video) {
                     </div>
                 </div>
                 ${video.downloads && video.downloads.length > 0 ? `
-                    <div class="download-options" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                        ${video.downloads.map((link, index) => `
-                            <a href="${link}" target="_blank" rel="noopener noreferrer" 
-                               style="padding: 8px 15px; background: var(--primary-color, #007bff); 
-                                      color: white; text-decoration: none; border-radius: 5px; 
-                                      display: inline-flex; align-items: center; gap: 5px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="download-options">
+                        <div class="download-options-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Links
+                        </div>
+                        <div class="download-links-container">
+                            ${video.downloads.map((link, index) => `
+                                <a href="${link}" target="_blank" rel="noopener noreferrer" class="download-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    ${video.downloads.length > 1 ? `Link ${index + 1}` : 'Download'}
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : video.download ? `
+                    <div class="download-options">
+                        <div class="download-options-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download
+                        </div>
+                        <div class="download-links-container">
+                            <a href="${video.download}" target="_blank" rel="noopener noreferrer" class="download-link">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="7 10 12 15 17 10"></polyline>
                                     <line x1="12" y1="15" x2="12" y2="3"></line>
                                 </svg>
-                                Download Link ${index + 1}
+                                Download
                             </a>
-                        `).join('')}
+                        </div>
                     </div>
                 ` : ''}
             </div>
@@ -1098,20 +1126,6 @@ function displayTMDBDetails(movieData, type, video) {
         const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
         const safeDescription = movieData.overview ? movieData.overview.replace(/[\"\']/g, '') : 'No description available';
         
-        // Create new responsive download button if download link exists
-        const downloadButton = video && video.download ? `
-            <div class="download-section">
-                <button onclick="handleDownload('${safeTitle}', '${safeReleaseYear}', '${video.download}')" 
-                        class="new-download-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7,10 12,15 17,10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                    </svg>
-                    <span>Download ${movieData.title || 'Movie'}</span>
-                </button>
-            </div>` : '';
-        
         // Create compact movie info
         let compactInfoHTML = createCompactMovieInfo(movieData, type);
         
@@ -1128,7 +1142,6 @@ function displayTMDBDetails(movieData, type, video) {
                 ${movieData.tagline ? `<p class="movie-tagline">${movieData.tagline}</p>` : ''}
                 <p class="movie-description">${safeDescription}</p>
             </div>
-            ${downloadButton}
             ${compactInfoHTML}
             ${castHTML}
             ${trailerHTML}
