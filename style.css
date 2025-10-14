@@ -68,7 +68,7 @@
     --gradient-primary: var(--accent-main);
     --gradient-secondary: var(--accent-soft);
     --text-primary: #FFFFFF;
-    --text-secondary: #CCCCCC;
+    --text-secondary:  #CCCCCC;
     --border-color: #2A2A2A;
     --hover-overlay: rgba(255, 0, 0, 0.1);
 }

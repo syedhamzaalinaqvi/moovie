@@ -35,7 +35,15 @@ const FEATURED_MOVIE_OPTIONS = {
 
 // Simplified Video Data - Only tmdbId and embedCode needed
 const videoData = [
-    {
+  
+  {
+        id: 1,
+        tmdbId: 1109086, // War 2
+        type: "movie",
+        downloads: ["https://linkmake.in/view/R5PGo1h13A"],
+        embedCode: `<iframe src="https://hikke383ehr.com/play/tt27425164" width="1200" height="495" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+  {
         id: 1,
         tmdbId: 1061474, // Superman 
         type: "movie",
@@ -76,6 +84,7 @@ const videoData = [
         type: "tv",
         downloads: [
             "https://linkmake.in/view/1S43gUS4Vm",
+            "https://linkmake.in/view/2yu2Pm9HDD"
             // Add more download links here as needed
         ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
