@@ -112,10 +112,12 @@ const videoData = [
         id: 11,
         tmdbId: 119051, //Wednesday
         type: "tv",
+        // NEW: You can now use objects with custom labels!
         downloads: [
-            "https://linkmake.in/view/CHFIed4Mo1",
-            "https://linkmake.in/view/YvYhQBrUpp",
+            { url: "https://linkmake.in/view/CHFIed4Mo1", label: "Season 1" },
+            { url: "https://linkmake.in/view/YvYhQBrUpp", label: "Season 2" },
         ],
+        // OLD way still works: downloads: ["url1", "url2"] (shows "Link 1", "Link 2")
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
@@ -965,6 +967,13 @@ async function openVideoModal(video) {
     };
 
     try {
+        // Normalize download data - convert single download to downloads array
+        if (video.download && !video.downloads) {
+            video.downloads = [video.download];
+        } else if (!video.downloads) {
+            video.downloads = [];
+        }
+
         // Set up iframe sizing handler
         const setupIframeStyles = () => {
             const iframes = modalElements.video.getElementsByTagName('iframe');
@@ -978,7 +987,7 @@ async function openVideoModal(video) {
             }
         };
 
-        // Add the video with proper responsive container (removed old download button)
+        // Add the video with proper responsive container
         modalElements.video.innerHTML = `
             <div class="modal-content-wrapper">
                 <div class="video-container" style="position: relative; width: 100%; padding-bottom: 56.25%; margin-bottom: 15px; background: #000;">
@@ -987,19 +996,35 @@ async function openVideoModal(video) {
                     </div>
                 </div>
                 ${video.downloads && video.downloads.length > 0 ? `
-                    <div class="download-section">
-                        <div class="download-buttons">
-                            ${video.downloads.map((link, index) => `
-                                <button class="download-btn" onclick="window.open('${link}', '_blank')">
-                                    <span class="button-content">
-                                        <i class="fas fa-download"></i>
-                                        Download ${video.downloads.length > 1 ? `(Mirror ${index + 1})` : 'Movie'}
-                                    </span>
-                                </button>
-                            `).join('')}
+                    <div class="download-options">
+                        <div class="download-options-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Links
                         </div>
-                    
-                        
+                        <div class="download-links-container">
+                            ${video.downloads.map((item, index) => {
+                                // Support both string URLs and objects with {url, label}
+                                const downloadUrl = typeof item === 'string' ? item : item.url;
+                                const downloadLabel = typeof item === 'string' 
+                                    ? (video.downloads.length > 1 ? `Link ${index + 1}` : 'Download')
+                                    : (item.label || `Link ${index + 1}`);
+                                
+                                return `
+                                    <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-link">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                        ${downloadLabel}
+                                    </a>
+                                `;
+                            }).join('')}
+                        </div>
                     </div>
                 ` : ''}
             </div>
@@ -1097,20 +1122,6 @@ function displayTMDBDetails(movieData, type, video) {
         const safeReleaseYear = movieData.release_year ? movieData.release_year : '';
         const safeDescription = movieData.overview ? movieData.overview.replace(/[\"\']/g, '') : 'No description available';
         
-        // Create new responsive download button if download link exists
-        const downloadButton = video && video.download ? `
-            <div class="download-section">
-                <button onclick="handleDownload('${safeTitle}', '${safeReleaseYear}', '${video.download}')" 
-                        class="new-download-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7,10 12,15 17,10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                    </svg>
-                    <span>Download ${movieData.title || 'Movie'}</span>
-                </button>
-            </div>` : '';
-        
         // Create compact movie info
         let compactInfoHTML = createCompactMovieInfo(movieData, type);
         
@@ -1127,7 +1138,6 @@ function displayTMDBDetails(movieData, type, video) {
                 ${movieData.tagline ? `<p class="movie-tagline">${movieData.tagline}</p>` : ''}
                 <p class="movie-description">${safeDescription}</p>
             </div>
-            ${downloadButton}
             ${compactInfoHTML}
             ${castHTML}
             ${trailerHTML}
