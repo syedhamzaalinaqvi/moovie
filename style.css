@@ -59,18 +59,18 @@
 }
 
 :root {
-    --primary-dark: #0a0a0a;
-    --secondary-dark: #1a1a1a;
-    --tertiary-dark: #2a2a2a;
-    --accent-purple: #8b5cf6;
-    --accent-pink: #ec4899;
-    --accent-red: #ef4444;
-    --gradient-primary: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-    --gradient-secondary: linear-gradient(135deg, var(--accent-pink), var(--accent-red));
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --border-color: #333333;
-    --hover-overlay: rgba(139, 92, 246, 0.1);
+    --primary-dark: #121212;
+    --secondary-dark: #1E1E1E;
+    --tertiary-dark: #FFFFFF;
+    --accent-main: #FF0000;
+    --accent-soft: #FF3333;
+    --accent-highlight: #FF1A1A;
+    --gradient-primary: var(--accent-main);
+    --gradient-secondary: var(--accent-soft);
+    --text-primary: #FFFFFF;
+    --text-secondary: #CCCCCC;
+    --border-color: #2A2A2A;
+    --hover-overlay: rgba(255, 0, 0, 0.1);
 }
 
 body {
@@ -158,7 +158,78 @@ body {
     align-items: center;
     gap: 20px;
 }
+/*new seprate search bar css for moveing to above List/grid view*/
+/*.search-wrapper {
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+*/
+.search-container {
+    width: 100%;
+    position: relative;
+    margin: 0 1rem;
+    display:flex;
+    justify-content:center; 
+}
 
+.search-input {
+    width: 50%;
+    padding: 12px 45px 12px 20px;
+    border-radius: 25px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var( --accent-highlight);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.search-btn {
+    width: 30px;
+    height: 35px;
+    transform: translateY(-50%);
+     background: var(--gradient-primary);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    position: relative;
+    top: 22px;
+    right: 30px;
+    border-radius: 50%;
+
+}
+
+.search-btn:hover {
+    color: var(--primary-color);
+     
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        margin: 0 0.5rem;
+    }
+    
+    .search-input {
+        padding: 10px 40px 10px 15px;
+        font-size: 0.9rem;
+    }
+    .search-btn{
+ top: 20px;
+    right: 25px;
+    border-radius: 50%;
+    padding:8px,
+    }
+}
+/* original seacrh bar css
 .search-container {
     position: relative;
     display: flex;
@@ -200,7 +271,7 @@ body {
 .search-btn:hover {
     transform: scale(1.1);
 }
-
+*/
 .login-btn {
     background: var(--gradient-primary);
     color: white;
