@@ -716,8 +716,9 @@ function restorePageState() {
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DOM Content Loaded - Starting H-TV initialization...');
     
-    // Load previous page state
-    const hasState = loadPageState();
+    // CLEAR OLD PAGE STATE - Start fresh
+    clearPageState();
+    displayedMovies = 12; // Reset to 12
     
     // Show loading indicator
     if (videosGrid) {
@@ -733,12 +734,9 @@ document.addEventListener("DOMContentLoaded", function () {
             loadLiveTvSlider();
             loadTrendingSlider();
             
-            // Restore page state if available
-            if (hasState) {
-                restorePageState();
-            }
-            
             console.log('H-TV initialization complete!');
+            console.log('Total movies loaded:', loadedMovies.length);
+            console.log('Displaying:', displayedMovies, 'movies initially');
         } catch (error) {
             console.error('Error during initialization:', error);
             if (videosGrid) {
@@ -751,15 +749,20 @@ document.addEventListener("DOMContentLoaded", function () {
 // Load movies with TMDB data
 async function loadMoviesWithTMDBData() {
     console.log('Starting to load movies with TMDB data...');
+    console.log('Total movies in videoData:', videoData.length);
     loadedMovies = [];
 
-    for (const video of videoData) {
+    // Process each movie - duplicates will reuse cached TMDB data
+    for (let i = 0; i < videoData.length; i++) {
+        const video = videoData[i];
         try {
-            console.log(`Loading movie ${video.id} - TMDB ID: ${video.tmdbId}`);
+            console.log(`[${i + 1}/${videoData.length}] Loading movie ID ${video.id} - TMDB ID: ${video.tmdbId}`);
             const tmdbData = await fetchTMDBData(video.tmdbId, video.type);
+            
             if (tmdbData) {
                 const movieWithData = {
                     ...video,
+                    uniqueId: `movie_${i}_${video.id}_${video.tmdbId}`, // Unique ID for each entry
                     title: tmdbData.title,
                     duration: tmdbData.runtime ? `${Math.floor(tmdbData.runtime / 60)}h ${tmdbData.runtime % 60}m` : 
                              tmdbData.number_of_seasons ? `${tmdbData.number_of_seasons} seasons` : "Unknown",
@@ -770,38 +773,41 @@ async function loadMoviesWithTMDBData() {
                     tmdbData: tmdbData,
                 };
                 loadedMovies.push(movieWithData);
-                console.log(`Successfully loaded: ${tmdbData.title}`);
+                console.log(`✅ [${i + 1}] Successfully loaded: ${tmdbData.title}`);
             } else {
-                console.warn(`No TMDB data for movie ${video.id}, using fallback`);
-                // Fallback if TMDB data fails
+                console.warn(`⚠️ No TMDB data for movie ${video.id}, using fallback`);
                 loadedMovies.push({
                     ...video,
+                    uniqueId: `movie_${i}_${video.id}_fallback`,
                     title: `Movie ${video.id}`,
                     duration: "Unknown",
                     views: "Loading...",
                     category: "unknown",
-                    thumbnail:
-                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                    thumbnail: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==",
                     description: "Failed to load movie details",
                 });
             }
         } catch (error) {
-            console.error(`Error loading movie ${video.id}:`, error);
-            // Add fallback movie anyway
+            console.error(`❌ Error loading movie ${video.id}:`, error);
             loadedMovies.push({
                 ...video,
+                uniqueId: `movie_${i}_${video.id}_error`,
                 title: `Movie ${video.id}`,
                 duration: "Unknown",
                 views: "Error",
                 category: "unknown",
-                thumbnail:
-                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg==",
+                thumbnail: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkVycm9yPC90ZXh0Pjwvc3ZnPg==",
                 description: "Failed to load movie details",
             });
         }
     }
 
-    console.log(`Loaded ${loadedMovies.length} movies total`);
+    console.log(`🎬 TOTAL LOADED: ${loadedMovies.length} movies (expected: ${videoData.length})`);
+    
+    if (loadedMovies.length !== videoData.length) {
+        console.error(`⚠️ WARNING: Loaded ${loadedMovies.length} but expected ${videoData.length} movies!`);
+    }
+    
     filteredVideos = [...loadedMovies];
     renderVideos();
 }
