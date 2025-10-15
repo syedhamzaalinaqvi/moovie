@@ -410,5 +410,5 @@ window.handleDelete = async function(commentId) {
     await deleteComment(commentId);
 };
 
-// Export functions
-export { initializeAuth, currentUser };
+// Export currentUser for external access
+export { currentUser };
