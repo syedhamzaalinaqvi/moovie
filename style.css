@@ -152,18 +152,33 @@
 }
 
 :root {
-    --primary-dark: #121212;
-    --secondary-dark: #1E1E1E;
-    --tertiary-dark: #FFFFFF;
-    --accent-main: #FF0000;
-    --accent-soft: #FF3333;
-    --accent-highlight: #FF1A1A;
-    --gradient-primary: var(--accent-main);
-    --gradient-secondary: var(--accent-soft);
-    --text-primary: #FFFFFF;
-    --text-secondary:  #CCCCCC;
-    --border-color: #2A2A2A;
-    --hover-overlay: rgba(255, 0, 0, 0.1);
+    --primary-dark: #0a0a0a;
+    --secondary-dark: #1a1a1a;
+    --tertiary-dark: #2a2a2a;
+    
+    /* Red Gradient Theme Colors */
+    --red-primary: #ff0000;
+    --red-secondary: #dc143c;
+    --red-dark: #8b0000;
+    --red-bright: #ff1744;
+    --red-neon: #ff073a;
+    
+    /* Beautiful Red Gradients */
+    --gradient-primary: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+    --gradient-secondary: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+    --gradient-fire: linear-gradient(135deg, #ff0000 0%, #ff6b00 50%, #ffa500 100%);
+    --gradient-neon: linear-gradient(135deg, #ff073a 0%, #ff5e62 100%);
+    --gradient-dark-red: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+    
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #999999;
+    
+    /* Border & Overlay */
+    --border-color: #2a2a2a;
+    --hover-overlay: rgba(255, 8, 68, 0.15);
+    --glow-red: rgba(255, 0, 68, 0.5);
 }
 
 body {
@@ -374,12 +389,13 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 8, 68, 0.4);
 }
 
 .login-btn:hover {
+    background: var(--gradient-neon);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 8, 68, 0.6), 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
 .mobile-menu-btn {
@@ -484,17 +500,24 @@ body {
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
     padding: 8px 20px;
-    border-radius: 25px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
 }
 
-.filter-btn:hover,
+.filter-btn:hover {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(255, 8, 68, 0.3);
+}
+
 .filter-btn.active {
     background: var(--gradient-primary);
     color: white;
     border-color: transparent;
+    box-shadow: 0 4px 20px rgba(255, 8, 68, 0.5), 0 0 15px rgba(255, 0, 0, 0.2);
     transform: translateY(-2px);
 }
 
@@ -625,8 +648,8 @@ body {
 
 .video-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
-    border-color: var(--accent-purple);
+    box-shadow: 0 15px 35px rgba(255, 8, 68, 0.3), 0 0 20px rgba(255, 0, 0, 0.15);
+    border-color: rgba(255, 8, 68, 0.5);
 }
 
 .video-thumbnail {

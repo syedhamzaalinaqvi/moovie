@@ -964,11 +964,11 @@ function createLoadMoreButton() {
         margin-top: 30px;
     `;
     
-    // Create button
+    // Create button with RED GRADIENT THEME
     const button = document.createElement('button');
     button.id = 'loadMoreButton';
     button.style.cssText = `
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
         color: white;
         border: none;
         padding: 18px 40px;
@@ -976,29 +976,33 @@ function createLoadMoreButton() {
         font-weight: bold;
         border-radius: 50px;
         cursor: pointer;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 10px 30px rgba(255, 8, 68, 0.5);
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         gap: 10px;
+        position: relative;
+        overflow: hidden;
     `;
     
     button.innerHTML = `
-        <span>⬇️ Load More Movies</span>
-        <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px;">
+        <span>🔥 Load More Movies</span>
+        <span style="background: rgba(255,255,255,0.25); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">
             ${remaining} remaining
         </span>
     `;
     
-    // Add hover effect
+    // Add hover effect with RED GLOW
     button.onmouseover = () => {
-        button.style.transform = 'translateY(-5px)';
-        button.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.6)';
+        button.style.transform = 'translateY(-5px) scale(1.02)';
+        button.style.boxShadow = '0 15px 50px rgba(255, 8, 68, 0.8), 0 0 30px rgba(255, 0, 0, 0.4)';
+        button.style.background = 'linear-gradient(135deg, #ff073a 0%, #ff5e62 100%)';
     };
     
     button.onmouseout = () => {
-        button.style.transform = 'translateY(0)';
-        button.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.4)';
+        button.style.transform = 'translateY(0) scale(1)';
+        button.style.boxShadow = '0 10px 30px rgba(255, 8, 68, 0.5)';
+        button.style.background = 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)';
     };
     
     // Add click handler
