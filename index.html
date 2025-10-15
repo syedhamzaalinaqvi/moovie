@@ -470,5 +470,151 @@
     </footer>
 
     <script src="script.js"></script>
+    
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeAuth, postComment, loadComments } from './firebase-comments.js';
+        
+        // Initialize Firebase authentication
+        initializeAuth();
+        
+        // Load comments on page load
+        loadComments();
+        
+        // Handle comment form submission
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm) {
+            commentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const commentText = document.getElementById('commentText').value.trim();
+                const charCount = document.getElementById('charCount');
+                
+                if (!commentText) {
+                    alert('Please enter a comment!');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = commentForm.querySelector('.submit-comment-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '⏳ Posting...';
+                submitBtn.disabled = true;
+                
+                const success = await postComment({ text: commentText });
+                
+                if (success) {
+                    // Reset form
+                    commentForm.reset();
+                    charCount.textContent = '0';
+                    
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,255,136,0.3); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease;';
+                    successMsg.textContent = '✅ Comment posted successfully!';
+                    document.body.appendChild(successMsg);
+                    
+                    setTimeout(() => {
+                        successMsg.style.animation = 'slideOut 0.3s ease';
+                        setTimeout(() => successMsg.remove(), 300);
+                    }, 3000);
+                }
+                
+                // Restore button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+    
+    <!-- Login Modal Integration -->
+    <script type="module">
+        import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, googleProvider } from './firebase-config.js';
+        
+        // Login Modal Elements
+        const loginModal = document.getElementById('loginModal');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const loginModalClose = document.getElementById('loginModalClose');
+        
+        // Close modal handlers
+        if (loginModalClose) {
+            loginModalClose.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+        }
+        
+        if (loginOverlay) {
+            loginOverlay.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+        }
+        
+        // Handle login form
+        const loginForm = document.querySelector('#loginModal form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = loginForm.querySelector('input[type="email"]').value;
+                const password = loginForm.querySelector('input[type="password"]').value;
+                
+                if (!email || !password) {
+                    alert('Please enter email and password!');
+                    return;
+                }
+                
+                try {
+                    // Try to sign in
+                    await signInWithEmailAndPassword(auth, email, password);
+                    loginModal.style.display = 'none';
+                    
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(255,8,68,0.4); z-index: 9999; font-weight: 600;';
+                    successMsg.textContent = '✅ Logged in successfully!';
+                    document.body.appendChild(successMsg);
+                    setTimeout(() => successMsg.remove(), 3000);
+                    
+                } catch (error) {
+                    // If user doesn't exist, create account
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        const createAccount = confirm('Account not found. Would you like to create a new account with these credentials?');
+                        if (createAccount) {
+                            try {
+                                await createUserWithEmailAndPassword(auth, email, password);
+                                loginModal.style.display = 'none';
+                                
+                                const successMsg = document.createElement('div');
+                                successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(255,8,68,0.4); z-index: 9999; font-weight: 600;';
+                                successMsg.textContent = '✅ Account created and logged in!';
+                                document.body.appendChild(successMsg);
+                                setTimeout(() => successMsg.remove(), 3000);
+                                
+                            } catch (signupError) {
+                                alert('Error creating account: ' + signupError.message);
+                            }
+                        }
+                    } else if (error.code === 'auth/wrong-password') {
+                        alert('Incorrect password. Please try again.');
+                    } else if (error.code === 'auth/invalid-email') {
+                        alert('Invalid email address.');
+                    } else {
+                        alert('Error: ' + error.message);
+                    }
+                }
+            });
+        }
+    </script>
+    
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
 </body>
 </html>
