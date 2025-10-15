@@ -473,57 +473,85 @@
     
     <!-- Firebase Integration -->
     <script type="module">
-        import { initializeAuth, postComment, loadComments } from './firebase-comments.js';
+        console.log('🔥 Loading Firebase modules...');
         
-        // Initialize Firebase authentication
-        initializeAuth();
-        
-        // Load comments on page load
-        loadComments();
-        
-        // Handle comment form submission
-        const commentForm = document.getElementById('commentForm');
-        if (commentForm) {
-            commentForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
+        try {
+            const { initializeAuth, postComment, loadComments } = await import('./firebase-comments.js');
+            
+            console.log('✅ Firebase modules loaded successfully!');
+            console.log('✅ Firebase Authentication initialized');
+            console.log('✅ Firebase Database connected');
+            
+            // Initialize Firebase authentication
+            initializeAuth();
+            
+            // Load comments on page load
+            loadComments();
+            console.log('✅ Comments loaded from Firebase');
+            
+            // Handle comment form submission
+            const commentForm = document.getElementById('commentForm');
+            if (commentForm) {
+                console.log('✅ Comment form found - Firebase integration active');
                 
-                const commentText = document.getElementById('commentText').value.trim();
-                const charCount = document.getElementById('charCount');
-                
-                if (!commentText) {
-                    alert('Please enter a comment!');
-                    return;
-                }
-                
-                // Show loading state
-                const submitBtn = commentForm.querySelector('.submit-comment-btn');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '⏳ Posting...';
-                submitBtn.disabled = true;
-                
-                const success = await postComment({ text: commentText });
-                
-                if (success) {
-                    // Reset form
-                    commentForm.reset();
-                    charCount.textContent = '0';
+                commentForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
                     
-                    // Show success message
-                    const successMsg = document.createElement('div');
-                    successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,255,136,0.3); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease;';
-                    successMsg.textContent = '✅ Comment posted successfully!';
-                    document.body.appendChild(successMsg);
+                    const commentText = document.getElementById('commentText').value.trim();
+                    const charCount = document.getElementById('charCount');
                     
-                    setTimeout(() => {
-                        successMsg.style.animation = 'slideOut 0.3s ease';
-                        setTimeout(() => successMsg.remove(), 300);
-                    }, 3000);
-                }
-                
-                // Restore button
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            });
+                    if (!commentText) {
+                        alert('Please enter a comment!');
+                        return;
+                    }
+                    
+                    console.log('📝 Attempting to post comment to Firebase...');
+                    
+                    // Show loading state
+                    const submitBtn = commentForm.querySelector('.submit-comment-btn');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '⏳ Posting...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const success = await postComment({ text: commentText });
+                        
+                        if (success) {
+                            console.log('✅ Comment posted to Firebase successfully!');
+                            
+                            // Reset form
+                            commentForm.reset();
+                            charCount.textContent = '0';
+                            
+                            // Show success message
+                            const successMsg = document.createElement('div');
+                            successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,255,136,0.3); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease;';
+                            successMsg.textContent = '✅ Comment posted successfully!';
+                            document.body.appendChild(successMsg);
+                            
+                            setTimeout(() => {
+                                successMsg.style.animation = 'slideOut 0.3s ease';
+                                setTimeout(() => successMsg.remove(), 300);
+                            }, 3000);
+                        } else {
+                            console.error('❌ Failed to post comment');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error posting comment:', error);
+                        alert('Error posting comment: ' + error.message);
+                    }
+                    
+                    // Restore button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            } else {
+                console.error('❌ Comment form not found!');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load Firebase modules:', error);
+            console.error('Error details:', error.message);
+            alert('Firebase integration error. Check console for details.');
         }
     </script>
     

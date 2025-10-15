@@ -16,9 +16,22 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+let app, auth, database;
+
+try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    database = getDatabase(app);
+    
+    console.log('🔥 Firebase App initialized successfully!');
+    console.log('✅ Firebase Auth ready');
+    console.log('✅ Firebase Database ready');
+    console.log('📊 Database URL:', firebaseConfig.databaseURL);
+} catch (error) {
+    console.error('❌ Firebase initialization failed:', error);
+    console.error('Error details:', error.message);
+    throw error;
+}
 
 // Export for use in other files
 export { 
@@ -39,5 +52,3 @@ export {
     orderByChild,
     get
 };
-
-console.log('🔥 Firebase initialized successfully!');

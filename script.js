@@ -1847,9 +1847,11 @@ function setupCommentSection() {
     const charCount = document.getElementById('charCount');
     
     if (!commentForm || !commentText || !charCount) {
-        console.log('Comment section elements not found');
+        console.log('❌ Comment section elements not found');
         return;
     }
+    
+    console.log('✅ Comment section initialized - Firebase will handle form submission');
     
     // Character counter
     commentText.addEventListener('input', () => {
@@ -1866,27 +1868,8 @@ function setupCommentSection() {
         }
     });
     
-    // Form submission - will be handled by firebase-comments.js
-    commentForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const comment = commentText.value.trim();
-        
-        if (!comment) {
-            alert('Please enter a comment!');
-            return;
-        }
-        
-        console.log('Comment submitted:', comment);
-        
-        // Firebase integration will handle this
-        // For now, show placeholder message
-        alert('Firebase is being integrated! Comment functionality will work once you add the script tags.');
-        
-        // Reset form
-        commentForm.reset();
-        charCount.textContent = '0';
-    });
+    // NOTE: Form submission is now handled by Firebase module in index.html
+    // This function only sets up the character counter
 }
 
 // Scroll to Top functionality

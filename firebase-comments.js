@@ -20,17 +20,27 @@ let currentUser = null;
 
 // Initialize authentication state listener
 export function initializeAuth() {
-    onAuthStateChanged(auth, (user) => {
-        currentUser = user;
-        updateUIForAuthState(user);
+    console.log('🔐 Initializing Firebase Authentication...');
+    
+    try {
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            updateUIForAuthState(user);
+            
+            if (user) {
+                console.log('✅ User logged in:', user.email);
+                console.log('👤 User ID:', user.uid);
+                loadComments(); // Reload comments when user logs in
+            } else {
+                console.log('👤 No user logged in - Login required to comment');
+            }
+        });
         
-        if (user) {
-            console.log('✅ User logged in:', user.email);
-            loadComments(); // Reload comments when user logs in
-        } else {
-            console.log('❌ User logged out');
-        }
-    });
+        console.log('✅ Auth state listener initialized');
+    } catch (error) {
+        console.error('❌ Failed to initialize auth:', error);
+        throw error;
+    }
 }
 
 // Update UI based on authentication state
@@ -132,12 +142,21 @@ export async function postComment(commentData) {
 
 // Load all comments
 export function loadComments() {
-    const commentsRef = ref(database, 'comments');
+    console.log('📥 Loading comments from Firebase...');
     
-    onValue(commentsRef, (snapshot) => {
-        const commentsData = snapshot.val();
-        displayComments(commentsData);
-    });
+    try {
+        const commentsRef = ref(database, 'comments');
+        
+        onValue(commentsRef, (snapshot) => {
+            const commentsData = snapshot.val();
+            console.log('📊 Comments data received:', commentsData ? Object.keys(commentsData).length + ' comments' : '0 comments');
+            displayComments(commentsData);
+        }, (error) => {
+            console.error('❌ Error loading comments:', error);
+        });
+    } catch (error) {
+        console.error('❌ Failed to load comments:', error);
+    }
 }
 
 // Display comments in the UI
