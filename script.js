@@ -137,7 +137,109 @@ const videoData = [
         embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
     
+// dublicate movies
 
+  {
+        id: 13,
+        tmdbId: 1109086, // War 2
+        type: "movie",
+        downloads: ["https://linkmake.in/view/R5PGo1h13A"],
+        embedCode: `<iframe src="https://hikke383ehr.com/play/tt27425164" width="1200" height="495" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+  {
+        id: 14,
+        tmdbId: 1061474, // Superman 
+        type: "movie",
+        downloads: ["https://linkmake.in/view/yz4V4eXOnt"],
+        embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
+    },
+    {
+        id: 15,
+        tmdbId: 1510251, //Murderbaad
+        type: "movie",
+        downloads: ["https://linkmake.in/view/ejVFdx7Z7t"],
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt37392885" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 16,
+        tmdbId: 575265, // mission imposible 2025
+        type: "movie",
+        downloads: ["https://linkmake.in/view/C7svoEz27W"],
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt9603208" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 17,
+        tmdbId: 911430, // F1
+        type: "movie",
+        download: "https://linkmake.in/view/AUi6XHpnNF",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt16311594" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 18,
+        tmdbId: 1241894, // Woodwalker 2024
+        type: "movie",
+        download: "https://hubdrive.space/file/1964106209",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30398905" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 19,
+        tmdbId: 110492, // Peacemaker
+        type: "tv",
+        downloads: [
+            { url: "https://linkmake.in/view/1S43gUS4Vm", label: "Season 1" },
+            { url: "https://linkmake.in/view/2yu2Pm9HDD", label: "Season 2" }
+        ],
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 20,
+        tmdbId: 1254624, // Night Always Comes
+        type: "movie",
+        download: "https://hubdrive.space/file/1897326323",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31567422" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 21,
+        tmdbId: 227114, // Butterfly
+        type: "tv",
+        download: "https://linkmake.in/view/NnsizQZhog",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26672404" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 22,
+        tmdbId: 1071585, // Megan 2.0
+        type: "movie",
+        download: "https://linkmake.in/view/t2TrFRIhzH",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt26342662" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 23,
+        tmdbId: 1234821, //Jurassic world rebirth
+        type: "movie",
+        download: "https://linkmake.in/view/Gx50BNb2nD",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt31036941" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    {
+        id: 24,
+        tmdbId: 119051, //Wednesday
+        type: "tv",
+        // NEW: You can now use objects with custom labels!
+        downloads: [
+            { url: "https://linkmake.in/view/CHFIed4Mo1", label: "Season 1" },
+            { url: "https://linkmake.in/view/YvYhQBrUpp", label: "Season 2" },
+        ],
+        // OLD way still works: downloads: ["url1", "url2"] (shows "Link 1", "Link 2")
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt13443470" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    
+    {
+        id: 25,
+        tmdbId: 1106289, //Pickup 2025
+        type: "movie",
+        download: "https://hubdrive.space/file/2309932002",
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+  //dublicate movies ended
 
 ];
 
@@ -402,13 +504,13 @@ let filteredVideos = [];
 let currentView = "grid";
 
 // Load more functionality variables
-let displayedMovies = 16; // Show 16 movies initially
-const moviesPerLoad = 16; // Load 16 more movies when "Load More" is clicked
+let displayedMovies = 12; // Show 12 movies initially
+const moviesPerLoad = 12; // Load 12 more movies when "Load More" is clicked
 
 // Page memory functionality
 const PAGE_MEMORY_KEY = 'htv-page-state';
 let pageMemory = {
-    displayedMovies: 16,
+    displayedMovies: 12,
     scrollPosition: 0,
     currentCategory: 'all',
     searchQuery: ''
@@ -554,7 +656,7 @@ function loadPageState() {
         const saved = localStorage.getItem(PAGE_MEMORY_KEY);
         if (saved) {
             pageMemory = JSON.parse(saved);
-            displayedMovies = pageMemory.displayedMovies || 16;
+            displayedMovies = pageMemory.displayedMovies || 12;
             currentCategory = pageMemory.currentCategory || 'all';
             searchQuery = pageMemory.searchQuery || '';
             
@@ -814,6 +916,7 @@ function renderVideos() {
     }
 
     // Show only the number of movies specified by displayedMovies
+    console.log('Displaying movies:', { total: filteredVideos.length, showing: displayedMovies });
     const moviesToShow = filteredVideos.slice(0, displayedMovies);
     
     moviesToShow.forEach((video, index) => {
@@ -826,60 +929,101 @@ function renderVideos() {
         }
     });
     
-    // Add Load More button if there are more movies to show
-    if (displayedMovies < filteredVideos.length) {
-        const loadMoreContainer = document.createElement("div");
-        loadMoreContainer.className = "load-more-container";
-        
-        const loadMoreBtn = document.createElement("button");
-        loadMoreBtn.className = "load-more-btn";
-        loadMoreBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <circle cx="12" cy="21" r="3"></circle>
-                <circle cx="12" cy="3" r="3"></circle>
-            </svg>
-            <span>Load More Movies (${filteredVideos.length - displayedMovies} remaining)</span>
-        `;
-        
-        loadMoreBtn.onclick = () => {
-            // Add loading state
-            loadMoreBtn.classList.add('loading');
-            loadMoreBtn.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <circle cx="12" cy="21" r="3"></circle>
-                    <circle cx="12" cy="3" r="3"></circle>
-                </svg>
-                <span>Loading more movies...</span>
-            `;
-            
-            // Simulate loading delay for better UX
-            setTimeout(() => {
-                displayedMovies += moviesPerLoad;
-                renderVideos();
-                
-                // Save page state after loading more
-                savePageState();
-                
-                // Smooth scroll to the newly loaded content
-                setTimeout(() => {
-                    const newlyLoadedCards = videosGrid.querySelectorAll('.video-card');
-                    if (newlyLoadedCards.length > displayedMovies - moviesPerLoad) {
-                        const targetCard = newlyLoadedCards[displayedMovies - moviesPerLoad];
-                        if (targetCard) {
-                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }
-                }, 100);
-            }, 500); // Small delay to show loading state
-        };
-        
-        loadMoreContainer.appendChild(loadMoreBtn);
-        videosGrid.appendChild(loadMoreContainer);
-    }
+    // NEW LOAD MORE BUTTON - Built from scratch
+    createLoadMoreButton();
     
     console.log(`Finished rendering videos - Showing ${moviesToShow.length} of ${filteredVideos.length} movies`);
+}
+
+// NEW: Create Load More Button Function
+function createLoadMoreButton() {
+    // Check if we need a load more button
+    if (displayedMovies >= filteredVideos.length) {
+        console.log('All movies displayed - no load more button needed');
+        return;
+    }
+    
+    const remaining = filteredVideos.length - displayedMovies;
+    console.log(`Creating load more button: ${remaining} movies remaining`);
+    
+    // Create wrapper div
+    const wrapper = document.createElement('div');
+    wrapper.id = 'loadMoreWrapper';
+    wrapper.style.cssText = `
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 20px;
+        margin-top: 30px;
+    `;
+    
+    // Create button
+    const button = document.createElement('button');
+    button.id = 'loadMoreButton';
+    button.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    `;
+    
+    button.innerHTML = `
+        <span>⬇️ Load More Movies</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px;">
+            ${remaining} remaining
+        </span>
+    `;
+    
+    // Add hover effect
+    button.onmouseover = () => {
+        button.style.transform = 'translateY(-5px)';
+        button.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.6)';
+    };
+    
+    button.onmouseout = () => {
+        button.style.transform = 'translateY(0)';
+        button.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.4)';
+    };
+    
+    // Add click handler
+    button.onclick = () => {
+        console.log('Load More clicked!');
+        
+        // Show loading state
+        button.innerHTML = '⏳ Loading...';
+        button.style.pointerEvents = 'none';
+        button.style.opacity = '0.7';
+        
+        // Load more movies after short delay
+        setTimeout(() => {
+            displayedMovies += moviesPerLoad;
+            savePageState();
+            renderVideos();
+            
+            // Scroll to new content
+            setTimeout(() => {
+                window.scrollBy({
+                    top: 300,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }, 300);
+    };
+    
+    wrapper.appendChild(button);
+    videosGrid.appendChild(wrapper);
+    
+    console.log('✅ Load More button created and added to grid!');
 }
 
 // Create Video Card
@@ -931,6 +1075,8 @@ function handleSearch() {
 
 // Filter Videos
 function filterVideos(isRestoringState = false) {
+    console.log('Filtering videos...', { currentCategory, searchQuery });
+    
     filteredVideos = loadedMovies.filter((video) => {
         const matchesCategory =
             currentCategory === "all" || video.category === currentCategory;
@@ -942,10 +1088,12 @@ function filterVideos(isRestoringState = false) {
 
         return matchesCategory && matchesSearch;
     });
+    
+    console.log('Filtered results:', { total: filteredVideos.length });
 
     // Only reset displayed movies count when not restoring state
     if (!isRestoringState) {
-        displayedMovies = 16;
+        displayedMovies = 12;
         savePageState(); // Save state when user actively filters
     }
     
