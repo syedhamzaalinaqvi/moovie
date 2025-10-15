@@ -83,9 +83,8 @@ const videoData = [
         tmdbId: 110492, // Peacemaker
         type: "tv",
         downloads: [
-            "https://linkmake.in/view/1S43gUS4Vm",
-            "https://linkmake.in/view/2yu2Pm9HDD"
-            // Add more download links here as needed
+            { url: "https://linkmake.in/view/1S43gUS4Vm", label: "Season 1" },
+            { url: "https://linkmake.in/view/2yu2Pm9HDD", label: "Season 2" }
         ],
         embedCode: `<iframe src="https://fuhho374key.com/play/tt13146488" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
