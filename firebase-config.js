@@ -1,6 +1,6 @@
 // Firebase Configuration and Initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, push, set, onValue, remove, update, query, orderByChild, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // Your Firebase configuration
@@ -12,14 +12,13 @@ const firebaseConfig = {
     messagingSenderId: "1046379679363",
     appId: "1:1046379679363:web:f37ebc4a08008f58d695b6",
     measurementId: "G-DRMJYG3RW5",
-    databaseURL: "https://moovie-35706-default-rtdb.firebaseio.com" // Add this for Realtime Database
+    databaseURL: "https://moovie-35706-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
-const googleProvider = new GoogleAuthProvider();
 
 // Export for use in other files
 export { 
@@ -30,8 +29,6 @@ export {
     createUserWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged,
-    googleProvider,
-    signInWithPopup,
     ref, 
     push, 
     set, 

@@ -6,8 +6,6 @@ import {
     createUserWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged,
-    googleProvider,
-    signInWithPopup,
     ref, 
     push, 
     set, 
