@@ -733,6 +733,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setupEventListeners();
             loadLiveTvSlider();
             loadTrendingSlider();
+            setupCommentSection();          // Initialize comment section
             
             console.log('H-TV initialization complete!');
             console.log('Total movies loaded:', loadedMovies.length);
@@ -1837,6 +1838,50 @@ function setupSliders() {
             });
         });
     }
+}
+
+// Comment Section Functionality
+function setupCommentSection() {
+    const commentForm = document.getElementById('commentForm');
+    const commentText = document.getElementById('commentText');
+    const charCount = document.getElementById('charCount');
+    
+    if (!commentForm || !commentText || !charCount) {
+        console.log('Comment section elements not found');
+        return;
+    }
+    
+    // Character counter
+    commentText.addEventListener('input', () => {
+        const count = commentText.value.length;
+        charCount.textContent = count;
+        
+        // Change color when approaching limit
+        if (count > 450) {
+            charCount.style.color = '#ff0844';
+        } else if (count > 400) {
+            charCount.style.color = '#ffa500';
+        } else {
+            charCount.style.color = 'var(--text-muted)';
+        }
+    });
+    
+    // Form submission (placeholder - will be replaced with Firebase)
+    commentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('commentName').value;
+        const comment = commentText.value;
+        
+        console.log('Comment submitted:', { name, comment });
+        
+        // Show success message
+        alert('Comment form is ready! Firebase integration will be added next.');
+        
+        // Reset form
+        commentForm.reset();
+        charCount.textContent = '0';
+    });
 }
 
 // Scroll to Top functionality
