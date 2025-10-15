@@ -473,86 +473,117 @@
     
     <!-- Firebase Integration -->
     <script type="module">
-        console.log('🔥 Loading Firebase modules...');
-        
-        try {
-            const { initializeAuth, postComment, loadComments } = await import('./firebase-comments.js');
+        (async function() {
+            console.log('🔥 Loading Firebase modules...');
             
-            console.log('✅ Firebase modules loaded successfully!');
-            console.log('✅ Firebase Authentication initialized');
-            console.log('✅ Firebase Database connected');
-            
-            // Initialize Firebase authentication
-            initializeAuth();
-            
-            // Load comments on page load
-            loadComments();
-            console.log('✅ Comments loaded from Firebase');
-            
-            // Handle comment form submission
-            const commentForm = document.getElementById('commentForm');
-            if (commentForm) {
-                console.log('✅ Comment form found - Firebase integration active');
+            try {
+                const { initializeAuth, postComment, loadComments } = await import('./firebase-comments.js');
                 
-                commentForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    
-                    const commentText = document.getElementById('commentText').value.trim();
-                    const charCount = document.getElementById('charCount');
-                    
-                    if (!commentText) {
-                        alert('Please enter a comment!');
-                        return;
-                    }
-                    
-                    console.log('📝 Attempting to post comment to Firebase...');
-                    
-                    // Show loading state
-                    const submitBtn = commentForm.querySelector('.submit-comment-btn');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '⏳ Posting...';
-                    submitBtn.disabled = true;
-                    
-                    try {
-                        const success = await postComment({ text: commentText });
+                console.log('✅ Firebase modules loaded successfully!');
+                console.log('✅ Firebase Authentication initialized');
+                console.log('✅ Firebase Database connected');
+                
+                // Initialize Firebase authentication
+                initializeAuth();
+                
+                // Load comments on page load
+                loadComments();
+                console.log('✅ Comments loaded from Firebase');
+                
+                // Wait for DOM to be fully loaded
+                window.addEventListener('DOMContentLoaded', () => {
+                    const commentForm = document.getElementById('commentForm');
+                    if (commentForm) {
+                        console.log('✅ Comment form found - Firebase integration active');
                         
-                        if (success) {
-                            console.log('✅ Comment posted to Firebase successfully!');
+                        // Remove any existing submit listeners
+                        const newForm = commentForm.cloneNode(true);
+                        commentForm.parentNode.replaceChild(newForm, commentForm);
+                        
+                        newForm.addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             
-                            // Reset form
-                            commentForm.reset();
-                            charCount.textContent = '0';
+                            console.log('📝 Form submit intercepted by Firebase');
                             
-                            // Show success message
-                            const successMsg = document.createElement('div');
-                            successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,255,136,0.3); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease;';
-                            successMsg.textContent = '✅ Comment posted successfully!';
-                            document.body.appendChild(successMsg);
+                            const commentText = document.getElementById('commentText').value.trim();
+                            const charCount = document.getElementById('charCount');
                             
-                            setTimeout(() => {
-                                successMsg.style.animation = 'slideOut 0.3s ease';
-                                setTimeout(() => successMsg.remove(), 300);
-                            }, 3000);
-                        } else {
-                            console.error('❌ Failed to post comment');
+                            if (!commentText) {
+                                alert('Please enter a comment!');
+                                return false;
+                            }
+                            
+                            console.log('📝 Attempting to post comment to Firebase...');
+                            
+                            // Show loading state
+                            const submitBtn = newForm.querySelector('.submit-comment-btn');
+                            const originalText = submitBtn.innerHTML;
+                            submitBtn.innerHTML = '⏳ Posting...';
+                            submitBtn.disabled = true;
+                            
+                            try {
+                                const success = await postComment({ text: commentText });
+                                
+                                if (success) {
+                                    console.log('✅ Comment posted to Firebase successfully!');
+                                    
+                                    // Reset form
+                                    newForm.reset();
+                                    charCount.textContent = '0';
+                                    
+                                    // Show success message
+                                    const successMsg = document.createElement('div');
+                                    successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,255,136,0.3); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease;';
+                                    successMsg.textContent = '✅ Comment posted successfully!';
+                                    document.body.appendChild(successMsg);
+                                    
+                                    setTimeout(() => {
+                                        successMsg.style.animation = 'slideOut 0.3s ease';
+                                        setTimeout(() => successMsg.remove(), 300);
+                                    }, 3000);
+                                } else {
+                                    console.error('❌ Failed to post comment');
+                                }
+                            } catch (error) {
+                                console.error('❌ Error posting comment:', error);
+                                alert('Error posting comment: ' + error.message);
+                            }
+                            
+                            // Restore button
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                            
+                            return false;
+                        });
+                        
+                        // Re-setup character counter
+                        const commentText = document.getElementById('commentText');
+                        const charCount = document.getElementById('charCount');
+                        if (commentText && charCount) {
+                            commentText.addEventListener('input', () => {
+                                const count = commentText.value.length;
+                                charCount.textContent = count;
+                                
+                                if (count > 450) {
+                                    charCount.style.color = '#ff0844';
+                                } else if (count > 400) {
+                                    charCount.style.color = '#ffa500';
+                                } else {
+                                    charCount.style.color = 'var(--text-muted)';
+                                }
+                            });
                         }
-                    } catch (error) {
-                        console.error('❌ Error posting comment:', error);
-                        alert('Error posting comment: ' + error.message);
+                    } else {
+                        console.error('❌ Comment form not found!');
                     }
-                    
-                    // Restore button
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
                 });
-            } else {
-                console.error('❌ Comment form not found!');
+            } catch (error) {
+                console.error('❌ Failed to load Firebase modules:', error);
+                console.error('Error details:', error.message);
+                console.error('Stack trace:', error.stack);
             }
-        } catch (error) {
-            console.error('❌ Failed to load Firebase modules:', error);
-            console.error('Error details:', error.message);
-            alert('Firebase integration error. Check console for details.');
-        }
+        })();
     </script>
     
     <!-- Login Modal Integration -->
