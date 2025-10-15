@@ -1866,17 +1866,22 @@ function setupCommentSection() {
         }
     });
     
-    // Form submission (placeholder - will be replaced with Firebase)
-    commentForm.addEventListener('submit', (e) => {
+    // Form submission - will be handled by firebase-comments.js
+    commentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const name = document.getElementById('commentName').value;
-        const comment = commentText.value;
+        const comment = commentText.value.trim();
         
-        console.log('Comment submitted:', { name, comment });
+        if (!comment) {
+            alert('Please enter a comment!');
+            return;
+        }
         
-        // Show success message
-        alert('Comment form is ready! Firebase integration will be added next.');
+        console.log('Comment submitted:', comment);
+        
+        // Firebase integration will handle this
+        // For now, show placeholder message
+        alert('Firebase is being integrated! Comment functionality will work once you add the script tags.');
         
         // Reset form
         commentForm.reset();
