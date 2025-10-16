@@ -50,6 +50,19 @@ const videoData = [
         downloads: ["https://linkmake.in/view/yz4V4eXOnt"],
         embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
+   
+    
+    {
+        id: 2,
+        tmdbId: 75758, //Lost in Space
+        type: "tv",
+        downloads: [
+            { url: "https://embedpk.net/13a4c2ecrlr3.html", label: "Season 1" },
+            { url: "https://embedpk.net/jpt6u4s3aanw.html", label: "Season 2" },
+            { url: "https://linkmake.in/view/EdiiOb2dXY", label: "Season 3" }
+        ],
+        embedCode: `<iframe src="https://fuhho374key.com/play/tt5232792" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
     {
         id: 2,
         tmdbId: 1510251, //Murderbaad
