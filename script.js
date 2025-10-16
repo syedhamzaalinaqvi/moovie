@@ -165,8 +165,16 @@ const videoData = [
         download: "https://hubdrive.space/file/2309932002",
         embedCode: `<iframe src="https://fuhho374key.com/play/tt30445556" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
     },
-
+    {
+        id: 12,
+        tmdbId: 464293, // legend of Maula jutt
+        type: "movie",
+        download: "https://linkmake.in/view/Ak9SZxt4Vz",
+        embedCode: `<iframe src="#" width="610" height="370" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
+    
 ];
+
 
 // Cache for movie data to avoid repeated API calls
 const movieCache = new Map();
