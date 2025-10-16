@@ -50,8 +50,17 @@ const videoData = [
         downloads: ["https://linkmake.in/view/yz4V4eXOnt"],
         embedCode: `<IFRAME SRC="https://mivalyo.com/embed/euzlk6l3jb90" FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=NO WIDTH=640 HEIGHT=360 allowfullscreen></IFRAME>`,
     },
-   
     
+    {
+        id: 1,
+        tmdbId: 205715, //Gen v
+        type: "tv",
+        downloads: [
+            {url: "https://linkmake.in/view/ulJ1zQxeEE", label: "Season 1"},
+            {url: "https://linkmake.in/view/tohS2UdpS0", label: "Season 2"},
+        ],
+        embedCode: `<iframe src="https://hikke383ehr.com/play/tt13159924" width="1200" height="495" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+    },
     {
         id: 2,
         tmdbId: 1153399, //coolie
