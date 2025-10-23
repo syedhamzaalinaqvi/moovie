@@ -6,9 +6,27 @@
     <title>H-TV - Premium Video Streaming</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="comments-styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em'                 <div class="login-form">
+                <h2>Login to H-TV</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="login-submit-btn" id="emailSignInBtn">Sign In with Email</button>
+                    <div class="or-divider">
+                        <span>OR</span>
+                    </div>
+                    <button type="button" class="google-sign-in-btn" id="googleSignInBtn">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Sign in with Google
+                    </button>
+                </form>
+                <p class="login-footer">Don't have an account? <a href="#" id="toggleSignUp">Sign up</a></p>
+            </div>>🎬</text></svg>">
 </head>
-
     <style> 
         .ad-banner {
         width: 90%; 
@@ -421,19 +439,28 @@
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
-            <div class="login-form">
-                <h2>Login to H-TV</h2>
-                <p style="color: red;">This login form is not properly funtioning</p>
-                <form>
+            <div class="login-form" id="loginFormContainer">
+                <h2 id="authTitle">Login to H-TV</h2>
+                <form id="authForm">
                     <div class="form-group">
-                        <input type="email" placeholder="Email" required>
+                        <input type="email" id="authEmail" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" placeholder="Password" required>
+                        <input type="password" id="authPassword" placeholder="Password" required>
                     </div>
-                    <button type="submit" class="login-submit-btn">Sign In</button>
+                    <button type="submit" class="login-submit-btn" id="authSubmitBtn">Sign In</button>
+                    <div class="or-divider">
+                        <span>OR</span>
+                    </div>
+                    <button type="button" class="google-sign-in-btn" id="googleSignInBtn">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Sign in with Google
+                    </button>
                 </form>
-                <p class="login-footer">Don't have an account? <a href="#">Sign up</a></p>
+                <p class="login-footer">
+                    <span id="authSwitchText">Don't have an account?</span>
+                    <a href="#" id="authToggleBtn">Sign up</a>
+                </p>
             </div>
         </div>
     </div>
@@ -588,78 +615,142 @@
     
     <!-- Login Modal Integration -->
     <script type="module">
-        import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from './firebase-config.js';
+        import { 
+            auth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword,
+            GoogleAuthProvider,
+            signInWithPopup 
+        } from './firebase-config.js';
+        
+        // Initialize Google Auth Provider
+        const googleProvider = new GoogleAuthProvider();
         
         // Login Modal Elements
         const loginModal = document.getElementById('loginModal');
         const loginOverlay = document.getElementById('loginOverlay');
         const loginModalClose = document.getElementById('loginModalClose');
+        const loginForm = document.getElementById('loginForm');
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const toggleSignUpBtn = document.getElementById('toggleSignUp');
+        
+        let isSignUp = false;
         
         // Close modal handlers
-        if (loginModalClose) {
-            loginModalClose.addEventListener('click', () => {
-                loginModal.style.display = 'none';
+        const closeModal = () => {
+            loginModal.style.display = 'none';
+            resetForm();
+        };
+        
+        if (loginModalClose) loginModalClose.addEventListener('click', closeModal);
+        if (loginOverlay) loginOverlay.addEventListener('click', closeModal);
+        
+        // Show success message function
+        const showMessage = (message, type = 'success') => {
+            const color = type === 'success' ? '#00cc66' : '#ff0844';
+            const successMsg = document.createElement('div');
+            successMsg.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: linear-gradient(135deg, ${color} 0%, ${type === 'success' ? '#00ff88' : '#ffb199'} 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px ${color}66;
+                z-index: 9999;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            successMsg.textContent = message;
+            document.body.appendChild(successMsg);
+            
+            setTimeout(() => {
+                successMsg.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => successMsg.remove(), 300);
+            }, 3000);
+        };
+        
+        // Reset form function
+        const resetForm = () => {
+            if (loginForm) {
+                loginForm.reset();
+                document.getElementById('emailSignInBtn').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            }
+        };
+        
+        // Toggle Sign Up/Sign In
+        if (toggleSignUpBtn) {
+            toggleSignUpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                isSignUp = !isSignUp;
+                const emailSignInBtn = document.getElementById('emailSignInBtn');
+                const toggleText = document.querySelector('.login-footer');
+                
+                if (emailSignInBtn) {
+                    emailSignInBtn.textContent = isSignUp ? 'Sign Up with Email' : 'Sign In with Email';
+                }
+                
+                if (toggleText) {
+                    toggleText.innerHTML = isSignUp 
+                        ? 'Already have an account? <a href="#" id="toggleSignUp">Sign in</a>'
+                        : 'Don\'t have an account? <a href="#" id="toggleSignUp">Sign up</a>';
+                }
             });
         }
         
-        if (loginOverlay) {
-            loginOverlay.addEventListener('click', () => {
-                loginModal.style.display = 'none';
-            });
-        }
-        
-        // Handle login form
-        const loginForm = document.querySelector('#loginModal form');
+        // Handle Email Sign In/Sign Up
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                const email = loginForm.querySelector('input[type="email"]').value;
-                const password = loginForm.querySelector('input[type="password"]').value;
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
                 
                 if (!email || !password) {
-                    alert('Please enter email and password!');
+                    showMessage('Please enter email and password!', 'error');
                     return;
                 }
                 
                 try {
-                    // Try to sign in
-                    await signInWithEmailAndPassword(auth, email, password);
-                    loginModal.style.display = 'none';
+                    let result;
+                    if (isSignUp) {
+                        result = await createUserWithEmailAndPassword(auth, email, password);
+                        showMessage('✅ Account created successfully!');
+                    } else {
+                        result = await signInWithEmailAndPassword(auth, email, password);
+                        showMessage('✅ Logged in successfully!');
+                    }
                     
-                    // Show success message
-                    const successMsg = document.createElement('div');
-                    successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(255,8,68,0.4); z-index: 9999; font-weight: 600;';
-                    successMsg.textContent = '✅ Logged in successfully!';
-                    document.body.appendChild(successMsg);
-                    setTimeout(() => successMsg.remove(), 3000);
+                    closeModal();
                     
                 } catch (error) {
-                    // If user doesn't exist, create account
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                        const createAccount = confirm('Account not found. Would you like to create a new account with these credentials?');
-                        if (createAccount) {
-                            try {
-                                await createUserWithEmailAndPassword(auth, email, password);
-                                loginModal.style.display = 'none';
-                                
-                                const successMsg = document.createElement('div');
-                                successMsg.style.cssText = 'position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(255,8,68,0.4); z-index: 9999; font-weight: 600;';
-                                successMsg.textContent = '✅ Account created and logged in!';
-                                document.body.appendChild(successMsg);
-                                setTimeout(() => successMsg.remove(), 3000);
-                                
-                            } catch (signupError) {
-                                alert('Error creating account: ' + signupError.message);
-                            }
-                        }
+                    console.error('Auth error:', error);
+                    
+                    let errorMessage = 'An error occurred. Please try again.';
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'Account not found. Please sign up.';
                     } else if (error.code === 'auth/wrong-password') {
-                        alert('Incorrect password. Please try again.');
-                    } else if (error.code === 'auth/invalid-email') {
-                        alert('Invalid email address.');
-                    } else {
-                        alert('Error: ' + error.message);
+                        errorMessage = 'Incorrect password. Please try again.';
+                    } else if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = 'Email already in use. Please sign in.';
                     }
+                    
+                    showMessage(errorMessage, 'error');
+                }
+            });
+        }
+        
+        // Handle Google Sign In
+        if (googleSignInBtn) {
+            googleSignInBtn.addEventListener('click', async () => {
+                try {
+                    const result = await signInWithPopup(auth, googleProvider);
+                    showMessage('✅ Signed in with Google successfully!');
+                    closeModal();
+                } catch (error) {
+                    console.error('Google Sign In Error:', error);
+                    showMessage('Failed to sign in with Google. Please try again.', 'error');
                 }
             });
         }
@@ -673,6 +764,63 @@
         @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(400px); opacity: 0; }
+        }
+        
+        /* Login Form Styles */
+        .login-form {
+            padding: 2rem;
+        }
+        
+        .login-form h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        .google-sign-in-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.8rem;
+            background: #fff;
+            color: #757575;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .google-sign-in-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .google-sign-in-btn img {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+        }
+        
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--text-muted);
+        }
+        
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .or-divider span {
+            padding: 0 10px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
     </style>
 </body>

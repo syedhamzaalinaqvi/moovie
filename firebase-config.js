@@ -1,6 +1,6 @@
 // Firebase Configuration and Initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, push, set, onValue, remove, update, query, orderByChild, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // Your Firebase configuration
@@ -42,6 +42,8 @@ export {
     createUserWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged,
+    GoogleAuthProvider,
+    signInWithPopup,
     ref, 
     push, 
     set, 
