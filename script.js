@@ -61,7 +61,9 @@ const videoData = [
             {url: "https://linkmake.in/view/ulJ1zQxeEE", label: "Season 1"},
             {url: "https://linkmake.in/view/tohS2UdpS0", label: "Season 2"},
         ],
-        embedCode: `<iframe src="https://hikke383ehr.com/play/tt13159924" width="1200" height="495" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`,
+        embedCode: `<iframe src="https://h-player-ashen.vercel.app/?embed=1&data=eyJwbGF5bGlzdCI6W3sic2VyaWVzTmFtZSI6ImJhZCBib3kiLCJzZWFzb25zIjpbeyJzZWFzb25OdW1iZXIiOjEsImVwaXNvZGVzIjpbeyJlcGlzb2RlTnVtYmVyIjoxLCJlcGlzb2RlTmFtZSI6ImJiMSIsInVybCI6Imh0dHBzOi8vbWVkaWEuYm95c29udHViZS5jb20vdmlkZW9zLzYvOC9lL2UvNC82OGVlNDM4YTM3YTNjLm1wNCIsImR1cmF0aW9uIjoiMDA6MDA6MDAiLCJxdWFsaXR5IjoiQXV0byIsInByb2dyZXNzIjowfSx7ImVwaXNvZGVOdW1iZXIiOjIsImVwaXNvZGVOYW1lIjoiYmIyIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5taWxreXZpZGVvLmNvbS92aWRlb3MvNS83LzcvMC8wLzU3NzAwYzkyMzg4MGQubXA0IiwiZHVyYXRpb24iOiIwMDowMDowMCIsInF1YWxpdHkiOiJBdXRvIiwicHJvZ3Jlc3MiOjB9LHsiZXBpc29kZU51bWJlciI6MywiZXBpc29kZU5hbWUiOiJiYjMiLCJ1cmwiOiJodHRwczovL21lZGlhLm1pbGt5dmlkZW8uY29tL3ZpZGVvcy81LzcvNy8wLzAvNTc3MDBjOTIzODgwZC5tcDQiLCJkdXJhdGlvbiI6IjAwOjAwOjAwIiwicXVhbGl0eSI6IkF1dG8iLCJwcm9ncmVzcyI6MH1dfV19XSwic2F2ZSI6ZmFsc2V9" width="800" height="450" frameborder="0" allowfullscreen></iframe>
+
+<!-- If you prefer to postMessage the playlist, use the player iframe and then send { type: "hplayer.load", payload: {...} } -->`,
     },
     {
         id: 2,
